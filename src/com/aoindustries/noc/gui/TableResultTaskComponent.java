@@ -210,12 +210,28 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             // Update the data in the table
             Locale locale = Locale.getDefault();
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
-            String retrievedLine = ApplicationResourcesAccessor.getMessage(
-                locale,
-                "TableResultTaskComponent.retrieved",
-                df.format(new Date(tableResult.getTime())),
-                SQLUtility.getMilliDecimal(tableResult.getLatency()/1000)
-            );
+            String formattedDate = df.format(new Date(tableResult.getTime()));
+            long latency = tableResult.getLatency();
+            String retrievedLine =
+                latency < 1000000
+                ? ApplicationResourcesAccessor.getMessage(
+                    locale,
+                    "TableResultTaskComponent.retrieved.micro",
+                    formattedDate,
+                    SQLUtility.getMilliDecimal(latency)
+                ) : latency < 1000000000
+                ? ApplicationResourcesAccessor.getMessage(
+                    locale,
+                    "TableResultTaskComponent.retrieved.milli",
+                    formattedDate,
+                    SQLUtility.getMilliDecimal(latency/1000)
+                ) : ApplicationResourcesAccessor.getMessage(
+                    locale,
+                    "TableResultTaskComponent.retrieved.second",
+                    formattedDate,
+                    SQLUtility.getMilliDecimal(latency/1000000)
+                )
+            ;
             retrievedLabel.setText(retrievedLine);
 
             UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel)table.getModel();

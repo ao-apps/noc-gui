@@ -160,12 +160,26 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
                 Locale locale = Locale.getDefault();
                 DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
                 StringBuilder text = new StringBuilder();
+                String formattedDate = df.format(new Date(singleResult.getTime()));
+                long latency = singleResult.getLatency();
                 text.append(
-                    ApplicationResourcesAccessor.getMessage(
+                    latency < 1000000
+                    ? ApplicationResourcesAccessor.getMessage(
                         locale,
-                        "SingleResultTaskComponent.retrieved",
-                        df.format(new Date(singleResult.getTime())),
-                        SQLUtility.getMilliDecimal(singleResult.getLatency()/1000)
+                        "SingleResultTaskComponent.retrieved.micro",
+                        formattedDate,
+                        SQLUtility.getMilliDecimal(latency)
+                    ) : latency < 1000000000
+                    ? ApplicationResourcesAccessor.getMessage(
+                        locale,
+                        "SingleResultTaskComponent.retrieved.milli",
+                        formattedDate,
+                        SQLUtility.getMilliDecimal(latency/1000)
+                    ) : ApplicationResourcesAccessor.getMessage(
+                        locale,
+                        "SingleResultTaskComponent.retrieved.second",
+                        formattedDate,
+                        SQLUtility.getMilliDecimal(latency/1000000)
                     )
                 );
                 if(singleResult.getError()!=null) {
