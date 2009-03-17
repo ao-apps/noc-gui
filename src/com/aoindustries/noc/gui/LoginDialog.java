@@ -319,7 +319,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             }
                                         }
                                     );
-                                } catch(final RuntimeException err) {
+                                } catch(final Exception err) {
                                     // Check if canceled
                                     synchronized(loginLock) {
                                         if(Thread.currentThread()!=loginThread) return;
