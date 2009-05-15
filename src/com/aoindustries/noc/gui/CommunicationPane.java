@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import com.aoindustries.aoserv.client.AOServConnector;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -17,6 +18,7 @@ import javax.swing.SwingUtilities;
 public class CommunicationPane extends JPanel {
 
     private final NOC noc;
+    private AOServConnector conn; // This is the connector that has all the listeners added
 
     public CommunicationPane(NOC noc) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -31,7 +33,7 @@ public class CommunicationPane extends JPanel {
     /**
      * start() should only be called when we have a login established.
      */
-    void start() {
+    void start(AOServConnector conn) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     }
     
@@ -40,5 +42,6 @@ public class CommunicationPane extends JPanel {
      */
     void stop() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+        // TODO: Close any ticket popup windows - with a chance to save changes.  Cancelable?
     }
 }

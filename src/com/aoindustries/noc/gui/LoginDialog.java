@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.noc.common.Monitor;
 import com.aoindustries.rmi.RMIClientSocketFactorySSL;
 import com.aoindustries.rmi.RMIClientSocketFactoryTCP;
@@ -16,6 +17,7 @@ import com.aoindustries.noc.monitor.client.MonitorClient;
 import com.aoindustries.swing.ErrorDialog;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -73,9 +75,9 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
 
         this.noc = noc;
         this.owner = owner;
-        JRootPane localRootPane = new JRootPane();
-        setContentPane(localRootPane);
-        localRootPane.setLayout(new BorderLayout());
+        Container localContentPane = getContentPane();
+        localContentPane.setLayout(new BorderLayout());
+        JRootPane localRootPane = getRootPane();
 
         // Add the labels
         JPanel P=new JPanel(new GridLayout(6, 1, 0, 2));
@@ -85,7 +87,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.localPort.prompt")));
         P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.username.prompt")));
         P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.password.prompt")));
-        localRootPane.add(P, BorderLayout.WEST);
+        localContentPane.add(P, BorderLayout.WEST);
 
         // Add the fields
         P=new JPanel(new GridLayout(6, 1, 0, 2));
@@ -106,14 +108,14 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         usernameField.setText(noc.preferences.getUsername());
         P.add(passwordField=new JPasswordField(16));
         passwordField.addActionListener(this);
-        localRootPane.add(P, BorderLayout.CENTER);
+        localContentPane.add(P, BorderLayout.CENTER);
 
         P=new JPanel(new FlowLayout());
         P.add(okButton=new JButton(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.ok.label")));
         okButton.addActionListener(this);
         P.add(cancelButton=new JButton(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.cancel.label")));
         cancelButton.addActionListener(this);
-        localRootPane.add(P, BorderLayout.SOUTH);
+        localContentPane.add(P, BorderLayout.SOUTH);
 
         // Handle escape button
         KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
@@ -184,6 +186,12 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                             @Override
                             public void run() {
                                 try {
+                                    // First try to login to local AOServConnector
+                                    final AOServConnector conn = AOServConnector.getConnector(
+                                        username,
+                                        password,
+                                        noc
+                                    );
                                     Monitor monitor;
                                     final RMIClientSocketFactory csf;
                                     final RMIServerSocketFactory ssf;
@@ -265,6 +273,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                                 try {
                                                     setVisible(false);
                                                     noc.loginCompleted(
+                                                        conn,
                                                         rootNode,
                                                         rootNodeLabel,
                                                         server,

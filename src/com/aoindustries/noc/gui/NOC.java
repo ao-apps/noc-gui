@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.RootNode;
 import com.aoindustries.util.BufferManager;
@@ -141,6 +142,7 @@ public class NOC implements ErrorHandler {
 
     /* The following variables should always be accessed from the Swing event thread. */
     // Encapsulate with getter/setter to enforce?
+    AOServConnector conn;
     RootNode rootNode;
     int port;
     RMIClientSocketFactory csf;
@@ -715,6 +717,7 @@ public class NOC implements ErrorHandler {
      * @param  port  the port for the local objects, not the server port.
      */
     void loginCompleted(
+        AOServConnector conn,
         RootNode rootNode,
         String rootNodeLabel,
         String server,
@@ -742,12 +745,13 @@ public class NOC implements ErrorHandler {
         preferences.setExternal(external);
         preferences.setLocalPort(localPort);
         preferences.setUsername(username);
+        this.conn = conn;
         this.rootNode = rootNode;
         this.port = port;
         this.csf = csf;
         this.ssf = ssf;
         alerts.start();
-        communication.start();
+        communication.start(conn);
         systems.start(rootNode, rootNodeLabel);
     }
 
@@ -765,6 +769,7 @@ public class NOC implements ErrorHandler {
             communication.stop();
             systems.stop();
         }
+        this.conn = null;
         this.rootNode = null;
         this.port = -1;
         this.csf = null;
