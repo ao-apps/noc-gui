@@ -16,7 +16,6 @@ import com.aoindustries.noc.monitor.client.MonitorClient;
 import com.aoindustries.swing.ErrorDialog;
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -33,13 +32,19 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.util.Locale;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRootPane;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 /**
@@ -68,7 +73,8 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
 
         this.noc = noc;
         this.owner = owner;
-        Container localRootPane=getContentPane();
+        JRootPane localRootPane = new JRootPane();
+        setContentPane(localRootPane);
         localRootPane.setLayout(new BorderLayout());
 
         // Add the labels
@@ -108,6 +114,18 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         P.add(cancelButton=new JButton(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.cancel.label")));
         cancelButton.addActionListener(this);
         localRootPane.add(P, BorderLayout.SOUTH);
+
+        // Handle escape button
+        KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
+        Action actionListener = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                cancel();
+            }
+        };
+        InputMap inputMap = localRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(stroke, "ESCAPE");
+        localRootPane.getActionMap().put("ESCAPE", actionListener);
 
         pack();
 

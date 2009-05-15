@@ -10,15 +10,15 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 /**
- * Encapsulates and stores the previous user preferences.
+ * Central point of all client communication.
  *
  * @author  AO Industries, Inc.
  */
-public class TicketsPane extends JPanel {
+public class CommunicationPane extends JPanel {
 
     private final NOC noc;
 
-    public TicketsPane(NOC noc) {
+    public CommunicationPane(NOC noc) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         this.noc = noc;

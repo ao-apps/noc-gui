@@ -61,6 +61,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * The central NOC software, can run as an applet or standalone.  In standalone, can operating as tabs or frames.
@@ -113,7 +115,7 @@ public class NOC implements ErrorHandler {
     private final Container parent;
     private final JFrame singleFrame;
     final JFrame alertsFrame;
-    final JFrame ticketsFrame;
+    final JFrame communicationFrame;
     final JFrame systemsFrame;
 
     private Preferences.DisplayMode currentDisplayMode;
@@ -123,11 +125,11 @@ public class NOC implements ErrorHandler {
 
     private JButton singleLoginButton;
     private JButton alertsLoginButton;
-    private JButton ticketsLoginButton;
+    private JButton communicationLoginButton;
     private JButton systemsLoginButton;
 
     private final AlertsPane alerts;
-    private final TicketsPane tickets;
+    private final CommunicationPane communication;
     private final SystemsPane systems;
 
     final Image trayIconEnabledImage;
@@ -165,11 +167,11 @@ public class NOC implements ErrorHandler {
         else currentDisplayMode = preferences.getDisplayMode();
 
         this.alertsFrame = new JFrame(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.alerts.title"));
-        this.ticketsFrame = new JFrame(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.tickets.title"));
+        this.communicationFrame = new JFrame(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.communication.title"));
         this.systemsFrame = new JFrame(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.systems.title"));
 
         this.alerts = new AlertsPane(this);
-        this.tickets = new TicketsPane(this);
+        this.communication = new CommunicationPane(this);
         this.systems = new SystemsPane(this);
 
         // Add listeners for frame moves
@@ -199,15 +201,15 @@ public class NOC implements ErrorHandler {
                 }
             }
         );
-        ticketsFrame.addComponentListener(
+        communicationFrame.addComponentListener(
             new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
-                    preferences.setTicketsFrameBounds(ticketsFrame.getBounds());
+                    preferences.setCommunicationFrameBounds(communicationFrame.getBounds());
                 }
                 @Override
                 public void componentMoved(ComponentEvent e) {
-                    preferences.setTicketsFrameBounds(ticketsFrame.getBounds());
+                    preferences.setCommunicationFrameBounds(communicationFrame.getBounds());
                 }
             }
         );
@@ -237,7 +239,7 @@ public class NOC implements ErrorHandler {
                         // Stays running in the background to popup alerts
                         singleFrame.setVisible(false);
                         alertsFrame.setVisible(false);
-                        ticketsFrame.setVisible(false);
+                        communicationFrame.setVisible(false);
                         systemsFrame.setVisible(false);
                     } else throw new AssertionError("Both parent and singleFrame are null");
                 } catch(RemoteException err) {
@@ -251,8 +253,8 @@ public class NOC implements ErrorHandler {
         }
         alertsFrame.addWindowListener(windowAdapter);
         alertsFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        ticketsFrame.addWindowListener(windowAdapter);
-        ticketsFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        communicationFrame.addWindowListener(windowAdapter);
+        communicationFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         systemsFrame.addWindowListener(windowAdapter);
         systemsFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
@@ -380,9 +382,9 @@ public class NOC implements ErrorHandler {
                 systemsFrame.setVisible(true);
                 systemsFrame.setState(Frame.NORMAL);
                 systemsFrame.toFront();
-                ticketsFrame.setVisible(true);
-                ticketsFrame.setState(Frame.NORMAL);
-                ticketsFrame.toFront();
+                communicationFrame.setVisible(true);
+                communicationFrame.setState(Frame.NORMAL);
+                communicationFrame.toFront();
                 alertsFrame.setVisible(true);
                 alertsFrame.setState(Frame.NORMAL);
                 alertsFrame.toFront();
@@ -395,7 +397,7 @@ public class NOC implements ErrorHandler {
                     singleFrame.setState(Frame.NORMAL);
                     singleFrame.toFront();
                     singleFrame.requestFocus();
-                    tabbedPane.setSelectedIndex(0);
+                    //tabbedPane.setSelectedIndex(0);
                 }
                 break;
             default: throw new AssertionError("Unexpected value for currentDisplayMode: "+currentDisplayMode);
@@ -413,7 +415,7 @@ public class NOC implements ErrorHandler {
             logout();
             singleFrame.setVisible(false);
             alertsFrame.setVisible(false);
-            ticketsFrame.setVisible(false);
+            communicationFrame.setVisible(false);
             systemsFrame.setVisible(false);
             try {
                 System.exit(0);
@@ -456,16 +458,16 @@ public class NOC implements ErrorHandler {
     Component getDefaultDialogOwner() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        // Resolve the owner as either the single frame or the frame that is active (or defaulting to tickets frame)
+        // Resolve the owner as either the single frame or the frame that is active (or defaulting to communication frame)
         if(preferences.getDisplayMode()==Preferences.DisplayMode.TABS) {
             if(singleFrame!=null) return singleFrame;
             else if(parent!=null) return JOptionPane.getFrameForComponent(parent);
             else throw new AssertionError("Both parent and singleFrame are null");
         } else {
             if(alertsFrame.isActive()) return alertsFrame;
-            if(ticketsFrame.isActive()) return ticketsFrame;
+            if(communicationFrame.isActive()) return communicationFrame;
             if(systemsFrame.isActive()) return systemsFrame;
-            return ticketsFrame;
+            return communicationFrame;
         }
     }
 
@@ -503,6 +505,7 @@ public class NOC implements ErrorHandler {
 
         switch(currentDisplayMode) {
             case FRAMES:
+                ignoreChangeEvent = true;
                 if(singleFrame!=null) {
                     singleFrame.setVisible(false);
                     singleFrame.getContentPane().removeAll();
@@ -512,6 +515,7 @@ public class NOC implements ErrorHandler {
                     parent.validate();
                     parent.repaint();
                 }
+                ignoreChangeEvent = false;
                 {
                     alertsFrame.getContentPane().setLayout(new BorderLayout());
                     JToolBar toolBar = new JToolBar(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.alerts.tools"));
@@ -526,17 +530,17 @@ public class NOC implements ErrorHandler {
                     alertsFrame.setVisible(true);
                 }
                 {
-                    ticketsFrame.getContentPane().setLayout(new BorderLayout());
-                    JToolBar toolBar = new JToolBar(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.tickets.tools"));
+                    communicationFrame.getContentPane().setLayout(new BorderLayout());
+                    JToolBar toolBar = new JToolBar(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.communication.tools"));
                     toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
                     toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-                    tickets.addToolBars(toolBar);
+                    communication.addToolBars(toolBar);
                     toolBar.addSeparator();
-                    ticketsLoginButton = addCommonButtons(toolBar);
-                    ticketsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-                    ticketsFrame.getContentPane().add(tickets, BorderLayout.CENTER);
-                    ticketsFrame.setBounds(preferences.getTicketsFrameBounds());
-                    ticketsFrame.setVisible(true);
+                    communicationLoginButton = addCommonButtons(toolBar);
+                    communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+                    communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
+                    communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
+                    communicationFrame.setVisible(true);
                 }
                 {
                     systemsFrame.getContentPane().setLayout(new BorderLayout());
@@ -557,8 +561,8 @@ public class NOC implements ErrorHandler {
                 // Remove from frames
                 alertsFrame.setVisible(false);
                 alertsFrame.getContentPane().removeAll();
-                ticketsFrame.setVisible(false);
-                ticketsFrame.getContentPane().removeAll();
+                communicationFrame.setVisible(false);
+                communicationFrame.getContentPane().removeAll();
                 systemsFrame.setVisible(false);
                 systemsFrame.getContentPane().removeAll();
                 // Add as tabs
@@ -577,6 +581,18 @@ public class NOC implements ErrorHandler {
         }
     }
 
+    private boolean ignoreChangeEvent = false;
+    private final ChangeListener changeListener = new ChangeListener() {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            //System.out.println("stateChanged: ignoreChangeEvent="+ignoreChangeEvent+", selectedIndex="+tabbedPane.getSelectedIndex());
+            if(!ignoreChangeEvent) {
+                int selectedIndex = tabbedPane.getSelectedIndex();
+                if(selectedIndex!=-1) preferences.setTabbedPaneSelectedIndex(selectedIndex);
+            }
+        }
+    };
+
     /**
      * Sets up the tabbed pane in the given component.  Should only be called by <code>configureDisplayMode</code>.
      *
@@ -593,20 +609,26 @@ public class NOC implements ErrorHandler {
         toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
         alerts.addToolBars(toolBar);
         toolBar.addSeparator();
-        tickets.addToolBars(toolBar);
+        communication.addToolBars(toolBar);
         toolBar.addSeparator();
         systems.addToolBars(toolBar);
         toolBar.addSeparator();
         singleLoginButton = addCommonButtons(toolBar);
         alertsLoginButton = null;
-        ticketsLoginButton = null;
+        communicationLoginButton = null;
         systemsLoginButton = null;
         parent.add(toolBar, BorderLayout.PAGE_START);
-        if(tabbedPane == null) tabbedPane = new JTabbedPane();
+        if(tabbedPane == null) {
+            tabbedPane = new JTabbedPane();
+            tabbedPane.addChangeListener(changeListener);
+        }
+        ignoreChangeEvent = true;
         tabbedPane.removeAll();
         tabbedPane.add(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.alerts.tab"), alerts);
-        tabbedPane.add(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.tickets.tab"), tickets);
+        tabbedPane.add(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.communication.tab"), communication);
         tabbedPane.add(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.systems.tab"), systems);
+        tabbedPane.setSelectedIndex(preferences.getTabbedPaneSelectedIndex());
+        ignoreChangeEvent = false;
         parent.add(tabbedPane, BorderLayout.CENTER);
     }
 
@@ -709,7 +731,7 @@ public class NOC implements ErrorHandler {
         String logoutLabel = ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.logoutButton.label");
         if(singleLoginButton!=null) singleLoginButton.setText(logoutLabel);
         if(alertsLoginButton!=null) alertsLoginButton.setText(logoutLabel);
-        if(ticketsLoginButton!=null) ticketsLoginButton.setText(logoutLabel);
+        if(communicationLoginButton!=null) communicationLoginButton.setText(logoutLabel);
         if(systemsLoginButton!=null) systemsLoginButton.setText(logoutLabel);
         if(trayIcon!=null) {
             setTrayIconImage(trayIconEnabledImage);
@@ -725,7 +747,7 @@ public class NOC implements ErrorHandler {
         this.csf = csf;
         this.ssf = ssf;
         alerts.start();
-        tickets.start();
+        communication.start();
         systems.start(rootNode, rootNodeLabel);
     }
 
@@ -740,7 +762,7 @@ public class NOC implements ErrorHandler {
 
         if(this.rootNode!=null) {
             alerts.stop();
-            tickets.stop();
+            communication.stop();
             systems.stop();
         }
         this.rootNode = null;
@@ -750,7 +772,7 @@ public class NOC implements ErrorHandler {
         String loginLabel = ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "NOC.loginButton.label");
         if(singleLoginButton!=null) singleLoginButton.setText(loginLabel);
         if(alertsLoginButton!=null) alertsLoginButton.setText(loginLabel);
-        if(ticketsLoginButton!=null) ticketsLoginButton.setText(loginLabel);
+        if(communicationLoginButton!=null) communicationLoginButton.setText(loginLabel);
         if(systemsLoginButton!=null) systemsLoginButton.setText(loginLabel);
         if(trayIcon!=null) {
             setTrayIconImage(trayIconDisabledImage);

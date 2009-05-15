@@ -23,6 +23,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
@@ -55,6 +57,7 @@ import javax.swing.tree.TreeSelectionModel;
 public class SystemsPane extends JPanel {
 
     private final NOC noc;
+    private final JSplitPane splitPane;
     private final JTree tree;
     private final DefaultTreeModel treeModel;
     private final DefaultMutableTreeNode rootTreeNode;
@@ -64,7 +67,7 @@ public class SystemsPane extends JPanel {
     private SystemsTreeNode selectedTreeNode;
     private TaskComponent taskComponent;
 
-    public SystemsPane(NOC noc) throws RemoteException {
+    public SystemsPane(final NOC noc) throws RemoteException {
         super(new BorderLayout());
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -79,16 +82,25 @@ public class SystemsPane extends JPanel {
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         taskPanel = new JPanel(new GridLayout(1, 1));
-        add(
-            new JSplitPane(
-                JSplitPane.HORIZONTAL_SPLIT,
-                true,
-                new JScrollPane(tree),
-                taskPanel
-            ),
-            BorderLayout.CENTER
+        splitPane = new JSplitPane(
+            JSplitPane.HORIZONTAL_SPLIT,
+            true,
+            new JScrollPane(tree),
+            taskPanel
         );
-        
+        splitPane.setDividerLocation(noc.preferences.getSystemsSplitPaneDividerLocation());
+        splitPane.addPropertyChangeListener(
+            "dividerLocation",
+            new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    //System.err.println("TODO: propertyName="+evt.getPropertyName());
+                    noc.preferences.setSystemsSplitPaneDividerLocation(splitPane.getDividerLocation());
+                }
+            }
+        );
+
+        add(splitPane, BorderLayout.CENTER);
         tree.addTreeSelectionListener(
             new TreeSelectionListener() {
                 @Override

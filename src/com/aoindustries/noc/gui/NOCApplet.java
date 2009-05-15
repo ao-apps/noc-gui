@@ -82,7 +82,7 @@ public class NOCApplet extends JApplet {
                 if(noc!=null) {
                     noc.logout();
                     noc.alertsFrame.setVisible(false);
-                    noc.ticketsFrame.setVisible(false);
+                    noc.communicationFrame.setVisible(false);
                     noc.systemsFrame.setVisible(false);
                     noc=null;
                 }

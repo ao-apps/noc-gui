@@ -30,9 +30,10 @@ public class Preferences {
 
     /** Local caches are used, just in case saving the user preferences doesn't work */
     private DisplayMode displayMode;
+    private int tabbedPaneSelectedIndex;
     private Rectangle singleFrameBounds;
     private Rectangle alertsFrameBounds;
-    private Rectangle ticketsFrameBounds;
+    private Rectangle communicationFrameBounds;
     private Rectangle systemsFrameBounds;
     private String server;
     private String serverPort;
@@ -41,6 +42,7 @@ public class Preferences {
     private String username;
 
     private AlertLevel systemsAlertLevel;
+    private int systemsSplitPaneDividerLocation;
 
     public Preferences(NOC noc) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -54,6 +56,14 @@ public class Preferences {
             noc.reportWarning(err, null);
             displayMode = DisplayMode.TABS;
         }
+        String tabbedPaneSelectedIndexS = prefs.get("Preferences."+hostname+".tabbedPaneSelectedIndex", "1");
+        try {
+            tabbedPaneSelectedIndex = Integer.parseInt(tabbedPaneSelectedIndexS);
+            if(tabbedPaneSelectedIndex<0 || tabbedPaneSelectedIndex>2) tabbedPaneSelectedIndex = 1;
+        } catch(NumberFormatException err) {
+            noc.reportWarning(err, null);
+            tabbedPaneSelectedIndex = 1;
+        }
         singleFrameBounds = new Rectangle(
             prefs.getInt("Preferences."+hostname+".singleFrameBounds.x", 100),
             prefs.getInt("Preferences."+hostname+".singleFrameBounds.y", 50),
@@ -66,11 +76,11 @@ public class Preferences {
             prefs.getInt("Preferences."+hostname+".alertsFrameBounds.width", 800),
             prefs.getInt("Preferences."+hostname+".alertsFrameBounds.height", 600)
         );
-        ticketsFrameBounds = new Rectangle(
-            prefs.getInt("Preferences."+hostname+".ticketsFrameBounds.x", 150),
-            prefs.getInt("Preferences."+hostname+".ticketsFrameBounds.y", 100),
-            prefs.getInt("Preferences."+hostname+".ticketsFrameBounds.width", 800),
-            prefs.getInt("Preferences."+hostname+".ticketsFrameBounds.height", 600)
+        communicationFrameBounds = new Rectangle(
+            prefs.getInt("Preferences."+hostname+".communicationFrameBounds.x", 150),
+            prefs.getInt("Preferences."+hostname+".communicationFrameBounds.y", 100),
+            prefs.getInt("Preferences."+hostname+".communicationFrameBounds.width", 800),
+            prefs.getInt("Preferences."+hostname+".communicationFrameBounds.height", 600)
         );
         systemsFrameBounds = new Rectangle(
             prefs.getInt("Preferences."+hostname+".systemsFrameBounds.x", 200),
@@ -95,6 +105,13 @@ public class Preferences {
             noc.reportWarning(err, null);
             systemsAlertLevel = AlertLevel.MEDIUM;
         }
+        String systemsSplitPaneDividerLocationS = prefs.get("Preferences."+hostname+".systemsSplitPaneDividerLocation", "200");
+        try {
+            systemsSplitPaneDividerLocation = Integer.parseInt(systemsSplitPaneDividerLocationS);
+        } catch(NumberFormatException err) {
+            noc.reportWarning(err, null);
+            systemsSplitPaneDividerLocation = 200;
+        }
     }
 
     private String getLocalHostname() {
@@ -117,6 +134,19 @@ public class Preferences {
 
         this.displayMode = displayMode;
         prefs.put("Preferences."+getLocalHostname()+".displayMode", displayMode.name());
+    }
+
+    public int getTabbedPaneSelectedIndex() {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        return tabbedPaneSelectedIndex;
+    }
+
+    public void setTabbedPaneSelectedIndex(int tabbedPaneSelectedIndex) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        this.tabbedPaneSelectedIndex = tabbedPaneSelectedIndex;
+        prefs.put("Preferences."+getLocalHostname()+".tabbedPaneSelectedIndex", Integer.toString(tabbedPaneSelectedIndex));
     }
 
     public Rectangle getSingleFrameBounds() {
@@ -153,21 +183,21 @@ public class Preferences {
         prefs.putInt("Preferences."+hostname+".alertsFrameBounds.height", alertsFrameBounds.height);
     }
 
-    public Rectangle getTicketsFrameBounds() {
+    public Rectangle getCommunicationFrameBounds() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        return ticketsFrameBounds;
+        return communicationFrameBounds;
     }
 
-    public void setTicketsFrameBounds(Rectangle ticketsFrameBounds) {
+    public void setCommunicationFrameBounds(Rectangle communicationFrameBounds) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        this.ticketsFrameBounds = ticketsFrameBounds;
+        this.communicationFrameBounds = communicationFrameBounds;
         String hostname = getLocalHostname();
-        prefs.putInt("Preferences."+hostname+".ticketsFrameBounds.x", ticketsFrameBounds.x);
-        prefs.putInt("Preferences."+hostname+".ticketsFrameBounds.y", ticketsFrameBounds.y);
-        prefs.putInt("Preferences."+hostname+".ticketsFrameBounds.width", ticketsFrameBounds.width);
-        prefs.putInt("Preferences."+hostname+".ticketsFrameBounds.height", ticketsFrameBounds.height);
+        prefs.putInt("Preferences."+hostname+".communicationFrameBounds.x", communicationFrameBounds.x);
+        prefs.putInt("Preferences."+hostname+".communicationFrameBounds.y", communicationFrameBounds.y);
+        prefs.putInt("Preferences."+hostname+".communicationFrameBounds.width", communicationFrameBounds.width);
+        prefs.putInt("Preferences."+hostname+".communicationFrameBounds.height", communicationFrameBounds.height);
     }
 
     public Rectangle getSystemsFrameBounds() {
@@ -263,5 +293,18 @@ public class Preferences {
 
         this.systemsAlertLevel = systemsAlertLevel;
         prefs.put("Preferences.systemsAlertLevel", systemsAlertLevel.name());
+    }
+
+    public int getSystemsSplitPaneDividerLocation() {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        return systemsSplitPaneDividerLocation;
+    }
+
+    public void setSystemsSplitPaneDividerLocation(int systemsSplitPaneDividerLocation) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        this.systemsSplitPaneDividerLocation = systemsSplitPaneDividerLocation;
+        prefs.put("Preferences."+getLocalHostname()+".systemsSplitPaneDividerLocation", Integer.toString(systemsSplitPaneDividerLocation));
     }
 }
