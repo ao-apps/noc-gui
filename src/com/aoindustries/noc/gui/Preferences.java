@@ -8,9 +8,17 @@ package com.aoindustries.noc.gui;
 import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.Monitor;
 import java.awt.Rectangle;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import javax.swing.SwingUtilities;
+import org.jdesktop.swingx.MultiSplitLayout.Node;
 
 /**
  * Encapsulates and stores the previous user preferences.
@@ -43,6 +51,8 @@ public class Preferences {
 
     private AlertLevel systemsAlertLevel;
     private int systemsSplitPaneDividerLocation;
+
+    private byte[] communicationMultiSplitLayoutModel;
 
     public Preferences(NOC noc) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -112,6 +122,7 @@ public class Preferences {
             noc.reportWarning(err, null);
             systemsSplitPaneDividerLocation = 200;
         }
+        communicationMultiSplitLayoutModel = prefs.getByteArray("Preferences."+hostname+".communicationMultiSplitLayoutModel", null);
     }
 
     private String getLocalHostname() {
@@ -306,5 +317,41 @@ public class Preferences {
 
         this.systemsSplitPaneDividerLocation = systemsSplitPaneDividerLocation;
         prefs.put("Preferences."+getLocalHostname()+".systemsSplitPaneDividerLocation", Integer.toString(systemsSplitPaneDividerLocation));
+    }
+
+    public Node getCommunicationMultiSplitLayoutModel() {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+        if(communicationMultiSplitLayoutModel==null) return null;
+        try {
+            XMLDecoder decoder = new XMLDecoder(new GZIPInputStream(new ByteArrayInputStream(communicationMultiSplitLayoutModel)));
+            try {
+                return (Node)decoder.readObject();
+            } finally {
+                decoder.close();
+            }
+        } catch(IOException err) {
+            noc.reportWarning(err, null);
+            this.communicationMultiSplitLayoutModel = null;
+            return null;
+        }
+    }
+
+    public void setCommunicationMultiSplitLayoutModel(Node modelRoot) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        try {
+            XMLEncoder xmlEncoder = new XMLEncoder(new GZIPOutputStream(bout));
+            try {
+                xmlEncoder.writeObject(modelRoot);
+            } finally {
+                xmlEncoder.close();
+            }
+            byte[] bytes = bout.toByteArray();
+            this.communicationMultiSplitLayoutModel = bytes;
+            prefs.putByteArray("Preferences."+getLocalHostname()+".communicationMultiSplitLayoutModel", bytes);
+        } catch(IOException err) {
+            noc.reportWarning(err, null);
+            this.communicationMultiSplitLayoutModel = null;
+        }
     }
 }

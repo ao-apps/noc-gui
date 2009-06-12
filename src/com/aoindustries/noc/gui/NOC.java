@@ -114,7 +114,7 @@ public class NOC implements ErrorHandler {
     final Preferences preferences;
 
     private final Container parent;
-    private final JFrame singleFrame;
+    final JFrame singleFrame;
     final JFrame alertsFrame;
     final JFrame communicationFrame;
     final JFrame systemsFrame;
@@ -414,15 +414,22 @@ public class NOC implements ErrorHandler {
             currentDisplayMode = Preferences.DisplayMode.TABS;
             configureDisplayMode();
         } else if(singleFrame!=null) {
-            logout();
-            singleFrame.setVisible(false);
-            alertsFrame.setVisible(false);
-            communicationFrame.setVisible(false);
-            systemsFrame.setVisible(false);
-            try {
-                System.exit(0);
-            } catch(SecurityException err) {
-                ErrorPrinter.printStackTraces(err);
+            // Give components a chance to save (with cancel possibility)
+            if(
+                alerts.exitApplication()
+                && communication.exitApplication()
+                && systems.exitApplication()
+            ) {
+                logout();
+                singleFrame.setVisible(false);
+                alertsFrame.setVisible(false);
+                communicationFrame.setVisible(false);
+                systemsFrame.setVisible(false);
+                try {
+                    System.exit(0);
+                } catch(SecurityException err) {
+                    ErrorPrinter.printStackTraces(err);
+                }
             }
         } else throw new AssertionError("Both parent and singleFrame are null");
     }

@@ -762,4 +762,14 @@ public class SystemsPane extends JPanel {
             return 0;
         }
     }
+
+    /**
+     * Called when the application is about to exit.
+     *
+     * @return  <code>true</code> to allow the window(s) to close or <code>false</code>
+     *          to cancel the event.
+     */
+    public boolean exitApplication() {
+        return true;
+    }
 }

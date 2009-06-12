@@ -298,4 +298,14 @@ public class AlertsPane extends JPanel {
         validate();
         repaint();
     }*/
+
+    /**
+     * Called when the application is about to exit.
+     *
+     * @return  <code>true</code> to allow the window(s) to close or <code>false</code>
+     *          to cancel the event.
+     */
+    public boolean exitApplication() {
+        return true;
+    }
 }

@@ -324,6 +324,11 @@ public class CommunicationPane extends JPanel implements TableListener {
 
     @Override
     public void tableUpdated(Table table) {
+        /*try {
+            System.out.println("tableUpdated: "+table.getTableName());
+        } catch(Exception err) {
+            noc.reportError(err, null);
+        }*/
         refresh();
     }
 
@@ -456,17 +461,21 @@ public class CommunicationPane extends JPanel implements TableListener {
                                     @Override
                                         public void run() {
                                             assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-                                            // TODO: Categories
-                                            // TODO: Businesses
-                                            // TODO: Brands
-                                            // TODO: Resellers
-                                            // TODO: Assignments
-                                            synchronizeListModel(assignableUsers, assignmentsListModel);
-                                            synchronizeListModel(ticketTypes, typesListModel);
-                                            synchronizeListModel(ticketStatuses, statusesListModel);
-                                            synchronizeListModel(ticketPriorities, prioritiesListModel);
-                                            synchronizeListModel(languages, languagesListModel);
-                                            // TODO: Tickets
+                                            try {
+                                                // TODO: Categories
+                                                // TODO: Businesses
+                                                synchronizeTreeModel(brands, brandsRootNode);
+                                                // TODO: Resellers
+                                                // TODO: Assignments
+                                                synchronizeListModel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.assignments.unassigned"), assignableUsers, assignmentsListModel);
+                                                synchronizeListModel(null, ticketTypes, typesListModel);
+                                                synchronizeListModel(null, ticketStatuses, statusesListModel);
+                                                synchronizeListModel(null, ticketPriorities, prioritiesListModel);
+                                                synchronizeListModel(null, languages, languagesListModel);
+                                                // TODO: Tickets
+                                            } catch(Exception err) {
+                                                noc.reportError(err, null);
+                                            }
                                         }
                                     }
                                 );
@@ -503,27 +512,56 @@ public class CommunicationPane extends JPanel implements TableListener {
      * Synchronizes the list, adding and removing only a minimum number of elements.
      * Comparisons are performed using .equals
      */
-    private static void synchronizeListModel(List<?> list, DefaultListModel model) {
+    private static void synchronizeListModel(Object constantFirstRow, List<?> list, DefaultListModel model) {
+        int modelOffset;
+        if(constantFirstRow!=null) {
+            modelOffset = 1;
+            if(model.isEmpty()) model.addElement(constantFirstRow);
+            else if(!model.getElementAt(0).equals(constantFirstRow)) {
+                model.insertElementAt(constantFirstRow, 0);
+            }
+        } else modelOffset = 0;
         int size = list.size();
         for(int index=0; index<size; index++) {
             Object obj = list.get(index);
-            if(index>=model.size()) model.addElement(obj);
-            else if(!obj.equals(model.get(index))) {
+            if(index>=(model.size()-modelOffset)) model.addElement(obj);
+            else if(!obj.equals(model.get(index+modelOffset))) {
                 // Objects don't match
                 // If this object is found further down the list, then delete up to that object
                 int foundIndex = -1;
-                for(int searchIndex = index+1; searchIndex<model.size(); searchIndex++) {
-                    if(obj.equals(model.get(searchIndex))) {
+                for(int searchIndex = index+1; searchIndex<(model.size()-modelOffset); searchIndex++) {
+                    if(obj.equals(model.get(searchIndex+modelOffset))) {
                         foundIndex = searchIndex;
                         break;
                     }
                 }
-                if(foundIndex!=-1) model.removeRange(index, foundIndex-1);
+                if(foundIndex!=-1) model.removeRange(index+modelOffset, foundIndex-1+modelOffset);
                 // Otherwise, insert in the current index
-                else model.insertElementAt(obj, index);
+                else model.insertElementAt(obj, index+modelOffset);
             }
         }
         // Remove any extra
-        if(model.size() > size) model.removeRange(size, model.size()-1);
+        if((model.size()-modelOffset) > size) model.removeRange(size+modelOffset, model.size()-1+modelOffset);
+    }
+
+    private static void synchronizeTreeModel(List<Brand> brands, DefaultMutableTreeNode brandsRootNode) throws IOException, SQLException {
+        // Find the root brand(s) - expect only one
+        int size = brands.size();
+        List<Brand> rootBrands = new ArrayList<Brand>(1);
+        for(int c=0; c<size; c++) {
+            Brand brand = brands.get(c);
+            Business business = brand.getBusiness();
+            // A root brand is one that has no parents
+            boolean foundParent = false;
+            for(int d=0; d<size; d++) {
+                if(c!=d && brands.get(d).getBusiness().isParentOf(business)) {
+                    foundParent = true;
+                    break;
+                }
+            }
+            if(!foundParent) rootBrands.add(brand);
+        }
+        if(rootBrands.size()>1) throw new SQLException("Found more than one root Brand: "+rootBrands);
+        // TODO
     }
 }
