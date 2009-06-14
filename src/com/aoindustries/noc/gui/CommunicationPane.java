@@ -417,10 +417,23 @@ public class CommunicationPane extends JPanel implements TableListener {
                 }
             }
         };
+        Comparator reverseNaturalComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                // nulls sorted last
+                if(o1==null) {
+                    if(o2==null) return 0;
+                    else return -1;
+                } else {
+                    if(o2==null) return 1;
+                    else return -((Comparable)o1).compareTo(o2);
+                }
+            }
+        };
         tableRowSorter.setComparator(0, naturalComparator);
-        tableRowSorter.setComparator(1, naturalComparator);
-        tableRowSorter.setComparator(2, naturalComparator);
-        tableRowSorter.setComparator(3, naturalComparator);
+        tableRowSorter.setComparator(1, reverseNaturalComparator);
+        tableRowSorter.setComparator(2, reverseNaturalComparator);
+        tableRowSorter.setComparator(3, reverseNaturalComparator);
         tableRowSorter.setComparator(4, naturalComparator);
         tableRowSorter.setComparator(5, naturalComparator);
         tableRowSorter.setComparator(6, naturalComparator);
