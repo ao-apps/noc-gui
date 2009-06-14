@@ -417,22 +417,9 @@ public class CommunicationPane extends JPanel implements TableListener {
                 }
             }
         };
-        Comparator reverseNaturalComparator = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                // nulls sorted last
-                if(o1==null) {
-                    if(o2==null) return 0;
-                    else return -1;
-                } else {
-                    if(o2==null) return 1;
-                    else return -((Comparable)o1).compareTo(o2);
-                }
-            }
-        };
         tableRowSorter.setComparator(0, naturalComparator);
-        tableRowSorter.setComparator(1, reverseNaturalComparator);
-        tableRowSorter.setComparator(2, reverseNaturalComparator);
+        tableRowSorter.setComparator(1, naturalComparator);
+        tableRowSorter.setComparator(2, naturalComparator);
         tableRowSorter.setComparator(3, naturalComparator);
         tableRowSorter.setComparator(4, naturalComparator);
         tableRowSorter.setComparator(5, naturalComparator);
@@ -868,7 +855,6 @@ public class CommunicationPane extends JPanel implements TableListener {
                                         if(priority==null) priority = ticket.getClientPriority();
                                         Business bu = ticket.getBusiness();
                                         BusinessAdministrator openedBy = ticket.getCreatedBy();
-                                        String fromAddress = ticket.getFromAddress();
                                         ticketRows.add(
                                             new TicketRow(
                                                 bu!=null && bu.isDisabled(), // isStrikethrough
@@ -876,10 +862,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                                                 priority,
                                                 ticket.getStatus(),
                                                 ticket.getOpenDate(),
-                                                openedBy==null
-                                                    ? (fromAddress==null ? "" : ('('+fromAddress+')'))
-                                                    : (fromAddress==null ? openedBy.getKey() : (openedBy.getKey()+" ("+fromAddress+')'))
-                                                    ,
+                                                openedBy==null ? "" : openedBy.getKey(),
                                                 bu==null ? "" : bu.getKey(),
                                                 ticket.getSummary()
                                             )
@@ -1313,6 +1296,29 @@ public class CommunicationPane extends JPanel implements TableListener {
             }
         }
     }
+
+    /*
+    private static void synchronizeTreeModel(List<Brand> brands, DefaultMutableTreeNode brandsRootNode) throws IOException, SQLException {
+        // Find the root brand(s) - expect only one
+        int size = brands.size();
+        List<Brand> rootBrands = new ArrayList<Brand>(1);
+        for(int c=0; c<size; c++) {
+            Brand brand = brands.get(c);
+            Business business = brand.getBusiness();
+            // A root brand is one that has no parents
+            boolean foundParent = false;
+            for(int d=0; d<size; d++) {
+                if(c!=d && brands.get(d).getBusiness().isParentOf(business)) {
+                    foundParent = true;
+                    break;
+                }
+            }
+            if(!foundParent) rootBrands.add(brand);
+        }
+        // System.out.println("Root Brands: "+rootBrands);
+        if(rootBrands.size()>1) throw new SQLException("Found more than one root Brand: "+rootBrands);
+        // TODO
+    }*/
 
     private class DisablableTreeCellRenderer extends DefaultTreeCellRenderer {
         /** Last tree the renderer was painted in. */
