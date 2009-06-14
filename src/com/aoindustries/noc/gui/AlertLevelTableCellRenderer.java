@@ -18,6 +18,15 @@ import javax.swing.table.TableCellRenderer;
  */
 class AlertLevelTableCellRenderer implements TableCellRenderer {
 
+    final static Color
+        unknownColor = Color.LIGHT_GRAY,
+        criticalColor = Color.RED,
+        highColor = Color.ORANGE.darker(),
+        mediumColor = Color.BLUE,
+        lowColor = Color.GREEN.darker().darker(),
+        defaultColor = Color.BLACK
+    ;
+
     private final TableCellRenderer wrappedRenderer;
 
     AlertLevelTableCellRenderer(TableCellRenderer wrappedRenderer) {
@@ -35,22 +44,22 @@ class AlertLevelTableCellRenderer implements TableCellRenderer {
             Component component = wrappedRenderer.getTableCellRendererComponent(table, data, isSelected, hasFocus, row, column);
             switch(alertLevel) {
                 case UNKNOWN:
-                    component.setForeground(Color.LIGHT_GRAY);
+                    component.setForeground(unknownColor);
                     break;
                 case CRITICAL:
-                    component.setForeground(Color.RED);
+                    component.setForeground(criticalColor);
                     break;
                 case HIGH:
-                    component.setForeground(Color.ORANGE.darker());
+                    component.setForeground(highColor);
                     break;
                 case MEDIUM:
-                    component.setForeground(Color.BLUE);
+                    component.setForeground(mediumColor);
                     break;
                 case LOW:
-                    component.setForeground(Color.GREEN.darker().darker());
+                    component.setForeground(lowColor);
                     break;
                 default:
-                    component.setForeground(Color.BLACK);
+                    component.setForeground(defaultColor);
             }
             return component;
         } else {
