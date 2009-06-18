@@ -130,7 +130,7 @@ public class NOC implements ErrorHandler {
     private JButton systemsLoginButton;
 
     private final AlertsPane alerts;
-    private final CommunicationPane communication;
+    final CommunicationPane communication;
     private final SystemsPane systems;
 
     final Image trayIconEnabledImage;

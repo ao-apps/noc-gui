@@ -25,6 +25,8 @@ import com.aoindustries.swing.SynchronizingMutableTreeNode;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import com.aoindustries.table.Table;
 import com.aoindustries.table.TableListener;
+import com.aoindustries.tree.Node;
+import com.aoindustries.tree.NodeFilter;
 import com.aoindustries.tree.Tree;
 import com.aoindustries.tree.TreeCopy;
 import com.aoindustries.tree.Trees;
@@ -33,8 +35,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -75,10 +82,15 @@ import org.jdesktop.swingx.MultiSplitPane;
 /**
  * Central point of all client communication.
  *
+ * TODO: Make filters persistent (Expand to selected on trees)
+ * TODO: Make table column settings persistent
+ * TODO: Remember tree open/close states between different filter views - store as preferences.
+ *
  * @author  AO Industries, Inc.
  */
 public class CommunicationPane extends JPanel implements TableListener {
 
+    // <editor-fold defaultstate="collapsed" desc="Fields">
     private final NOC noc;
     private AOServConnector conn; // This is the connector that has all the listeners added
     private final MultiSplitPane splitPane;
@@ -134,61 +146,54 @@ public class CommunicationPane extends JPanel implements TableListener {
             );
         }
     };
+    // Ticket Editor
+    private final TicketEditor ticketEditor;
 
+    // </editor-fold>
+
+    private static final String LAYOUT_DEF = "(ROW "
+        + "  (COLUMN weight=0.3 "
+        + "    (LEAF name=categories weight=0.5) "
+        + "    (LEAF name=businesses weight=0.5) "
+        + "  ) "
+        + "  (COLUMN weight=0.7 "
+        + "    (ROW weight=0.2 "
+        + "      (LEAF name=brands weight=0.1428) "
+        + "      (LEAF name=resellers weight=0.1428) "
+        + "      (LEAF name=assignments weight=0.1428) "
+        + "      (LEAF name=types weight=0.1428) "
+        + "      (LEAF name=statuses weight=0.1428) "
+        + "      (LEAF name=priorities weight=0.1428) "
+        + "      (LEAF name=languages weight=0.1428) "
+        + "    ) "
+        + "    (LEAF name=tickets weight=0.3) "
+        + "    (LEAF name=ticketEditor weight=0.5) "
+        + "  ) "
+        + ") ";
+
+    // <editor-fold defaultstate="collapsed" desc="Construction">
     public CommunicationPane(final NOC noc) {
         super(new BorderLayout());
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         this.noc = noc;
 
-        String layoutDef = "(ROW "
-                         + "  (COLUMN weight=0.3 "
-                         + "    (LEAF name=categories weight=0.5) "
-                         + "    (LEAF name=businesses weight=0.5) "
-                         + "  ) "
-                         + "  (COLUMN weight=0.7 "
-                         + "    (ROW weight=0.2 "
-                         + "      (LEAF name=brands weight=0.1428) "
-                         + "      (LEAF name=resellers weight=0.1428) "
-                         + "      (LEAF name=assignments weight=0.1428) "
-                         + "      (LEAF name=types weight=0.1428) "
-                         + "      (LEAF name=statuses weight=0.1428) "
-                         + "      (LEAF name=priorities weight=0.1428) "
-                         + "      (LEAF name=languages weight=0.1428) "
-                         + "    ) "
-                         + "    (LEAF name=tickets weight=0.8) "
-                         + "  ) "
-                         + ") ";
-
         // MultiSplitPane
         splitPane = new MultiSplitPane();
         splitPane.getMultiSplitLayout().setDividerSize(4);
-        /*splitPane.setContinuousLayout(false);
-        splitPane.setDividerPainter(
-            new MultiSplitPane.DividerPainter() {
-                @Override
-                public void paint(Graphics g, Divider divider) {
-                    if ((divider == splitPane.activeDivider()) && !splitPane.isContinuousLayout()) {
-                        Graphics2D g2d = (Graphics2D)g;
-                        g2d.setColor(Color.black);
-                        g2d.fill(divider.getBounds());
-                    }
-                }
-            }
-        );*/
         MultiSplitLayout.Node modelRoot;
         boolean floatingDividers;
         try {
-            modelRoot = noc.preferences.getCommunicationMultiSplitLayoutModel();
+            modelRoot = noc.preferences.getCommunicationMultiSplitLayoutModel(LAYOUT_DEF);
             if(modelRoot==null) {
-                modelRoot = MultiSplitLayout.parseModel(layoutDef);
+                modelRoot = MultiSplitLayout.parseModel(LAYOUT_DEF);
                 floatingDividers = true;
             } else {
                 floatingDividers = false;
             }
         } catch(Exception err) {
             noc.reportWarning(err, null);
-            modelRoot = MultiSplitLayout.parseModel(layoutDef);
+            modelRoot = MultiSplitLayout.parseModel(LAYOUT_DEF);
             floatingDividers = true;
         }
         splitPane.getMultiSplitLayout().setModel(modelRoot);
@@ -433,37 +438,87 @@ public class CommunicationPane extends JPanel implements TableListener {
         tableRowSorter.setComparator(0, naturalComparator);
         tableRowSorter.setComparator(1, reverseNaturalComparator);
         tableRowSorter.setComparator(2, reverseNaturalComparator);
-        tableRowSorter.setComparator(3, reverseNaturalComparator);
+        tableRowSorter.setComparator(3, naturalComparator);
         tableRowSorter.setComparator(4, naturalComparator);
         tableRowSorter.setComparator(5, naturalComparator);
         tableRowSorter.setComparator(6, naturalComparator);
         ticketsTable.setRowSorter(tableRowSorter);
+        ticketsTable.getSelectionModel().addListSelectionListener(
+            new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    if(!e.getValueIsAdjusting()) {
+                        int[] selectedRows = ticketsTable.getSelectedRows();
+                        if(selectedRows.length==1) {
+                            int selectedRow = selectedRows[0];
+                            int selectedModelRow = ticketsTable.convertRowIndexToModel(selectedRow);
+                            Integer ticketId = (Integer)((TicketCell)ticketsTableModel.getValueAt(selectedModelRow, 0)).value;
+                            // System.out.println("DEBUG: selectedModelRow: "+ticketId);
+                            showTicketEditor(ticketId);
+                        } else {
+                            hideTicketEditor();
+                        }
+                    }
+                }
+            }
+        );
+        ticketsTable.addMouseListener(
+            new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if(
+                        !e.isAltDown()
+                        && !e.isAltGraphDown()
+                        && !e.isControlDown()
+                        && !e.isMetaDown()
+                        && !e.isShiftDown()
+                        && e.getClickCount()==2
+                    ) {
+                        // System.out.println("DEBUG: double clicked");
+                        int[] selectedRows = ticketsTable.getSelectedRows();
+                        for(int selectedRow : selectedRows) {
+                            int selectedModelRow = ticketsTable.convertRowIndexToModel(selectedRow);
+                            Integer ticketId = (Integer)((TicketCell)ticketsTableModel.getValueAt(selectedModelRow, 0)).value;
+                            // System.out.println("DEBUG: selectedModelRow: "+ticketId);
+                            openTicketFrame(ticketId);
+                        }
+                    }
+                }
+            }
+        );
         splitPane.add(new JScrollPane(ticketsTable), "tickets");
+
+        // Ticket Editor
+        ticketEditor = new TicketEditor(noc, "CommunicationPane");
+        ticketEditor.setVisible(false);
+        splitPane.add(ticketEditor, "ticketEditor");
     }
 
     void addToolBars(JToolBar toolBar) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Start/Stop/Exit">
     /**
      * start() should only be called when we have a login established.
      */
     void start(AOServConnector conn) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
         this.conn = conn;
-        conn.getBusinesses().addTableListener(this);
-        conn.getBusinessAdministrators().addTableListener(this);
-        conn.getBusinessAdministratorPermissions().addTableListener(this);
-        conn.getBrands().addTableListener(this);
-        conn.getLanguages().addTableListener(this);
-        conn.getResellers().addTableListener(this);
-        conn.getTicketActions().addTableListener(this);
-        conn.getTicketAssignments().addTableListener(this);
-        conn.getTicketCategories().addTableListener(this);
-        conn.getTicketPriorities().addTableListener(this);
-        conn.getTicketStatuses().addTableListener(this);
-        conn.getTicketTypes().addTableListener(this);
-        conn.getTickets().addTableListener(this);
+        conn.getBusinesses().addTableListener(this, 0);
+        conn.getBusinessAdministrators().addTableListener(this, 0);
+        conn.getBusinessAdministratorPermissions().addTableListener(this, 0);
+        conn.getBrands().addTableListener(this, 0);
+        conn.getLanguages().addTableListener(this, 0);
+        conn.getResellers().addTableListener(this, 0);
+        conn.getTicketActions().addTableListener(this, 0);
+        conn.getTicketAssignments().addTableListener(this, 0);
+        conn.getTicketCategories().addTableListener(this, 0);
+        conn.getTicketPriorities().addTableListener(this, 0);
+        conn.getTicketStatuses().addTableListener(this, 0);
+        conn.getTicketTypes().addTableListener(this, 0);
+        conn.getTickets().addTableListener(this, 0);
 
         refresh();
     }
@@ -473,7 +528,7 @@ public class CommunicationPane extends JPanel implements TableListener {
      */
     void stop() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-        // TODO: Close any ticket popup windows - with a chance to save changes.  Cancelable?
+        closeAllTicketFrames();
         conn.getBusinesses().removeTableListener(this);
         conn.getBusinessAdministrators().removeTableListener(this);
         conn.getBusinessAdministratorPermissions().removeTableListener(this);
@@ -491,16 +546,6 @@ public class CommunicationPane extends JPanel implements TableListener {
         refresh();
     }
 
-    @Override
-    public void tableUpdated(Table table) {
-        /*try {
-            System.out.println("tableUpdated: "+table.getTableName());
-        } catch(Exception err) {
-            noc.reportError(err, null);
-        }*/
-        refresh();
-    }
-
     /**
      * Called when the application is about to exit.
      *
@@ -509,8 +554,20 @@ public class CommunicationPane extends JPanel implements TableListener {
      */
     public boolean exitApplication() {
         // Save the current settings
-        noc.preferences.setCommunicationMultiSplitLayoutModel(splitPane.getMultiSplitLayout().getModel());
+        noc.preferences.setCommunicationMultiSplitLayoutModel(LAYOUT_DEF, splitPane.getMultiSplitLayout().getModel());
         return true;
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Refreshing">
+    @Override
+    public void tableUpdated(Table table) {
+        /*try {
+            System.out.println("tableUpdated: "+table.getTableName());
+        } catch(Exception err) {
+            noc.reportError(err, null);
+        }*/
+        refresh();
     }
 
     private boolean isRefreshing = false;
@@ -794,31 +851,19 @@ public class CommunicationPane extends JPanel implements TableListener {
                                     // TODO: Remove any filter values that are no longer relevant
 
                                     // Query the tickets with the current filters
+                                    final Set<TicketCategory> categoriesWithTickets;
+                                    final Set<Business> businessesWithTickets;
                                     final List<Ticket> tickets;
                                     if(conn==null) {
                                         tickets = Collections.emptyList();
+                                        categoriesWithTickets = Collections.emptySet();
+                                        businessesWithTickets = Collections.emptySet();
                                     } else {
                                         //System.out.println("DEBUG: Got "+allTickets.size()+" total tickets");
                                         tickets = new ArrayList<Ticket>(allTickets.size()); // Worst-case is to be equal size - this avoids any resize - choosing time over space
+                                        categoriesWithTickets = new HashSet<TicketCategory>();
+                                        businessesWithTickets = new HashSet<Business>();
                                         for(Ticket ticket : allTickets) {
-                                            // Categories
-                                            if(includeUncategorized || !selectedCategories.isEmpty()) {
-                                                TicketCategory ticketCategory = ticket.getCategory();
-                                                if(ticketCategory==null) {
-                                                    if(!includeUncategorized) continue;
-                                                } else {
-                                                    if(!selectedCategories.contains(ticketCategory)) continue;
-                                                }
-                                            }
-                                            // Businesses
-                                            if(includeNoBusiness || !selectedBusinesses.isEmpty()) {
-                                                Business business = ticket.getBusiness();
-                                                if(business==null) {
-                                                    if(!includeNoBusiness) continue;
-                                                } else {
-                                                    if(!selectedBusinesses.contains(business)) continue;
-                                                }
-                                            }
                                             // Brands
                                             if(!selectedBrands.isEmpty()) {
                                                 Brand brand = ticket.getBrand();
@@ -856,11 +901,78 @@ public class CommunicationPane extends JPanel implements TableListener {
                                             if(!selectedLanguages.isEmpty()) {
                                                 if(!selectedLanguages.contains(ticket.getLanguage())) continue;
                                             }
+                                            // These are updated after the above filters because we want only
+                                            // the categories and businesses that have tickets given the
+                                            // above filters
+                                            TicketCategory ticketCategory = ticket.getCategory();
+                                            categoriesWithTickets.add(ticketCategory);
+                                            Business business = ticket.getBusiness();
+                                            businessesWithTickets.add(business);
+                                            // Categories
+                                            if(includeUncategorized || !selectedCategories.isEmpty()) {
+                                                if(ticketCategory==null) {
+                                                    if(!includeUncategorized) continue;
+                                                } else {
+                                                    if(!selectedCategories.contains(ticketCategory)) continue;
+                                                }
+                                            }
+                                            // Businesses
+                                            if(includeNoBusiness || !selectedBusinesses.isEmpty()) {
+                                                if(business==null) {
+                                                    if(!includeNoBusiness) continue;
+                                                } else {
+                                                    if(!selectedBusinesses.contains(business)) continue;
+                                                }
+                                            }
                                             // All filters passed, add to results
                                             tickets.add(ticket);
                                         }
+                                        // Reverse order because default is sorted by open date descending, we want ascending
+                                        Collections.reverse(tickets);
                                         // System.out.println("DEBUG: Got "+tickets.size()+" tickets through the filters");
                                     }
+
+                                    // Prune the categories and businesses trees to only include nodes that
+                                    // either have tickets or have children with tickets.
+                                    final Tree<TicketCategory> filteredCategoryTree = new TreeCopy<TicketCategory>(
+                                        categoryTree,
+                                        new NodeFilter<TicketCategory>() {
+                                            @Override
+                                            public boolean isNodeFiltered(Node<TicketCategory> node) throws IOException, SQLException {
+                                                return !hasTicket(node, categoriesWithTickets);
+                                            }
+                                            private boolean hasTicket(Node<TicketCategory> node, Set<TicketCategory> categoriesWithTickets) throws IOException, SQLException {
+                                                if(categoriesWithTickets.contains(node.getValue())) return true;
+                                                List<Node<TicketCategory>> children = node.getChildren();
+                                                if(children!=null) {
+                                                    for(Node<TicketCategory> child : children) {
+                                                        if(hasTicket(child, categoriesWithTickets)) return true;
+                                                    }
+                                                }
+                                                return false;
+                                            }
+                                        }
+                                    );
+                                    final Tree<Business> filteredBusinessTree = new TreeCopy<Business>(
+                                        businessTree,
+                                        new NodeFilter<Business>() {
+                                            @Override
+                                            public boolean isNodeFiltered(Node<Business> node) throws IOException, SQLException {
+                                                return !hasTicket(node, businessesWithTickets);
+                                            }
+                                            private boolean hasTicket(Node<Business> node, Set<Business> businessesWithTickets) throws IOException, SQLException {
+                                                if(businessesWithTickets.contains(node.getValue())) return true;
+                                                List<Node<Business>> children = node.getChildren();
+                                                if(children!=null) {
+                                                    for(Node<Business> child : children) {
+                                                        if(hasTicket(child, businessesWithTickets)) return true;
+                                                    }
+                                                }
+                                                return false;
+                                            }
+                                        }
+                                    );
+                                    
                                     // Perform ticket data lookups before going to the Swing thread
                                     final List<TicketRow> ticketRows = new ArrayList<TicketRow>(tickets.size());
                                     for(Ticket ticket : tickets) {
@@ -868,6 +980,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                                         if(priority==null) priority = ticket.getClientPriority();
                                         Business bu = ticket.getBusiness();
                                         BusinessAdministrator openedBy = ticket.getCreatedBy();
+                                        String fromAddress = ticket.getFromAddress();
                                         ticketRows.add(
                                             new TicketRow(
                                                 bu!=null && bu.isDisabled(), // isStrikethrough
@@ -875,7 +988,10 @@ public class CommunicationPane extends JPanel implements TableListener {
                                                 priority,
                                                 ticket.getStatus(),
                                                 ticket.getOpenDate(),
-                                                openedBy==null ? "" : openedBy.getKey(),
+                                                openedBy==null
+                                                    ? (fromAddress==null ? "" : ('('+fromAddress+')'))
+                                                    : (fromAddress==null ? openedBy.getKey() : (openedBy.getKey()+" ("+fromAddress+')'))
+                                                    ,
                                                 bu==null ? "" : bu.getKey(),
                                                 ticket.getSummary()
                                             )
@@ -889,8 +1005,8 @@ public class CommunicationPane extends JPanel implements TableListener {
                                             public void run() {
                                                 assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
                                                 try {
-                                                    categoriesRootNode.synchronize(categoriesTreeModel, categoryTree);
-                                                    businessesRootNode.synchronize(businessesTreeModel, businessTree);
+                                                    categoriesRootNode.synchronize(categoriesTreeModel, filteredCategoryTree);
+                                                    businessesRootNode.synchronize(businessesTreeModel, filteredBusinessTree);
                                                     brandsRootNode.synchronize(brandsTreeModel, brandTree);
                                                     resellersRootNode.synchronize(resellersTreeModel, resellerTree);
                                                     assignmentsListModel.synchronize(assignableUsers);
@@ -943,7 +1059,9 @@ public class CommunicationPane extends JPanel implements TableListener {
             );
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="Tickets Table">
     /**
      * Each table cell has a value, foregroundColor, and strikethrough flag.
      */
@@ -957,6 +1075,12 @@ public class CommunicationPane extends JPanel implements TableListener {
             this.value = value;
             this.foregroundColor = foregroundColor;
             this.isStrikethrough = isStrikethrough;
+        }
+
+        @Override
+        public String toString() {
+            Object myValue = getRendererValue();
+            return myValue==null ? null : myValue.toString();
         }
 
         @Override
@@ -1309,30 +1433,9 @@ public class CommunicationPane extends JPanel implements TableListener {
             }
         }
     }
+    // </editor-fold>
 
-    /*
-    private static void synchronizeTreeModel(List<Brand> brands, DefaultMutableTreeNode brandsRootNode) throws IOException, SQLException {
-        // Find the root brand(s) - expect only one
-        int size = brands.size();
-        List<Brand> rootBrands = new ArrayList<Brand>(1);
-        for(int c=0; c<size; c++) {
-            Brand brand = brands.get(c);
-            Business business = brand.getBusiness();
-            // A root brand is one that has no parents
-            boolean foundParent = false;
-            for(int d=0; d<size; d++) {
-                if(c!=d && brands.get(d).getBusiness().isParentOf(business)) {
-                    foundParent = true;
-                    break;
-                }
-            }
-            if(!foundParent) rootBrands.add(brand);
-        }
-        // System.out.println("Root Brands: "+rootBrands);
-        if(rootBrands.size()>1) throw new SQLException("Found more than one root Brand: "+rootBrands);
-        // TODO
-    }*/
-
+    // <editor-fold defaultstate="collapsed" desc="Trees">
     private class DisablableTreeCellRenderer extends DefaultTreeCellRenderer {
         /** Last tree the renderer was painted in. */
         private JTree tree;
@@ -1554,4 +1657,78 @@ public class CommunicationPane extends JPanel implements TableListener {
             return 0;
         }
     }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Ticket Editor">
+    private void showTicketEditor(final Integer ticketId) {
+        if(SwingUtilities.isEventDispatchThread()) {
+            // Run in background thread for data lookups
+            noc.executorService.submit(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        showTicketEditor(ticketId);
+                    }
+                }
+            );
+        } else {
+            try {
+                // Lookup the ticket
+                AOServConnector myConn = conn;
+                ticketEditor.showTicket(myConn==null ? null : myConn.getTickets().get(ticketId));
+            } catch(Exception err) {
+                ticketEditor.showTicket(null);
+                noc.reportError(err, null);
+            }
+        }
+    }
+
+    private void hideTicketEditor() {
+        ticketEditor.showTicket(null);
+    }
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Tickets Frames">
+    private final Map<Integer,TicketEditorFrame> ticketEditorFrames = new HashMap<Integer,TicketEditorFrame>();
+
+    /**
+     * Must run on Swing event thread.
+     */
+    private void openTicketFrame(Integer ticketId) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+        TicketEditorFrame existing = ticketEditorFrames.get(ticketId);
+        if(existing!=null) {
+            int state = existing.getExtendedState();
+            if((state&Frame.ICONIFIED)!=0) existing.setExtendedState(state-Frame.ICONIFIED);
+            existing.toFront();
+            // existing.requestFocus();
+        } else {
+            TicketEditorFrame ticketEditorFrame = new TicketEditorFrame(noc, ticketId);
+            ticketEditorFrames.put(ticketId, ticketEditorFrame);
+            ticketEditorFrame.setVisible(true);
+        }
+    }
+
+    /**
+     * Closes all ticket frames.
+     */
+    private void closeAllTicketFrames() {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+        List<Integer> ticketIds = new ArrayList<Integer>(ticketEditorFrames.keySet());
+        for(Integer ticketId : ticketIds) closeTicketFrame(ticketId);
+    }
+
+    /**
+     * Closes the specified ticket frame.
+     */
+    void closeTicketFrame(Integer ticketId) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+        TicketEditorFrame existing = ticketEditorFrames.remove(ticketId);
+        if(existing!=null) {
+            // TODO: Close any ticket popup windows - with a chance to save changes.  Cancelable?
+            existing.setVisible(false);
+            existing.dispose();
+        }
+    }
+    // </editor-fold>
 }

@@ -53,6 +53,9 @@ public class Preferences {
     private int systemsSplitPaneDividerLocation;
 
     private byte[] communicationMultiSplitLayoutModel;
+    private String communicationMultiSplitLayoutModelLayoutDef;
+
+    private Rectangle ticketEditorFrameBounds;
 
     public Preferences(NOC noc) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -122,7 +125,14 @@ public class Preferences {
             noc.reportWarning(err, null);
             systemsSplitPaneDividerLocation = 200;
         }
-        communicationMultiSplitLayoutModel = prefs.getByteArray("Preferences."+hostname+".communicationMultiSplitLayoutModel", null);
+        communicationMultiSplitLayoutModel = prefs.getByteArray("Preferences."+hostname+".cMSLM", null);
+        communicationMultiSplitLayoutModelLayoutDef = prefs.get("Preferences."+hostname+".cMSLM.layoutDef", null);
+        ticketEditorFrameBounds = new Rectangle(
+            prefs.getInt("Preferences."+hostname+".ticketEditorFrameBounds.x", 150),
+            prefs.getInt("Preferences."+hostname+".ticketEditorFrameBounds.y", 100),
+            prefs.getInt("Preferences."+hostname+".ticketEditorFrameBounds.width", 700),
+            prefs.getInt("Preferences."+hostname+".ticketEditorFrameBounds.height", 500)
+        );
     }
 
     private String getLocalHostname() {
@@ -319,9 +329,13 @@ public class Preferences {
         prefs.put("Preferences."+getLocalHostname()+".systemsSplitPaneDividerLocation", Integer.toString(systemsSplitPaneDividerLocation));
     }
 
-    public Node getCommunicationMultiSplitLayoutModel() {
+    public Node getCommunicationMultiSplitLayoutModel(String layoutDef) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-        if(communicationMultiSplitLayoutModel==null) return null;
+        if(
+            communicationMultiSplitLayoutModel==null
+            || communicationMultiSplitLayoutModelLayoutDef==null
+            || !communicationMultiSplitLayoutModelLayoutDef.equals(layoutDef)
+        ) return null;
         try {
             XMLDecoder decoder = new XMLDecoder(new GZIPInputStream(new ByteArrayInputStream(communicationMultiSplitLayoutModel)));
             try {
@@ -336,7 +350,7 @@ public class Preferences {
         }
     }
 
-    public void setCommunicationMultiSplitLayoutModel(Node modelRoot) {
+    public void setCommunicationMultiSplitLayoutModel(String layoutDef, Node modelRoot) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
@@ -348,10 +362,30 @@ public class Preferences {
             }
             byte[] bytes = bout.toByteArray();
             this.communicationMultiSplitLayoutModel = bytes;
-            prefs.putByteArray("Preferences."+getLocalHostname()+".communicationMultiSplitLayoutModel", bytes);
+            this.communicationMultiSplitLayoutModelLayoutDef = layoutDef;
+            prefs.putByteArray("Preferences."+getLocalHostname()+".cMSLM", bytes);
+            prefs.put("Preferences."+getLocalHostname()+".cMSLM.layoutDef", layoutDef);
         } catch(IOException err) {
             noc.reportWarning(err, null);
             this.communicationMultiSplitLayoutModel = null;
+            this.communicationMultiSplitLayoutModelLayoutDef = null;
         }
+    }
+
+    public Rectangle getTicketEditorFrameBounds() {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        return ticketEditorFrameBounds;
+    }
+
+    public void setTicketEditorFrameBounds(Rectangle ticketEditorFrameBounds) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        this.ticketEditorFrameBounds = ticketEditorFrameBounds;
+        String hostname = getLocalHostname();
+        prefs.putInt("Preferences."+hostname+".ticketEditorFrameBounds.x", ticketEditorFrameBounds.x);
+        prefs.putInt("Preferences."+hostname+".ticketEditorFrameBounds.y", ticketEditorFrameBounds.y);
+        prefs.putInt("Preferences."+hostname+".ticketEditorFrameBounds.width", ticketEditorFrameBounds.width);
+        prefs.putInt("Preferences."+hostname+".ticketEditorFrameBounds.height", ticketEditorFrameBounds.height);
     }
 }
