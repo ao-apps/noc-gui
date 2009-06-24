@@ -15,6 +15,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.swing.SwingUtilities;
@@ -54,6 +56,9 @@ public class Preferences {
 
     private byte[] communicationMultiSplitLayoutModel;
     private String communicationMultiSplitLayoutModelLayoutDef;
+
+    private Map<TicketEditor.PreferencesSet,byte[]> ticketEditorMultiSplitLayoutModels;
+    private Map<TicketEditor.PreferencesSet,String> ticketEditorMultiSplitLayoutModelLayoutDefs;
 
     private Rectangle ticketEditorFrameBounds;
 
@@ -127,6 +132,14 @@ public class Preferences {
         }
         communicationMultiSplitLayoutModel = prefs.getByteArray("Preferences."+hostname+".cMSLM", null);
         communicationMultiSplitLayoutModelLayoutDef = prefs.get("Preferences."+hostname+".cMSLM.layoutDef", null);
+        ticketEditorMultiSplitLayoutModels = new EnumMap<TicketEditor.PreferencesSet,byte[]>(TicketEditor.PreferencesSet.class);
+        ticketEditorMultiSplitLayoutModelLayoutDefs = new EnumMap<TicketEditor.PreferencesSet,String>(TicketEditor.PreferencesSet.class);
+        for(TicketEditor.PreferencesSet preferencesSet : TicketEditor.PreferencesSet.values()) {
+            byte[] bytes = prefs.getByteArray("Preferences."+hostname+".teMSLM."+preferencesSet, null);
+            if(bytes!=null) ticketEditorMultiSplitLayoutModels.put(preferencesSet, bytes);
+            String layoutDef = prefs.get("Preferences."+hostname+".teMSLM."+preferencesSet+".layoutDef", null);
+            if(layoutDef!=null) ticketEditorMultiSplitLayoutModelLayoutDefs.put(preferencesSet, layoutDef);
+        }
         ticketEditorFrameBounds = new Rectangle(
             prefs.getInt("Preferences."+hostname+".ticketEditorFrameBounds.x", 150),
             prefs.getInt("Preferences."+hostname+".ticketEditorFrameBounds.y", 100),
@@ -369,6 +382,51 @@ public class Preferences {
             noc.reportWarning(err, null);
             this.communicationMultiSplitLayoutModel = null;
             this.communicationMultiSplitLayoutModelLayoutDef = null;
+        }
+    }
+
+    public Node getTicketEditorMultiSplitLayoutModel(TicketEditor.PreferencesSet preferencesSet, String layoutDef) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+        byte[] ticketEditorMultiSplitLayoutModel = ticketEditorMultiSplitLayoutModels.get(preferencesSet);
+        String ticketEditorMultiSplitLayoutModelLayoutDef = ticketEditorMultiSplitLayoutModelLayoutDefs.get(preferencesSet);
+        if(
+            ticketEditorMultiSplitLayoutModel==null
+            || ticketEditorMultiSplitLayoutModelLayoutDef==null
+            || !ticketEditorMultiSplitLayoutModelLayoutDef.equals(layoutDef)
+        ) return null;
+        try {
+            XMLDecoder decoder = new XMLDecoder(new GZIPInputStream(new ByteArrayInputStream(ticketEditorMultiSplitLayoutModel)));
+            try {
+                return (Node)decoder.readObject();
+            } finally {
+                decoder.close();
+            }
+        } catch(IOException err) {
+            noc.reportWarning(err, null);
+            ticketEditorMultiSplitLayoutModels.remove(preferencesSet);
+            return null;
+        }
+    }
+
+    public void setTicketEditorMultiSplitLayoutModel(TicketEditor.PreferencesSet preferencesSet, String layoutDef, Node modelRoot) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        try {
+            XMLEncoder xmlEncoder = new XMLEncoder(new GZIPOutputStream(bout));
+            try {
+                xmlEncoder.writeObject(modelRoot);
+            } finally {
+                xmlEncoder.close();
+            }
+            byte[] bytes = bout.toByteArray();
+            this.ticketEditorMultiSplitLayoutModels.put(preferencesSet, bytes);
+            this.ticketEditorMultiSplitLayoutModelLayoutDefs.put(preferencesSet, layoutDef);
+            prefs.putByteArray("Preferences."+getLocalHostname()+".taMSLM."+preferencesSet, bytes);
+            prefs.put("Preferences."+getLocalHostname()+".taMSLM."+preferencesSet+".layoutDef", layoutDef);
+        } catch(IOException err) {
+            noc.reportWarning(err, null);
+            this.ticketEditorMultiSplitLayoutModels.remove(preferencesSet);
+            this.ticketEditorMultiSplitLayoutModelLayoutDefs.remove(preferencesSet);
         }
     }
 

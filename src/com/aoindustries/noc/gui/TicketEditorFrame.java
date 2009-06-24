@@ -34,7 +34,7 @@ public class TicketEditorFrame extends JFrame {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
-        ticketEditor = new TicketEditor(noc, "TicketEditorFrame");
+        ticketEditor = new TicketEditor(noc, TicketEditor.PreferencesSet.FRAME);
         ticketEditor.setVisible(false);
         contentPane.add(ticketEditor, BorderLayout.CENTER);
         this.ticketId = ticketId;
@@ -92,5 +92,9 @@ public class TicketEditorFrame extends JFrame {
                 }
             }
         );
+    }
+
+    TicketEditor getTicketEditor() {
+        return ticketEditor;
     }
 }

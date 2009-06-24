@@ -85,10 +85,33 @@ import org.jdesktop.swingx.MultiSplitPane;
  * TODO: Make filters persistent (Expand to selected on trees)
  * TODO: Make table column settings persistent
  * TODO: Remember tree open/close states between different filter views - store as preferences.
+ * TODO: If business or category selected don't hide it
  *
  * @author  AO Industries, Inc.
  */
 public class CommunicationPane extends JPanel implements TableListener {
+
+    // <editor-fold defaultstate="collapsed" desc="Constants">
+    private static final String LAYOUT_DEF = "(ROW "
+        + "  (COLUMN weight=0.3 "
+        + "    (LEAF name=categories weight=0.5) "
+        + "    (LEAF name=businesses weight=0.5) "
+        + "  ) "
+        + "  (COLUMN weight=0.7 "
+        + "    (ROW weight=0.2 "
+        + "      (LEAF name=brands weight=0.1428) "
+        + "      (LEAF name=resellers weight=0.1428) "
+        + "      (LEAF name=assignments weight=0.1428) "
+        + "      (LEAF name=types weight=0.1428) "
+        + "      (LEAF name=statuses weight=0.1428) "
+        + "      (LEAF name=priorities weight=0.1428) "
+        + "      (LEAF name=languages weight=0.1428) "
+        + "    ) "
+        + "    (LEAF name=tickets weight=0.3) "
+        + "    (LEAF name=ticketEditor weight=0.5) "
+        + "  ) "
+        + ") ";
+    // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Fields">
     private final NOC noc;
@@ -150,26 +173,6 @@ public class CommunicationPane extends JPanel implements TableListener {
     private final TicketEditor ticketEditor;
 
     // </editor-fold>
-
-    private static final String LAYOUT_DEF = "(ROW "
-        + "  (COLUMN weight=0.3 "
-        + "    (LEAF name=categories weight=0.5) "
-        + "    (LEAF name=businesses weight=0.5) "
-        + "  ) "
-        + "  (COLUMN weight=0.7 "
-        + "    (ROW weight=0.2 "
-        + "      (LEAF name=brands weight=0.1428) "
-        + "      (LEAF name=resellers weight=0.1428) "
-        + "      (LEAF name=assignments weight=0.1428) "
-        + "      (LEAF name=types weight=0.1428) "
-        + "      (LEAF name=statuses weight=0.1428) "
-        + "      (LEAF name=priorities weight=0.1428) "
-        + "      (LEAF name=languages weight=0.1428) "
-        + "    ) "
-        + "    (LEAF name=tickets weight=0.3) "
-        + "    (LEAF name=ticketEditor weight=0.5) "
-        + "  ) "
-        + ") ";
 
     // <editor-fold defaultstate="collapsed" desc="Construction">
     public CommunicationPane(final NOC noc) {
@@ -489,7 +492,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         splitPane.add(new JScrollPane(ticketsTable), "tickets");
 
         // Ticket Editor
-        ticketEditor = new TicketEditor(noc, "CommunicationPane");
+        ticketEditor = new TicketEditor(noc, TicketEditor.PreferencesSet.EMBEDDED);
         ticketEditor.setVisible(false);
         splitPane.add(ticketEditor, "ticketEditor");
     }
@@ -1314,7 +1317,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                             || !ticketCell.foregroundColor.equals(foregroundColor)
                         ) {
                             ticketsTableModel.setValueAt(
-                                new TicketCell(
+                                new DateTimeTicketCell(
                                     ticketRow.openDate,
                                     foregroundColor,
                                     isStrikethrough
@@ -1723,8 +1726,10 @@ public class CommunicationPane extends JPanel implements TableListener {
      */
     void closeTicketFrame(Integer ticketId) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-        TicketEditorFrame existing = ticketEditorFrames.remove(ticketId);
+        TicketEditorFrame existing = ticketEditorFrames.get(ticketId);
         if(existing!=null) {
+            existing.getTicketEditor().showTicket(null); // To remove any table listeners
+            ticketEditorFrames.remove(ticketId);
             // TODO: Close any ticket popup windows - with a chance to save changes.  Cancelable?
             existing.setVisible(false);
             existing.dispose();
