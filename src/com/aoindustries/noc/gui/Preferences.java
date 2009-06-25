@@ -421,8 +421,8 @@ public class Preferences {
             byte[] bytes = bout.toByteArray();
             this.ticketEditorMultiSplitLayoutModels.put(preferencesSet, bytes);
             this.ticketEditorMultiSplitLayoutModelLayoutDefs.put(preferencesSet, layoutDef);
-            prefs.putByteArray("Preferences."+getLocalHostname()+".taMSLM."+preferencesSet, bytes);
-            prefs.put("Preferences."+getLocalHostname()+".taMSLM."+preferencesSet+".layoutDef", layoutDef);
+            prefs.putByteArray("Preferences."+getLocalHostname()+".teMSLM."+preferencesSet, bytes);
+            prefs.put("Preferences."+getLocalHostname()+".teMSLM."+preferencesSet+".layoutDef", layoutDef);
         } catch(IOException err) {
             noc.reportWarning(err, null);
             this.ticketEditorMultiSplitLayoutModels.remove(preferencesSet);

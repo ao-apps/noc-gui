@@ -1663,31 +1663,12 @@ public class CommunicationPane extends JPanel implements TableListener {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Ticket Editor">
-    private void showTicketEditor(final Integer ticketId) {
-        if(SwingUtilities.isEventDispatchThread()) {
-            // Run in background thread for data lookups
-            noc.executorService.submit(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        showTicketEditor(ticketId);
-                    }
-                }
-            );
-        } else {
-            try {
-                // Lookup the ticket
-                AOServConnector myConn = conn;
-                ticketEditor.showTicket(myConn==null ? null : myConn.getTickets().get(ticketId));
-            } catch(Exception err) {
-                ticketEditor.showTicket(null);
-                noc.reportError(err, null);
-            }
-        }
+    private void showTicketEditor(Integer ticketId) {
+        ticketEditor.showTicket(conn, ticketId);
     }
 
     private void hideTicketEditor() {
-        ticketEditor.showTicket(null);
+        ticketEditor.showTicket(null, null);
     }
     // </editor-fold>
 
@@ -1728,7 +1709,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
         TicketEditorFrame existing = ticketEditorFrames.get(ticketId);
         if(existing!=null) {
-            existing.getTicketEditor().showTicket(null); // To remove any table listeners
+            existing.getTicketEditor().showTicket(null, null); // To remove any table listeners
             ticketEditorFrames.remove(ticketId);
             // TODO: Close any ticket popup windows - with a chance to save changes.  Cancelable?
             existing.setVisible(false);

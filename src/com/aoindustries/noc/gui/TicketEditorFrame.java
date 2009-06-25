@@ -41,14 +41,14 @@ public class TicketEditorFrame extends JFrame {
         Component glassPane = getGlassPane();
         glassPane.setCursor(Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
         glassPane.setVisible(true);
-        noc.executorService.submit(
+        ticketEditor.currentTicketExecutorService.submit(
             new Runnable() {
                 @Override
                 public void run() {
                     try {
                         AOServConnector conn = noc.conn;
-                        if(conn!=null) ticketEditor.showTicket(conn.getTickets().get(ticketId));
-                        else ticketEditor.showTicket(null);
+                        if(conn!=null) ticketEditor.showTicket(conn, ticketId);
+                        else ticketEditor.showTicket(null, null);
                     } catch(Exception err) {
                         noc.reportError(err, null);
                     } finally {
