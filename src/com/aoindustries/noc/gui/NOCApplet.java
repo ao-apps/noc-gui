@@ -5,14 +5,13 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
-import com.aoindustries.util.ErrorPrinter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JApplet;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 
 /**
  * Runs NOC as an applet.
@@ -20,6 +19,8 @@ import javax.swing.WindowConstants;
  * @author  AO Industries, Inc.
  */
 public class NOCApplet extends JApplet {
+
+    private static final Logger logger = Logger.getLogger(NOCApplet.class.getName());
 
     private NOC noc;
 
@@ -41,26 +42,28 @@ public class NOCApplet extends JApplet {
         }
     }*/
     
+    @Override
     public void start() {
         if(!SwingUtilities.isEventDispatchThread()) {
             try {
                 SwingUtilities.invokeAndWait(
                     new Runnable() {
+                    @Override
                         public void run() {
                             start();
                         }
                     }
                 );
             } catch(InterruptedException err) {
-                ErrorPrinter.printStackTraces(err);
+                logger.log(Level.SEVERE, null, err);
             } catch(InvocationTargetException err) {
-                ErrorPrinter.printStackTraces(err);
+                logger.log(Level.SEVERE, null, err);
             }
         } else {
             try {
                 this.noc = new NOC(getContentPane());
             } catch(IOException err) {
-                ErrorPrinter.printStackTraces(err);
+                logger.log(Level.SEVERE, null, err);
             }
         }
     }
@@ -68,14 +71,22 @@ public class NOCApplet extends JApplet {
     /**
      * Auto logs-out on stop.
      */
+    @Override
     public void stop() {
         if(!SwingUtilities.isEventDispatchThread()) {
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {public void run() {stop();}});
+                SwingUtilities.invokeAndWait(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            stop();
+                        }
+                    }
+                );
             } catch(InterruptedException err) {
-                ErrorPrinter.printStackTraces(err);
+                logger.log(Level.SEVERE, null, err);
             } catch(InvocationTargetException err) {
-                ErrorPrinter.printStackTraces(err);
+                logger.log(Level.SEVERE, null, err);
             }
         } else {
             try {
@@ -88,7 +99,7 @@ public class NOCApplet extends JApplet {
                 }
                 getContentPane().removeAll();
             } catch(RemoteException err) {
-                ErrorPrinter.printStackTraces(err);
+                logger.log(Level.SEVERE, null, err);
             }
         }
     }

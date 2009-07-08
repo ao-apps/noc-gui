@@ -31,6 +31,8 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -55,6 +57,8 @@ import javax.swing.tree.TreeSelectionModel;
  * @author  AO Industries, Inc.
  */
 public class SystemsPane extends JPanel {
+
+    private static final Logger logger = Logger.getLogger(SystemsPane.class.getName());
 
     private final NOC noc;
     private final JSplitPane splitPane;
@@ -155,7 +159,7 @@ public class SystemsPane extends JPanel {
                 alertLevel.setSelectedItem(criticalLabel);
                 break;
             default:
-                noc.reportWarning(new AssertionError("Unexpected display level, resetting to Medium: "+curAlertLevel), null);
+                logger.log(Level.WARNING, null, new AssertionError("Unexpected display level, resetting to Medium: "+curAlertLevel));
                 alertLevel.setSelectedItem(mediumLabel);
                 setAlertLevel(AlertLevel.MEDIUM);
         }
@@ -318,7 +322,7 @@ public class SystemsPane extends JPanel {
                             UnicastRemoteObject.exportObject(newTreeListener, port, csf, ssf);
                             rootNode.addTreeListener(newTreeListener);
                         } catch(RemoteException err) {
-                            noc.reportError(err, null);
+                            logger.log(Level.SEVERE, null, err);
                         }
                     }
                 }
@@ -326,7 +330,7 @@ public class SystemsPane extends JPanel {
             selectNode(newRootNode);
             batchValidateTreeNodes();
         } catch(RemoteException err) {
-            noc.reportError(err, null);
+            logger.log(Level.SEVERE, null, err);
         }
     }
 
@@ -350,7 +354,7 @@ public class SystemsPane extends JPanel {
                         oldRootNode.removeTreeListener(oldTreeListener);
                         noc.unexportObject(oldTreeListener);
                     } catch(RemoteException err) {
-                        noc.reportError(err, null);
+                        logger.log(Level.SEVERE, null, err);
                     }
                 }
             }
@@ -398,7 +402,7 @@ public class SystemsPane extends JPanel {
                                         try {
                                             Thread.sleep(250);
                                         } catch(InterruptedException err) {
-                                            noc.reportWarning(err, null);
+                                            logger.log(Level.WARNING, null, err);
                                         }
                                     } else break;
                                 }
@@ -436,7 +440,7 @@ public class SystemsPane extends JPanel {
                         }
                         tree.repaint();
                     } catch(RemoteException err) {
-                        noc.reportError(err, null);
+                        logger.log(Level.SEVERE, null, err);
                     }
                 }
             }

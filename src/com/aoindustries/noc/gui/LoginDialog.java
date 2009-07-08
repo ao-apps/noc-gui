@@ -34,6 +34,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.util.Locale;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.InputMap;
@@ -57,6 +58,8 @@ import javax.swing.SwingUtilities;
  * @author  AO Industries, Inc.
  */
 final public class LoginDialog extends JDialog implements ActionListener, WindowListener {
+
+    private static final Logger logger = Logger.getLogger(LoginDialog.class.getName());
 
     private final NOC noc;
     private final Component owner;
@@ -190,7 +193,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                     final AOServConnector conn = AOServConnector.getConnector(
                                         username,
                                         password,
-                                        noc
+                                        logger
                                     );
                                     Monitor monitor;
                                     final RMIClientSocketFactory csf;
@@ -206,7 +209,6 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                         csf = new RMIClientSocketFactoryTCP("127.0.0.1");
                                         ssf = new RMIServerSocketFactoryTCP("127.0.0.1");
                                         monitor = new MonitorImpl(
-                                            noc,
                                             Integer.parseInt(localPort),
                                             csf,
                                             ssf

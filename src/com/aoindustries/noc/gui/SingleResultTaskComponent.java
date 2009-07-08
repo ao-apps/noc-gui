@@ -19,6 +19,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -32,6 +34,8 @@ import javax.swing.SwingUtilities;
  * @author  AO Industries, Inc.
  */
 public class SingleResultTaskComponent extends JPanel implements TaskComponent {
+
+    private static final Logger logger = Logger.getLogger(SingleResultTaskComponent.class.getName());
 
     final private NOC noc;
     private SingleResultNode singleResultNode;
@@ -117,7 +121,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 
                         localSingleResultNode.addSingleResultListener(singleResultListener);
                     } catch(RemoteException err) {
-                        noc.reportError(err, null);
+                        logger.log(Level.SEVERE, null, err);
                     }
                 }
             }
@@ -139,7 +143,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
                             localSingleResultNode.removeSingleResultListener(singleResultListener);
                             noc.unexportObject(singleResultListener);
                         } catch(RemoteException err) {
-                            noc.reportError(err, null);
+                            logger.log(Level.SEVERE, null, err);
                         }
                     }
                 }

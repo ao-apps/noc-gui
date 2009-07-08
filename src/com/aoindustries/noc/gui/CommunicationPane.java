@@ -51,6 +51,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -90,6 +92,8 @@ import org.jdesktop.swingx.MultiSplitPane;
  * @author  AO Industries, Inc.
  */
 public class CommunicationPane extends JPanel implements TableListener {
+
+    private static final Logger logger = Logger.getLogger(CommunicationPane.class.getName());
 
     // <editor-fold defaultstate="collapsed" desc="Constants">
     private static final String LAYOUT_DEF = "(ROW "
@@ -195,7 +199,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                 floatingDividers = false;
             }
         } catch(Exception err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             modelRoot = MultiSplitLayout.parseModel(LAYOUT_DEF);
             floatingDividers = true;
         }
@@ -1019,13 +1023,13 @@ public class CommunicationPane extends JPanel implements TableListener {
                                                     languagesListModel.synchronize(languages);
                                                     synchronizedTickets(ticketRows);
                                                 } catch(Exception err) {
-                                                    noc.reportError(err, null);
+                                                    logger.log(Level.SEVERE, null, err);
                                                 }
                                             }
                                         }
                                     );
                                 } catch(Exception err) {
-                                    noc.reportError(err, null);
+                                    logger.log(Level.SEVERE, null, err);
                                 } finally {
                                     SwingUtilities.invokeLater(
                                         new Runnable() {

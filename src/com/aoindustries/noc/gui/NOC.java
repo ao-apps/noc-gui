@@ -9,7 +9,6 @@ import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.RootNode;
 import com.aoindustries.util.BufferManager;
-import com.aoindustries.util.ErrorHandler;
 import com.aoindustries.util.ErrorPrinter;
 import com.aoindustries.util.WrappedException;
 import java.awt.AWTException;
@@ -48,6 +47,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -70,7 +71,9 @@ import javax.swing.event.ChangeListener;
  *
  * @author  AO Industries, Inc.
  */
-public class NOC implements ErrorHandler {
+public class NOC {
+
+    private static final Logger logger = Logger.getLogger(NOC.class.getName());
 
     /**
      * Running as a standalone application.
@@ -344,7 +347,7 @@ public class NOC implements ErrorHandler {
             try {
                 tray.add(localTrayIcon);
             } catch (AWTException e) {
-                reportWarning(e, null);
+                logger.log(Level.WARNING, null, e);
                 localLoginMenuItem = null;
                 localTrayIconEnabledImage = null;
                 localTrayIconDisabledImage = null;
@@ -428,7 +431,7 @@ public class NOC implements ErrorHandler {
                 try {
                     System.exit(0);
                 } catch(SecurityException err) {
-                    ErrorPrinter.printStackTraces(err);
+                    logger.log(Level.SEVERE, null, err);
                 }
             }
         } else throw new AssertionError("Both parent and singleFrame are null");
@@ -480,19 +483,9 @@ public class NOC implements ErrorHandler {
         }
     }
 
-    @Override
-    public void reportWarning(Throwable T, Object[] extraInfo) {
-        ErrorPrinter.printStackTraces(T, extraInfo);
-        //new ErrorDialog(getDefaultDialogOwner(), "Warning", T, extraInfo).setVisible(true);
-        // Make sure swing event dispatch thread for dialog
-    }
-
-    @Override
-    public void reportError(Throwable T, Object[] extraInfo) {
-        ErrorPrinter.printStackTraces(T, extraInfo);
-        //new ErrorDialog(getDefaultDialogOwner(), "Error", T, extraInfo).setVisible(true);
-        // Make sure swing event dispatch thread for dialog
-    }
+    // TODO: Register logger to display in a window
+    //new ErrorDialog(getDefaultDialogOwner(), "Warning", T, extraInfo).setVisible(true);
+    // Make sure swing event dispatch thread for dialog
 
     /**
      * Sets the display mode.
@@ -810,7 +803,7 @@ public class NOC implements ErrorHandler {
                             try {
                                 playSound(SystemsPane.class.getResourceAsStream("buzzer.wav"));
                             } catch(Exception err) {
-                                reportError(err, null);
+                                logger.log(Level.SEVERE, null, err);
                             } finally {
                                 synchronized(buzzerLock) {
                                     isBuzzing = false;
@@ -906,15 +899,15 @@ public class NOC implements ErrorHandler {
                 try {
                     Thread.sleep(100);
                 } catch(InterruptedException err) {
-                    reportWarning(err, null);
+                    logger.log(Level.WARNING, null, err);
                 }
             }
             if(!unexported) {
-                reportWarning(new RuntimeException("Unable to unexport Object, now being forceful"), null);
+                logger.log(Level.WARNING, null, new RuntimeException("Unable to unexport Object, now being forceful"));
                 UnicastRemoteObject.unexportObject(remote, true);
             }
         } catch(NoSuchObjectException err) {
-            reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
         }
     }
 }

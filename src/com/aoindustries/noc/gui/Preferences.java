@@ -17,6 +17,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.swing.SwingUtilities;
@@ -28,6 +30,8 @@ import org.jdesktop.swingx.MultiSplitLayout.Node;
  * @author  AO Industries, Inc.
  */
 public class Preferences {
+
+    private static final Logger logger = Logger.getLogger(Preferences.class.getName());
 
     public enum DisplayMode {
         FRAMES,
@@ -71,7 +75,7 @@ public class Preferences {
         try {
             displayMode = DisplayMode.valueOf(displayModeS);
         } catch(IllegalArgumentException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             displayMode = DisplayMode.TABS;
         }
         String tabbedPaneSelectedIndexS = prefs.get("Preferences."+hostname+".tabbedPaneSelectedIndex", "1");
@@ -79,7 +83,7 @@ public class Preferences {
             tabbedPaneSelectedIndex = Integer.parseInt(tabbedPaneSelectedIndexS);
             if(tabbedPaneSelectedIndex<0 || tabbedPaneSelectedIndex>2) tabbedPaneSelectedIndex = 1;
         } catch(NumberFormatException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             tabbedPaneSelectedIndex = 1;
         }
         singleFrameBounds = new Rectangle(
@@ -113,21 +117,21 @@ public class Preferences {
         try {
             username = prefs.get("Preferences.username", System.getProperty("user.name", ""));
         } catch(SecurityException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             username = "";
         }
         String systemsAlertLevelS = prefs.get("Preferences.systemsAlertLevel", AlertLevel.MEDIUM.name());
         try {
             systemsAlertLevel = AlertLevel.valueOf(systemsAlertLevelS);
         } catch(IllegalArgumentException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             systemsAlertLevel = AlertLevel.MEDIUM;
         }
         String systemsSplitPaneDividerLocationS = prefs.get("Preferences."+hostname+".systemsSplitPaneDividerLocation", "200");
         try {
             systemsSplitPaneDividerLocation = Integer.parseInt(systemsSplitPaneDividerLocationS);
         } catch(NumberFormatException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             systemsSplitPaneDividerLocation = 200;
         }
         communicationMultiSplitLayoutModel = prefs.getByteArray("Preferences."+hostname+".cMSLM", null);
@@ -152,7 +156,7 @@ public class Preferences {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch(UnknownHostException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             return "unknown";
         }
     }
@@ -357,7 +361,7 @@ public class Preferences {
                 decoder.close();
             }
         } catch(IOException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             this.communicationMultiSplitLayoutModel = null;
             return null;
         }
@@ -379,7 +383,7 @@ public class Preferences {
             prefs.putByteArray("Preferences."+getLocalHostname()+".cMSLM", bytes);
             prefs.put("Preferences."+getLocalHostname()+".cMSLM.layoutDef", layoutDef);
         } catch(IOException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             this.communicationMultiSplitLayoutModel = null;
             this.communicationMultiSplitLayoutModelLayoutDef = null;
         }
@@ -402,7 +406,7 @@ public class Preferences {
                 decoder.close();
             }
         } catch(IOException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             ticketEditorMultiSplitLayoutModels.remove(preferencesSet);
             return null;
         }
@@ -424,7 +428,7 @@ public class Preferences {
             prefs.putByteArray("Preferences."+getLocalHostname()+".teMSLM."+preferencesSet, bytes);
             prefs.put("Preferences."+getLocalHostname()+".teMSLM."+preferencesSet+".layoutDef", layoutDef);
         } catch(IOException err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             this.ticketEditorMultiSplitLayoutModels.remove(preferencesSet);
             this.ticketEditorMultiSplitLayoutModelLayoutDefs.remove(preferencesSet);
         }

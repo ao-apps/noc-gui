@@ -15,6 +15,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -25,6 +27,8 @@ import javax.swing.WindowConstants;
  * @author  AO Industries, Inc.
  */
 public class TicketEditorFrame extends JFrame {
+
+    private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 
     private final TicketEditor ticketEditor;
     private final Integer ticketId;
@@ -50,7 +54,7 @@ public class TicketEditorFrame extends JFrame {
                         if(conn!=null) ticketEditor.showTicket(conn, ticketId);
                         else ticketEditor.showTicket(null, null);
                     } catch(Exception err) {
-                        noc.reportError(err, null);
+                        logger.log(Level.SEVERE, null, err);
                     } finally {
                         SwingUtilities.invokeLater(
                             new Runnable() {

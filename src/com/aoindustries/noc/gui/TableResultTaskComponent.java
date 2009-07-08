@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,6 +40,8 @@ import javax.swing.table.TableCellRenderer;
  * @author  AO Industries, Inc.
  */
 public class TableResultTaskComponent extends JPanel implements TaskComponent {
+
+    private static final Logger logger = Logger.getLogger(TableResultTaskComponent.class.getName());
 
     final private NOC noc;
     private TableResultNode tableResultNode;
@@ -132,7 +136,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                         //noc.unexportObject(tableResultListener);
                         localTableResultNode.addTableResultListener(tableResultListener);
                     } catch(RemoteException err) {
-                        noc.reportError(err, null);
+                        logger.log(Level.SEVERE, null, err);
                     }
                 }
             }
@@ -154,7 +158,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                         try {
                             localTableResultNode.removeTableResultListener(tableResultListener);
                         } catch(RemoteException err) {
-                            noc.reportError(err, null);
+                            logger.log(Level.SEVERE, null, err);
                         }
                     }
                 }

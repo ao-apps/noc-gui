@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -93,6 +95,8 @@ import org.jdesktop.swingx.MultiSplitPane;
  * @author  AO Industries, Inc.
  */
 public class TicketEditor extends JPanel implements TableListener {
+
+    private static final Logger logger = Logger.getLogger(TicketEditor.class.getName());
 
     // <editor-fold defaultstate="collapsed" desc="Constants">
     private static final String LAYOUT_DEF = "(ROW "
@@ -161,7 +165,7 @@ public class TicketEditor extends JPanel implements TableListener {
                                             }
                                         }
                                     } catch(Exception err) {
-                                        noc.reportError(err, null);
+                                        logger.log(Level.SEVERE, null, err);
                                     }
                                 }
                             }
@@ -208,7 +212,7 @@ public class TicketEditor extends JPanel implements TableListener {
                                             }
                                         }
                                     } catch(Exception err) {
-                                        noc.reportError(err, null);
+                                        logger.log(Level.SEVERE, null, err);
                                     }
                                 }
                             }
@@ -248,7 +252,7 @@ public class TicketEditor extends JPanel implements TableListener {
                                         }
                                     }
                                 } catch(Exception err) {
-                                    noc.reportError(err, null);
+                                    logger.log(Level.SEVERE, null, err);
                                 }
                             }
                         }
@@ -283,7 +287,7 @@ public class TicketEditor extends JPanel implements TableListener {
                                         }
                                     }
                                 } catch(Exception err) {
-                                    noc.reportError(err, null);
+                                    logger.log(Level.SEVERE, null, err);
                                 }
                             }
                         }
@@ -320,7 +324,7 @@ public class TicketEditor extends JPanel implements TableListener {
                                         }
                                     }
                                 } catch(Exception err) {
-                                    noc.reportError(err, null);
+                                    logger.log(Level.SEVERE, null, err);
                                 }
                             }
                         }
@@ -351,7 +355,7 @@ public class TicketEditor extends JPanel implements TableListener {
                 floatingDividers = false;
             }
         } catch(Exception err) {
-            noc.reportWarning(err, null);
+            logger.log(Level.WARNING, null, err);
             modelRoot = MultiSplitLayout.parseModel(LAYOUT_DEF);
             floatingDividers = true;
         }
@@ -544,7 +548,7 @@ public class TicketEditor extends JPanel implements TableListener {
                         currentTicket = ticket;
                     }
                 } catch(Exception err) {
-                    noc.reportError(err, null);
+                    logger.log(Level.SEVERE, null, err);
                 }
             }
         }
@@ -567,7 +571,7 @@ public class TicketEditor extends JPanel implements TableListener {
                                     currentTicket = newTicket;
                                 }
                             } catch(Exception err) {
-                                noc.reportError(err, null);
+                                logger.log(Level.SEVERE, null, err);
                             }
                         }
                     }

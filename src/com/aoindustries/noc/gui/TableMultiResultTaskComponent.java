@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -38,6 +40,8 @@ import javax.swing.table.TableCellRenderer;
  * @author  AO Industries, Inc.
  */
 public class TableMultiResultTaskComponent extends JPanel implements TaskComponent {
+
+    private static final Logger logger = Logger.getLogger(TableMultiResultTaskComponent.class.getName());
 
     final private NOC noc;
     private TableMultiResultNode tableMultiResultNode;
@@ -72,7 +76,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
             try {
                 updateValues();
             } catch(RemoteException err) {
-                noc.reportError(err, null);
+                logger.log(Level.SEVERE, null, err);
             }
         }
 
@@ -82,7 +86,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
             try {
                 updateValues();
             } catch(RemoteException err) {
-                noc.reportError(err, null);
+                logger.log(Level.SEVERE, null, err);
             }
         }
     };
@@ -122,7 +126,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                         //noc.unexportObject(tableResultListener);
                         localTableMultiResultNode.addTableMultiResultListener(tableMultiResultListener);
                     } catch(RemoteException err) {
-                        noc.reportError(err, null);
+                        logger.log(Level.SEVERE, null, err);
                     }
                 }
             }
@@ -143,7 +147,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                         try {
                             localTableMultiResultNode.removeTableMultiResultListener(tableMultiResultListener);
                         } catch(RemoteException err) {
-                            noc.reportError(err, null);
+                            logger.log(Level.SEVERE, null, err);
                         }
                     }
                 }
