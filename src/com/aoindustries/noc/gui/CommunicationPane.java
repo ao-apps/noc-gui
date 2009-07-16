@@ -519,7 +519,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         conn.getBrands().addTableListener(this, 0);
         conn.getLanguages().addTableListener(this, 0);
         conn.getResellers().addTableListener(this, 0);
-        conn.getTicketActions().addTableListener(this, 0);
+        // conn.getTicketActions().addTableListener(this, 0);
         conn.getTicketAssignments().addTableListener(this, 0);
         conn.getTicketCategories().addTableListener(this, 0);
         conn.getTicketPriorities().addTableListener(this, 0);
@@ -542,7 +542,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         conn.getBrands().removeTableListener(this);
         conn.getLanguages().removeTableListener(this);
         conn.getResellers().removeTableListener(this);
-        conn.getTicketActions().removeTableListener(this);
+        // conn.getTicketActions().removeTableListener(this);
         conn.getTicketAssignments().removeTableListener(this);
         conn.getTicketCategories().removeTableListener(this);
         conn.getTicketPriorities().removeTableListener(this);
