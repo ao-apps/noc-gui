@@ -78,7 +78,7 @@ public class NOC {
     /**
      * Running as a standalone application.
      *
-     * TODO: How may we include the security policy with the source code?
+     * May we include the security policy with the source code?
      */
     public static void main(String[] args) {
         try {

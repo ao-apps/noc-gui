@@ -118,6 +118,7 @@ public class CommunicationPane extends JPanel implements TableListener {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Fields">
+    private static final long serialVersionUID = 1L;
     private final NOC noc;
     private AOServConnector conn; // This is the connector that has all the listeners added
     private final MultiSplitPane splitPane;
@@ -166,6 +167,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         0
     );
     private final JTable ticketsTable = new JTable(ticketsTableModel) {
+        private static final long serialVersionUID = 1L;
         @Override
         public TableCellRenderer getCellRenderer(int row, int column) {
             return new TicketCellRenderer(
@@ -415,30 +417,30 @@ public class CommunicationPane extends JPanel implements TableListener {
         splitPane.add(languagesPanel, "languages");
 
         // Tickets
-        TableRowSorter tableRowSorter = new TableRowSorter(ticketsTableModel);
-        Comparator naturalComparator = new Comparator() {
+        TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<DefaultTableModel>(ticketsTableModel);
+        Comparator<Comparable<Object>> naturalComparator = new Comparator<Comparable<Object>>() {
             @Override
-            public int compare(Object o1, Object o2) {
+            public int compare(Comparable<Object> o1, Comparable<Object> o2) {
                 // nulls sorted last
                 if(o1==null) {
                     if(o2==null) return 0;
                     else return 1;
                 } else {
                     if(o2==null) return -1;
-                    else return ((Comparable)o1).compareTo(o2);
+                    else return o1.compareTo(o2);
                 }
             }
         };
-        Comparator reverseNaturalComparator = new Comparator() {
+        Comparator<Comparable<Object>> reverseNaturalComparator = new Comparator<Comparable<Object>>() {
             @Override
-            public int compare(Object o1, Object o2) {
+            public int compare(Comparable<Object> o1, Comparable<Object> o2) {
                 // nulls sorted last
                 if(o1==null) {
                     if(o2==null) return 0;
                     else return -1;
                 } else {
                     if(o2==null) return 1;
-                    else return -((Comparable)o1).compareTo(o2);
+                    else return -o1.compareTo(o2);
                 }
             }
         };
@@ -1072,13 +1074,13 @@ public class CommunicationPane extends JPanel implements TableListener {
     /**
      * Each table cell has a value, foregroundColor, and strikethrough flag.
      */
-    class TicketCell implements Comparable<TicketCell> {
+    class TicketCell<T extends Comparable<T>> implements Comparable<TicketCell<T>> {
 
-        final Object value;
+        final T value;
         final Color foregroundColor;
         final boolean isStrikethrough;
 
-        TicketCell(Object value, Color foregroundColor, boolean isStrikethrough) {
+        TicketCell(T value, Color foregroundColor, boolean isStrikethrough) {
             this.value = value;
             this.foregroundColor = foregroundColor;
             this.isStrikethrough = isStrikethrough;
@@ -1112,16 +1114,16 @@ public class CommunicationPane extends JPanel implements TableListener {
         }
 
         @Override
-        public int compareTo(TicketCell o) {
-            Object value1 = value;
-            Object value2 = o.value;
+        public int compareTo(TicketCell<T> o) {
+            T value1 = value;
+            T value2 = o.value;
             // Nulls sorted last
             if(value1==null) {
                 if(value2==null) return 0;
                 else return 1;
             } else {
                 if(value2==null) return 1;
-                else return ((Comparable)value1).compareTo(value2);
+                else return value1.compareTo(value2);
             }
         }
 
@@ -1133,14 +1135,14 @@ public class CommunicationPane extends JPanel implements TableListener {
         }
     }
 
-    class DateTimeTicketCell extends TicketCell {
-        DateTimeTicketCell(Object value, Color foregroundColor, boolean isStrikethrough) {
+    class DateTimeTicketCell extends TicketCell<Long> {
+        DateTimeTicketCell(Long value, Color foregroundColor, boolean isStrikethrough) {
             super(value, foregroundColor, isStrikethrough);
         }
 
         @Override
         Object getRendererValue() {
-            return SQLUtility.getDateTime((Long)value);
+            return SQLUtility.getDateTime(value);
         }
     }
 
@@ -1182,13 +1184,13 @@ public class CommunicationPane extends JPanel implements TableListener {
         Object[] getObjectArray() {
             Color foregroundColor = getForegroundColor();
             return new Object[] {
-                new TicketCell(ticketNumber, foregroundColor, isStrikethrough),
-                new TicketCell(priority, foregroundColor, isStrikethrough),
-                new TicketCell(status, foregroundColor, isStrikethrough),
+                new TicketCell<Integer>(ticketNumber, foregroundColor, isStrikethrough),
+                new TicketCell<TicketPriority>(priority, foregroundColor, isStrikethrough),
+                new TicketCell<TicketStatus>(status, foregroundColor, isStrikethrough),
                 new DateTimeTicketCell(openDate, foregroundColor, isStrikethrough),
-                new TicketCell(openedBy, foregroundColor, isStrikethrough),
-                new TicketCell(business, foregroundColor, isStrikethrough),
-                new TicketCell(summary, foregroundColor, isStrikethrough)
+                new TicketCell<String>(openedBy, foregroundColor, isStrikethrough),
+                new TicketCell<String>(business, foregroundColor, isStrikethrough),
+                new TicketCell<String>(summary, foregroundColor, isStrikethrough)
             };
         }
 
@@ -1264,7 +1266,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                             || !ticketCell.foregroundColor.equals(foregroundColor)
                         ) {
                             ticketsTableModel.setValueAt(
-                                new TicketCell(
+                                new TicketCell<Integer>(
                                     ticketRow.ticketNumber,
                                     foregroundColor,
                                     isStrikethrough
@@ -1283,7 +1285,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                             || !ticketCell.foregroundColor.equals(foregroundColor)
                         ) {
                             ticketsTableModel.setValueAt(
-                                new TicketCell(
+                                new TicketCell<TicketPriority>(
                                     ticketRow.priority,
                                     foregroundColor,
                                     isStrikethrough
@@ -1302,7 +1304,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                             || !ticketCell.foregroundColor.equals(foregroundColor)
                         ) {
                             ticketsTableModel.setValueAt(
-                                new TicketCell(
+                                new TicketCell<TicketStatus>(
                                     ticketRow.status,
                                     foregroundColor,
                                     isStrikethrough
@@ -1340,7 +1342,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                             || !ticketCell.foregroundColor.equals(foregroundColor)
                         ) {
                             ticketsTableModel.setValueAt(
-                                new TicketCell(
+                                new TicketCell<String>(
                                     ticketRow.openedBy,
                                     foregroundColor,
                                     isStrikethrough
@@ -1359,7 +1361,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                             || !ticketCell.foregroundColor.equals(foregroundColor)
                         ) {
                             ticketsTableModel.setValueAt(
-                                new TicketCell(
+                                new TicketCell<String>(
                                     ticketRow.business,
                                     foregroundColor,
                                     isStrikethrough
@@ -1378,7 +1380,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                             || !ticketCell.foregroundColor.equals(foregroundColor)
                         ) {
                             ticketsTableModel.setValueAt(
-                                new TicketCell(
+                                new TicketCell<String>(
                                     ticketRow.summary,
                                     foregroundColor,
                                     isStrikethrough
@@ -1444,6 +1446,9 @@ public class CommunicationPane extends JPanel implements TableListener {
 
     // <editor-fold defaultstate="collapsed" desc="Trees">
     private class DisablableTreeCellRenderer extends DefaultTreeCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
         /** Last tree the renderer was painted in. */
         private JTree tree;
         /** True if draws focus border around icon as well. */

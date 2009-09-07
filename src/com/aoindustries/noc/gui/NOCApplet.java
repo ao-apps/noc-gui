@@ -20,6 +20,8 @@ import javax.swing.SwingUtilities;
  */
 public class NOCApplet extends JApplet {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger logger = Logger.getLogger(NOCApplet.class.getName());
 
     private NOC noc;

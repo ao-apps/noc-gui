@@ -53,11 +53,11 @@ import javax.swing.SwingUtilities;
 /**
  * Prompts for a AOServ connection information and returns a connector.
  *
- * TODO: Support auto-login (saving the password)
- *
  * @author  AO Industries, Inc.
  */
 final public class LoginDialog extends JDialog implements ActionListener, WindowListener {
+
+    private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Logger.getLogger(LoginDialog.class.getName());
 
@@ -123,6 +123,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         // Handle escape button
         KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
         Action actionListener = new AbstractAction() {
+            private static final long serialVersionUID = 1L;
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 cancel();

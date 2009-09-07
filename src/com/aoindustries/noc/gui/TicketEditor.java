@@ -122,6 +122,8 @@ public class TicketEditor extends JPanel implements TableListener {
         + ") ";
     // </editor-fold>
 
+    private static final long serialVersionUID = 1L;
+
     private final NOC noc;
 
     public enum PreferencesSet {

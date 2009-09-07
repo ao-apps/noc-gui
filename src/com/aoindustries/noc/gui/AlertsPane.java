@@ -285,7 +285,7 @@ public class AlertsPane extends JPanel {
             
             tableModel.setValueAt(df.format(new Date(alert.time)), row, 0);
             tableModel.setValueAt(alert.sourceDisplay, row, 1);
-            tableModel.setValueAt(alert.newAlertLevel, row, 2); // TODO: internationalize
+            tableModel.setValueAt(alert.newAlertLevel, row, 2); // Should internationalize
             tableModel.setValueAt(alert.alertMessage, row, 3);
             row++;
         }

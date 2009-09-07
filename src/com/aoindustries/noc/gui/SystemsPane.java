@@ -98,7 +98,7 @@ public class SystemsPane extends JPanel {
             new PropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent evt) {
-                    //System.err.println("TODO: propertyName="+evt.getPropertyName());
+                    //System.err.println("DEBUG: propertyName="+evt.getPropertyName());
                     noc.preferences.setSystemsSplitPaneDividerLocation(splitPane.getDividerLocation());
                 }
             }
