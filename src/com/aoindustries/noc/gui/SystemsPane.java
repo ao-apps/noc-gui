@@ -58,6 +58,8 @@ import javax.swing.tree.TreeSelectionModel;
  */
 public class SystemsPane extends JPanel {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger logger = Logger.getLogger(SystemsPane.class.getName());
 
     private final NOC noc;
@@ -521,6 +523,8 @@ public class SystemsPane extends JPanel {
 
     private class SystemsTreeNode extends DefaultMutableTreeNode {
 
+        private static final long serialVersionUID = 1L;
+
         final private Node node;
 
         private AlertLevel alertLevel = AlertLevel.UNKNOWN;
@@ -546,6 +550,9 @@ public class SystemsPane extends JPanel {
     }
 
     private class SystemsTreeCellRenderer extends DefaultTreeCellRenderer {
+
+        private static final long serialVersionUID = 1L;
+
         /** Last tree the renderer was painted in. */
         private JTree tree;
         /** True if draws focus border around icon as well. */

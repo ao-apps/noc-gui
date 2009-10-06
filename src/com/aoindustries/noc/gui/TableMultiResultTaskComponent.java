@@ -41,10 +41,12 @@ import javax.swing.table.TableCellRenderer;
  */
 public class TableMultiResultTaskComponent extends JPanel implements TaskComponent {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger logger = Logger.getLogger(TableMultiResultTaskComponent.class.getName());
 
     final private NOC noc;
-    private TableMultiResultNode tableMultiResultNode;
+    private TableMultiResultNode<?,? extends TableMultiResult<?>> tableMultiResultNode;
     private JComponent validationComponent;
 
     // The JTable is swapped-out based on the column names
@@ -69,9 +71,9 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
         return this;
     }
     
-    final private TableMultiResultListener tableMultiResultListener = new TableMultiResultListener() {
+    final private TableMultiResultListener<TableMultiResult<?>> tableMultiResultListener = new TableMultiResultListener<TableMultiResult<?>>() {
         @Override
-        public void tableMultiResultAdded(final TableMultiResult tableMultiResult) {
+        public void tableMultiResultAdded(final TableMultiResult<?> tableMultiResult) {
             assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
             try {
                 updateValues();
@@ -81,7 +83,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
         }
 
         @Override
-        public void tableMultiResultRemoved(final TableMultiResult tableMultiResult) {
+        public void tableMultiResultRemoved(final TableMultiResult<?> tableMultiResult) {
             assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
             try {
                 updateValues();
@@ -99,7 +101,9 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
         if(!(node instanceof TableMultiResultNode)) throw new AssertionError("node is not a TableMultiResultNode: "+node.getClass().getName());
         if(validationComponent==null) throw new IllegalArgumentException("validationComponent is null");
 
-        final TableMultiResultNode localTableMultiResultNode = this.tableMultiResultNode = (TableMultiResultNode)node;
+        @SuppressWarnings("unchecked")
+        final TableMultiResultNode<?,? extends TableMultiResult<?>> localTableMultiResultNode = this.tableMultiResultNode = (TableMultiResultNode)node;
+
         this.validationComponent = validationComponent;
 
         // Scroll back to the top
@@ -137,7 +141,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
     public void stop() throws RemoteException {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        final TableMultiResultNode localTableMultiResultNode = this.tableMultiResultNode;
+        final TableMultiResultNode<?,? extends TableMultiResult<?>> localTableMultiResultNode = this.tableMultiResultNode;
         if(localTableMultiResultNode!=null) {
             this.tableMultiResultNode = null;
             noc.executorService.submit(
@@ -164,7 +168,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
     private void updateValues() throws RemoteException {
         assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 
-        final TableMultiResultNode localTableMultiResultNode = this.tableMultiResultNode;
+        final TableMultiResultNode<?,? extends TableMultiResult<?>> localTableMultiResultNode = this.tableMultiResultNode;
         // If any events come in after this is stopped, this may be null
         if(localTableMultiResultNode!=null) {
             // Do as much as possible before switching over to the event dispatch thread
@@ -172,7 +176,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
             final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
 
             final List<?> columnHeaders = localTableMultiResultNode.getColumnHeaders(locale);
-            final List<? extends TableMultiResult> results = localTableMultiResultNode.getResults();
+            final List<? extends TableMultiResult<?>> results = localTableMultiResultNode.getResults();
             final int rows = results.size();
 
             final List<Object> allHeaders = new ArrayList<Object>(columnHeaders.size()+2);
@@ -197,6 +201,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                                 );
                                 tableModel.setColumnIdentifiers(allHeaders.toArray());
                                 newTable = new JTable(tableModel) {
+                                    private static final long serialVersionUID = 1;
                                     @Override
                                     public TableCellRenderer getCellRenderer(int row, int column) {
                                         return new AlertLevelTableCellRenderer(
@@ -226,7 +231,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                             if(rows!=tableModel.getRowCount()) tableModel.setRowCount(rows);
 
                             for(int row=0;row<rows;row++) {
-                                TableMultiResult result = results.get(row);
+                                TableMultiResult<?> result = results.get(row);
                                 AlertLevel alertLevel = result.getAlertLevel();
 
                                 tableModel.setValueAt(
@@ -284,10 +289,10 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                                         );
                                     }
                                 } else {
-                                    List<?> rowData = result.getRowData();
+                                    int rowDataSize = result.getRowDataSize();
                                     for(int col=2;col<columns;col++) {
                                         tableModel.setValueAt(
-                                            new AlertLevelAndData(alertLevel, rowData.get(col-2)),
+                                            new AlertLevelAndData(alertLevel, (col-2)<rowDataSize ? result.getRowData(col-2) : ""),
                                             row,
                                             col
                                         );
