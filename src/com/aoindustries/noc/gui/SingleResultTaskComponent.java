@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.SingleResultListener;
 import com.aoindustries.noc.common.SingleResultNode;
 import com.aoindustries.noc.common.SingleResult;
@@ -34,6 +35,8 @@ import javax.swing.SwingUtilities;
  * @author  AO Industries, Inc.
  */
 public class SingleResultTaskComponent extends JPanel implements TaskComponent {
+
+    private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Logger.getLogger(SingleResultTaskComponent.class.getName());
 
@@ -198,5 +201,9 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
                 localValidationComponent.repaint();
             }
         }
+    }
+
+    @Override
+    public void systemsAlertLevelChanged(AlertLevel systemsAlertLevel) {
     }
 }

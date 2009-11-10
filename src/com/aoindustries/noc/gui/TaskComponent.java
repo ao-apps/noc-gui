@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.Node;
 import java.rmi.RemoteException;
 import javax.swing.JComponent;
@@ -30,4 +31,9 @@ public interface TaskComponent {
      * Called just before the component is removed.
      */
     void stop() throws RemoteException ;
+
+    /**
+     * Called just after the systems alert level is changed.
+     */
+    void systemsAlertLevelChanged(AlertLevel systemsAlertLevel);
 }

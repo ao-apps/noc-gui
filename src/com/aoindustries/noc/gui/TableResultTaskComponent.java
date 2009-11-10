@@ -18,6 +18,7 @@ import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,8 @@ import javax.swing.table.TableCellRenderer;
  */
 public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger logger = Logger.getLogger(TableResultTaskComponent.class.getName());
 
     final private NOC noc;
@@ -49,7 +52,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
     final private JLabel retrievedLabel;
     // The JTable is swapped-out based on the column names
-    final private Map<List<?>,JTable> tables = new HashMap<List<?>,JTable>();
+    final private Map<List<String>,JTable> tables = new HashMap<List<String>,JTable>();
     // The current table in the scrollPane
     private JTable table;
     final private JScrollPane scrollPane;
@@ -126,7 +129,6 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                                     }
                                 }
                             }
-                        
                         );
 
                         if(!tableResultListenerExported) {
@@ -140,7 +142,6 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                     }
                 }
             }
-        
         );
     }
 
@@ -181,7 +182,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             // Find the table for the current column labels
             
             // Swap-out the table if needed
-            List<?> columnHeaders = tableResult.getColumnHeaders();
+            List<String> columnHeaders = tableResult.getColumnHeaders();
             JTable newTable = tables.get(columnHeaders);
             if(newTable==null) {
                 //System.out.println("DEBUG: TableResultTaskComponent: creating new JTable: "+columnHeaders);
@@ -191,6 +192,8 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                 );
                 tableModel.setColumnIdentifiers(columnHeaders.toArray());
                 newTable = new JTable(tableModel) {
+                    private static final long serialVersionUID = 1L;
+
                     @Override
                     public TableCellRenderer getCellRenderer(int row, int column) {
                         return new AlertLevelTableCellRenderer(
@@ -198,6 +201,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                         );
                     }
                 };
+                newTable.setCellSelectionEnabled(true);
                 //table.setPreferredScrollableViewportSize(new Dimension(500, 70));
                 //table.setFillsViewportHeight(true);
                 tables.put(columnHeaders, newTable);
@@ -242,12 +246,28 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             int columns = tableResult.getColumns();
             if(columns!=tableModel.getColumnCount()) tableModel.setColumnCount(columns);
 
-            int rows = tableResult.getRows();
+            List<?> allTableData = tableResult.getTableData();
+            List<AlertLevel> allAlertLevels = tableResult.getAlertLevels();
+            int allRows = tableResult.getRows();
+            List<Object> tableData = new ArrayList<Object>(allRows*columns);
+            List<AlertLevel> alertLevels = new ArrayList<AlertLevel>(allRows);
+            AlertLevel systemsAlertLevel = noc.preferences.getSystemsAlertLevel();
+            int index = 0;
+            for(int row=0; row<allRows; row++) {
+                AlertLevel alertLevel = allAlertLevels.get(row);
+                if(alertLevel.compareTo(systemsAlertLevel)>=0) {
+                    for(int col=0;col<columns;col++) {
+                        tableData.add(allTableData.get(index++));
+                    }
+                    alertLevels.add(alertLevel);
+                } else {
+                    index+=columns;
+                }
+            }
+            int rows = tableData.size()/columns;
             if(rows!=tableModel.getRowCount()) tableModel.setRowCount(rows);
 
-            List<?> tableData = tableResult.getTableData();
-            List<AlertLevel> alertLevels = tableResult.getAlertLevels();
-            int index = 0;
+            index = 0;
             for(int row=0;row<rows;row++) {
                 AlertLevel alertLevel = alertLevels.get(row);
                 for(int col=0;col<columns;col++) {
@@ -263,5 +283,35 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             validationComponent.validate();
             validationComponent.repaint();
         }
+    }
+
+    @Override
+    public void systemsAlertLevelChanged(AlertLevel systemsAlertLevel) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        final TableResultNode localTableResultNode = this.tableResultNode;
+        noc.executorService.submit(
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        final TableResult result = localTableResultNode.getLastResult();
+                        SwingUtilities.invokeLater(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    // When localTableResultNode doesn't match, we have been stopped already
+                                    if(localTableResultNode.equals(TableResultTaskComponent.this.tableResultNode)) {
+                                        updateValue(result);
+                                    }
+                                }
+                            }
+                        );
+                    } catch(RemoteException err) {
+                        logger.log(Level.SEVERE, null, err);
+                    }
+                }
+            }
+        );
     }
 }

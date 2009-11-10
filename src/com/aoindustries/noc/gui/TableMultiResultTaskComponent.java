@@ -7,11 +7,11 @@ package com.aoindustries.noc.gui;
  */
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import com.aoindustries.noc.common.AlertLevel;
+import com.aoindustries.noc.common.NanoTimeSpan;
 import com.aoindustries.noc.common.Node;
 import com.aoindustries.noc.common.TableMultiResult;
 import com.aoindustries.noc.common.TableMultiResultListener;
 import com.aoindustries.noc.common.TableMultiResultNode;
-import com.aoindustries.sql.SQLUtility;
 import java.awt.GridLayout;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
@@ -253,21 +253,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                                         alertLevel,
                                         (error!=null && columns==2)
                                         ? error
-                                        : latency < 1000000
-                                        ? ApplicationResourcesAccessor.getMessage(
-                                            locale,
-                                            "TableMultiResultTaskComponent.latency.micro",
-                                            SQLUtility.getMilliDecimal(latency)
-                                        ) : latency < 1000000000
-                                        ? ApplicationResourcesAccessor.getMessage(
-                                            locale,
-                                            "TableMultiResultTaskComponent.latency.milli",
-                                            SQLUtility.getMilliDecimal(latency/1000)
-                                        ) : ApplicationResourcesAccessor.getMessage(
-                                            locale,
-                                            "TableMultiResultTaskComponent.latency.second",
-                                            SQLUtility.getMilliDecimal(latency/1000000)
-                                        )
+                                        : NanoTimeSpan.toString(latency, locale)
                                     ),
                                     row,
                                     1
@@ -308,5 +294,9 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                 }
             );
         }
+    }
+
+    @Override
+    public void systemsAlertLevelChanged(AlertLevel systemsAlertLevel) {
     }
 }

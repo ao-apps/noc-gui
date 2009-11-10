@@ -194,6 +194,7 @@ public class SystemsPane extends JPanel {
 
         noc.preferences.setSystemsAlertLevel(systemsAlertLevel);
         batchValidateTreeNodes();
+        if(this.taskComponent!=null) this.taskComponent.systemsAlertLevelChanged(systemsAlertLevel);
     }
 
     /**
