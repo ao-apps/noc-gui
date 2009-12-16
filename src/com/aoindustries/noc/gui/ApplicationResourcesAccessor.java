@@ -22,7 +22,7 @@ final class ApplicationResourcesAccessor {
     private ApplicationResourcesAccessor() {
     }
 
-    private static final com.aoindustries.util.ApplicationResourcesAccessor accessor = new com.aoindustries.util.ApplicationResourcesAccessor("com.aoindustries.noc.gui.ApplicationResources");
+    private static final com.aoindustries.util.i18n.ApplicationResourcesAccessor accessor = new com.aoindustries.util.i18n.ApplicationResourcesAccessor("com.aoindustries.noc.gui.ApplicationResources");
 
     public static String getMessage(Locale locale, String key) {
         return accessor.getMessage(locale, key);

@@ -816,7 +816,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                                         // Determine the reseller for assignment lookups
                                         Reseller thisReseller = null;
                                         {
-                                            Business thisBusiness = conn.getThisBusinessAdministrator().getUsername().getPackage().getBusiness();
+                                            Business thisBusiness = conn.getThisBusinessAdministrator().getUsername().getBusiness();
                                             if(thisBusiness!=null) {
                                                 Brand thisBrand = thisBusiness.getBrand();
                                                 if(thisBrand!=null) thisReseller = thisBrand.getReseller();
@@ -844,12 +844,12 @@ public class CommunicationPane extends JPanel implements TableListener {
                                             assignableUsersSet.add(businessAdministrator);
                                         }
                                         final BusinessAdministrator thisBusinessAdministrator = conn.getThisBusinessAdministrator();
-                                        final Business thisBusiness = thisBusinessAdministrator.getUsername().getPackage().getBusiness();
+                                        final Business thisBusiness = thisBusinessAdministrator.getUsername().getBusiness();
                                         for(BusinessAdministrator businessAdministrator : businessAdministrators) {
                                             if(
                                                 !businessAdministrator.isDisabled()
                                                 && businessAdministrator.hasPermission(AOServPermission.Permission.edit_ticket)
-                                                && businessAdministrator.getUsername().getPackage().getBusiness().equals(thisBusiness)
+                                                && businessAdministrator.getUsername().getBusiness().equals(thisBusiness)
                                             ) {
                                                 assignableUsersSet.add(businessAdministrator);
                                             }
