@@ -22,13 +22,5 @@ final class ApplicationResourcesAccessor {
     private ApplicationResourcesAccessor() {
     }
 
-    private static final com.aoindustries.util.i18n.ApplicationResourcesAccessor accessor = new com.aoindustries.util.i18n.ApplicationResourcesAccessor("com.aoindustries.noc.gui.ApplicationResources");
-
-    public static String getMessage(Locale locale, String key) {
-        return accessor.getMessage(locale, key);
-    }
-    
-    public static String getMessage(Locale locale, String key, Object... args) {
-        return accessor.getMessage(locale, key, args);
-    }
+    static final com.aoindustries.util.i18n.ApplicationResourcesAccessor accessor = com.aoindustries.util.i18n.ApplicationResourcesAccessor.getInstance("com.aoindustries.noc.gui.ApplicationResources");
 }

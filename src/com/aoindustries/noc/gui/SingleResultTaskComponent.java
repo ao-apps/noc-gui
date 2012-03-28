@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.SingleResultListener;
 import com.aoindustries.noc.common.SingleResultNode;
@@ -171,19 +172,19 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
                 long latency = singleResult.getLatency();
                 text.append(
                     latency < 1000000
-                    ? ApplicationResourcesAccessor.getMessage(
-                        locale,
+                    ? accessor.getMessage(
+                        //locale,
                         "SingleResultTaskComponent.retrieved.micro",
                         formattedDate,
                         SQLUtility.getMilliDecimal(latency)
                     ) : latency < 1000000000
-                    ? ApplicationResourcesAccessor.getMessage(
-                        locale,
+                    ? accessor.getMessage(
+                        //locale,
                         "SingleResultTaskComponent.retrieved.milli",
                         formattedDate,
                         SQLUtility.getMilliDecimal(latency/1000)
-                    ) : ApplicationResourcesAccessor.getMessage(
-                        locale,
+                    ) : accessor.getMessage(
+                        //locale,
                         "SingleResultTaskComponent.retrieved.second",
                         formattedDate,
                         SQLUtility.getMilliDecimal(latency/1000000)

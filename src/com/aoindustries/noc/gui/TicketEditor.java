@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.aoserv.client.Brand;
 import com.aoindustries.aoserv.client.Business;
@@ -368,29 +369,29 @@ public class TicketEditor extends JPanel implements TableListener {
         // Small Fields
         JPanel smallFieldsPanel = new JPanel(new LabelledGridLayout(7, 1, 0, 1, 4, false));
         // brand
-        smallFieldsPanel.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.header.brand")));
+        smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.brand")));
         smallFieldsPanel.add(brandLabel);
         // ticketNumber
-        smallFieldsPanel.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.header.ticketNumber")));
+        smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.ticketNumber")));
         smallFieldsPanel.add(ticketNumberLabel);
         // type
-        smallFieldsPanel.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.header.type")));
+        smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.type")));
         typeComboBox.setEditable(false);
         typeComboBox.addFocusListener(typeComboBoxFocusListener);
         smallFieldsPanel.add(typeComboBox);
         // status
-        smallFieldsPanel.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.header.status")));
+        smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.status")));
         statusComboBox.setEditable(false);
         statusComboBox.addFocusListener(statusComboBoxFocusListener);
         smallFieldsPanel.add(statusComboBox);
         // openDate
-        smallFieldsPanel.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.header.openDate")));
+        smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.openDate")));
         smallFieldsPanel.add(openDateLabel);
         // openedBy
-        smallFieldsPanel.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.header.openedBy")));
+        smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.openedBy")));
         smallFieldsPanel.add(openedByLabel);
         // business
-        smallFieldsPanel.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.header.business")));
+        smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.business")));
         businessComboBox.setEditable(false);
         businessComboBox.addFocusListener(businessComboBoxFocusListener);
         smallFieldsPanel.add(businessComboBox);
@@ -417,7 +418,7 @@ public class TicketEditor extends JPanel implements TableListener {
         JPanel summaryPanel = new JPanel(new BorderLayout());
         summaryPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.summary.label"),
+                accessor.getMessage("TicketEditor.summary.label"),
                 SwingConstants.LEFT
             )
         );
@@ -445,7 +446,7 @@ public class TicketEditor extends JPanel implements TableListener {
         JPanel internalNotesPanel = new JPanel(new BorderLayout());
         internalNotesPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditor.internalNotes.label"),
+                accessor.getMessage("TicketEditor.internalNotes.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );

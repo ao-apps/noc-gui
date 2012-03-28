@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.AlertLevelChange;
 import com.aoindustries.noc.common.SingleResultNode;
@@ -129,11 +130,11 @@ public class SystemsPane extends JPanel {
     void addToolBars(JToolBar toolBar) throws RemoteException {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        final String allLabel = ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "SystemsPane.alertLevel.all.label");
-        final String lowLabel = ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "SystemsPane.alertLevel.low.label");
-        final String mediumLabel = ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "SystemsPane.alertLevel.medium.label");
-        final String highLabel = ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "SystemsPane.alertLevel.high.label");
-        final String criticalLabel = ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "SystemsPane.alertLevel.critical.label");
+        final String allLabel = accessor.getMessage("SystemsPane.alertLevel.all.label");
+        final String lowLabel = accessor.getMessage("SystemsPane.alertLevel.low.label");
+        final String mediumLabel = accessor.getMessage("SystemsPane.alertLevel.medium.label");
+        final String highLabel = accessor.getMessage("SystemsPane.alertLevel.high.label");
+        final String criticalLabel = accessor.getMessage("SystemsPane.alertLevel.critical.label");
         JComboBox alertLevel = new JComboBox(
             new String[] {
                 allLabel,

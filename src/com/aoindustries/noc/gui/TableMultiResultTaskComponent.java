@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.NanoTimeSpan;
@@ -175,13 +176,13 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
             final Locale locale = Locale.getDefault();
             final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
 
-            final List<?> columnHeaders = localTableMultiResultNode.getColumnHeaders(locale);
+            final List<?> columnHeaders = localTableMultiResultNode.getColumnHeaders();
             final List<? extends TableMultiResult<?>> results = localTableMultiResultNode.getResults();
             final int rows = results.size();
 
             final List<Object> allHeaders = new ArrayList<Object>(columnHeaders.size()+2);
-            allHeaders.add(ApplicationResourcesAccessor.getMessage(locale, "TableMultiResultTaskComponent.time.header"));
-            allHeaders.add(ApplicationResourcesAccessor.getMessage(locale, "TableMultiResultTaskComponent.latency.header"));
+            allHeaders.add(accessor.getMessage("TableMultiResultTaskComponent.time.header"));
+            allHeaders.add(accessor.getMessage("TableMultiResultTaskComponent.latency.header"));
             allHeaders.addAll(columnHeaders);
             final int columns = allHeaders.size();
 
@@ -237,8 +238,8 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                                 tableModel.setValueAt(
                                     new AlertLevelAndData(
                                         alertLevel,
-                                        ApplicationResourcesAccessor.getMessage(
-                                            locale,
+                                        accessor.getMessage(
+                                            //locale,
                                             "TableMultiResultTaskComponent.time",
                                             df.format(new Date(result.getTime()))
                                         )
@@ -253,7 +254,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                                         alertLevel,
                                         (error!=null && columns==2)
                                         ? error
-                                        : NanoTimeSpan.toString(latency, locale)
+                                        : NanoTimeSpan.toString(latency)
                                     ),
                                     row,
                                     1

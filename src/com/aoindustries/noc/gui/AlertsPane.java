@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import com.aoindustries.noc.common.AlertLevel;
 import java.awt.GridLayout;
@@ -72,12 +73,11 @@ public class AlertsPane extends JPanel {
 
         this.noc = noc;
 
-        Locale locale = Locale.getDefault();
         String[] columnNames = {
-            ApplicationResourcesAccessor.getMessage(locale, "AlertsPane.time.header"),
-            ApplicationResourcesAccessor.getMessage(locale, "AlertsPane.alertLevel.header"),
-            ApplicationResourcesAccessor.getMessage(locale, "AlertsPane.sourceDisplay.header"),
-            ApplicationResourcesAccessor.getMessage(locale, "AlertsPane.alertMessage.header")
+            accessor.getMessage("AlertsPane.time.header"),
+            accessor.getMessage("AlertsPane.alertLevel.header"),
+            accessor.getMessage("AlertsPane.sourceDisplay.header"),
+            accessor.getMessage("AlertsPane.alertMessage.header")
         };
         tableModel = new UneditableDefaultTableModel(
             columnNames,
@@ -117,7 +117,7 @@ public class AlertsPane extends JPanel {
     void addToolBars(JToolBar toolBar) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        JButton buzzerTest = new JButton(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "AlertsPane.buzzerTest.label"));
+        JButton buzzerTest = new JButton(accessor.getMessage("AlertsPane.buzzerTest.label"));
         toolBar.add(buzzerTest);
         buzzerTest.addActionListener(
             new ActionListener() {
@@ -185,7 +185,7 @@ public class AlertsPane extends JPanel {
                 0,
                 new Object[] {
                     df.format(new Date(alert.time)),
-                    ApplicationResourcesAccessor.getMessage(locale, "AlertsPane.alertLevel."+alert.newAlertLevel),
+                    accessor.getMessage("AlertsPane.alertLevel."+alert.newAlertLevel),
                     alert.sourceDisplay,
                     alert.alertMessage
                 }

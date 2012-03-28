@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.aoserv.client.AOServPermission;
 import com.aoindustries.aoserv.client.Brand;
@@ -25,11 +26,11 @@ import com.aoindustries.swing.SynchronizingMutableTreeNode;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import com.aoindustries.table.Table;
 import com.aoindustries.table.TableListener;
-import com.aoindustries.tree.Node;
-import com.aoindustries.tree.NodeFilter;
-import com.aoindustries.tree.Tree;
-import com.aoindustries.tree.TreeCopy;
-import com.aoindustries.tree.Trees;
+import com.aoindustries.util.tree.Node;
+import com.aoindustries.util.tree.NodeFilter;
+import com.aoindustries.util.tree.Tree;
+import com.aoindustries.util.tree.TreeCopy;
+import com.aoindustries.util.tree.Trees;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -123,23 +124,23 @@ public class CommunicationPane extends JPanel implements TableListener {
     private AOServConnector conn; // This is the connector that has all the listeners added
     private final MultiSplitPane splitPane;
     // Categories
-    private final SynchronizingMutableTreeNode<TicketCategory> categoriesRootNode = new SynchronizingMutableTreeNode<TicketCategory>(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.categories.uncategorized"), true);
+    private final SynchronizingMutableTreeNode<TicketCategory> categoriesRootNode = new SynchronizingMutableTreeNode<TicketCategory>(accessor.getMessage("CommunicationPane.categories.uncategorized"), true);
     private final DefaultTreeModel categoriesTreeModel = new DefaultTreeModel(categoriesRootNode, true);
     private final JTree categoriesJTree = new JTree(categoriesTreeModel);
     // Businesses
-    private final SynchronizingMutableTreeNode<Business> businessesRootNode = new SynchronizingMutableTreeNode<Business>(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.businesses.noBusiness"), true);
+    private final SynchronizingMutableTreeNode<Business> businessesRootNode = new SynchronizingMutableTreeNode<Business>(accessor.getMessage("CommunicationPane.businesses.noBusiness"), true);
     private final DefaultTreeModel businessesTreeModel = new DefaultTreeModel(businessesRootNode, true);
     private final JTree businessesJTree = new JTree(businessesTreeModel);
     // Brands
-    private final SynchronizingMutableTreeNode<Brand> brandsRootNode = new SynchronizingMutableTreeNode<Brand>(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.brands.rootNode.label"), true);
+    private final SynchronizingMutableTreeNode<Brand> brandsRootNode = new SynchronizingMutableTreeNode<Brand>(accessor.getMessage("CommunicationPane.brands.rootNode.label"), true);
     private final DefaultTreeModel brandsTreeModel = new DefaultTreeModel(brandsRootNode, true);
     private final JTree brandsJTree = new JTree(brandsTreeModel);
     // Resellers
-    private final SynchronizingMutableTreeNode<Reseller> resellersRootNode = new SynchronizingMutableTreeNode<Reseller>(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.resellers.rootNode.label"), true);
+    private final SynchronizingMutableTreeNode<Reseller> resellersRootNode = new SynchronizingMutableTreeNode<Reseller>(accessor.getMessage("CommunicationPane.resellers.rootNode.label"), true);
     private final DefaultTreeModel resellersTreeModel = new DefaultTreeModel(resellersRootNode, true);
     private final JTree resellersJTree = new JTree(resellersTreeModel);
     // Assignments
-    private final SynchronizingListModel assignmentsListModel = new SynchronizingListModel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.assignments.unassigned"));
+    private final SynchronizingListModel assignmentsListModel = new SynchronizingListModel(accessor.getMessage("CommunicationPane.assignments.unassigned"));
     private final JList assignmentsList = new JList(assignmentsListModel);
     // Types
     private final SynchronizingListModel typesListModel = new SynchronizingListModel();
@@ -156,13 +157,13 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Tickets
     private final DefaultTableModel ticketsTableModel = new UneditableDefaultTableModel(
         new Object[] {
-            ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.ticketsTable.header.ticketNumber"),
-            ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.ticketsTable.header.priority"),
-            ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.ticketsTable.header.status"),
-            ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.ticketsTable.header.openDate"),
-            ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.ticketsTable.header.openedBy"),
-            ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.ticketsTable.header.business"),
-            ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.ticketsTable.header.summary")
+            accessor.getMessage("CommunicationPane.ticketsTable.header.ticketNumber"),
+            accessor.getMessage("CommunicationPane.ticketsTable.header.priority"),
+            accessor.getMessage("CommunicationPane.ticketsTable.header.status"),
+            accessor.getMessage("CommunicationPane.ticketsTable.header.openDate"),
+            accessor.getMessage("CommunicationPane.ticketsTable.header.openedBy"),
+            accessor.getMessage("CommunicationPane.ticketsTable.header.business"),
+            accessor.getMessage("CommunicationPane.ticketsTable.header.summary")
         },
         0
     );
@@ -213,7 +214,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel categoriesPanel = new JPanel(new BorderLayout());
         categoriesPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.categories.label"),
+                accessor.getMessage("CommunicationPane.categories.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -234,7 +235,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel businessesPanel = new JPanel(new BorderLayout());
         businessesPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.businesses.label"),
+                accessor.getMessage("CommunicationPane.businesses.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -256,7 +257,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel brandsPanel = new JPanel(new BorderLayout());
         brandsPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.brands.label"),
+                accessor.getMessage("CommunicationPane.brands.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -277,7 +278,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel resellersPanel = new JPanel(new BorderLayout());
         resellersPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.resellers.label"),
+                accessor.getMessage("CommunicationPane.resellers.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -298,7 +299,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel assignmentsPanel = new JPanel(new BorderLayout());
         assignmentsPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.assignments.label"),
+                accessor.getMessage("CommunicationPane.assignments.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -344,7 +345,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel typesPanel = new JPanel(new BorderLayout());
         typesPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.types.label"),
+                accessor.getMessage("CommunicationPane.types.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -363,7 +364,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel statusesPanel = new JPanel(new BorderLayout());
         statusesPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.statuses.label"),
+                accessor.getMessage("CommunicationPane.statuses.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -382,7 +383,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel prioritiesPanel = new JPanel(new BorderLayout());
         prioritiesPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.priorities.label"),
+                accessor.getMessage("CommunicationPane.priorities.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -401,7 +402,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         JPanel languagesPanel = new JPanel(new BorderLayout());
         languagesPanel.add(
             new JLabel(
-                ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "CommunicationPane.languages.label"),
+                accessor.getMessage("CommunicationPane.languages.label"),
                 SwingConstants.CENTER
             ), BorderLayout.NORTH
         );
@@ -816,7 +817,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                                         // Determine the reseller for assignment lookups
                                         Reseller thisReseller = null;
                                         {
-                                            Business thisBusiness = conn.getThisBusinessAdministrator().getUsername().getBusiness();
+                                            Business thisBusiness = conn.getThisBusinessAdministrator().getUsername().getPackage().getBusiness();
                                             if(thisBusiness!=null) {
                                                 Brand thisBrand = thisBusiness.getBrand();
                                                 if(thisBrand!=null) thisReseller = thisBrand.getReseller();
@@ -844,12 +845,12 @@ public class CommunicationPane extends JPanel implements TableListener {
                                             assignableUsersSet.add(businessAdministrator);
                                         }
                                         final BusinessAdministrator thisBusinessAdministrator = conn.getThisBusinessAdministrator();
-                                        final Business thisBusiness = thisBusinessAdministrator.getUsername().getBusiness();
+                                        final Business thisBusiness = thisBusinessAdministrator.getUsername().getPackage().getBusiness();
                                         for(BusinessAdministrator businessAdministrator : businessAdministrators) {
                                             if(
                                                 !businessAdministrator.isDisabled()
                                                 && businessAdministrator.hasPermission(AOServPermission.Permission.edit_ticket)
-                                                && businessAdministrator.getUsername().getBusiness().equals(thisBusiness)
+                                                && businessAdministrator.getUsername().getPackage().getBusiness().equals(thisBusiness)
                                             ) {
                                                 assignableUsersSet.add(businessAdministrator);
                                             }

@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -34,7 +35,7 @@ public class TicketEditorFrame extends JFrame {
     private final Integer ticketId;
 
     public TicketEditorFrame(final NOC noc, final Integer ticketId) {
-        super(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "TicketEditorFrame.title", ticketId));
+        super(accessor.getMessage("TicketEditorFrame.title", ticketId));
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());

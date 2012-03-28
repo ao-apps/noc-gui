@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import com.aoindustries.noc.common.AlertLevel;
 import com.aoindustries.noc.common.Node;
@@ -222,19 +223,19 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             long latency = tableResult.getLatency();
             String retrievedLine =
                 latency < 1000000
-                ? ApplicationResourcesAccessor.getMessage(
-                    locale,
+                ? accessor.getMessage(
+                    //locale,
                     "TableResultTaskComponent.retrieved.micro",
                     formattedDate,
                     SQLUtility.getMilliDecimal(latency)
                 ) : latency < 1000000000
-                ? ApplicationResourcesAccessor.getMessage(
-                    locale,
+                ? accessor.getMessage(
+                    //locale,
                     "TableResultTaskComponent.retrieved.milli",
                     formattedDate,
                     SQLUtility.getMilliDecimal(latency/1000)
-                ) : ApplicationResourcesAccessor.getMessage(
-                    locale,
+                ) : accessor.getMessage(
+                    //locale,
                     "TableResultTaskComponent.retrieved.second",
                     formattedDate,
                     SQLUtility.getMilliDecimal(latency/1000000)

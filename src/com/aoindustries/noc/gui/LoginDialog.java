@@ -5,6 +5,7 @@ package com.aoindustries.noc.gui;
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.noc.common.Monitor;
 import com.aoindustries.rmi.RMIClientSocketFactorySSL;
@@ -73,7 +74,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
     private JButton cancelButton;
 
     public LoginDialog(NOC noc, Component owner) {
-        super((owner instanceof JFrame) ? (JFrame)owner : new JFrame(), ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.title"), true);
+        super((owner instanceof JFrame) ? (JFrame)owner : new JFrame(), accessor.getMessage("LoginDialog.title"), true);
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         this.noc = noc;
@@ -84,12 +85,12 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
 
         // Add the labels
         JPanel P=new JPanel(new GridLayout(6, 1, 0, 2));
-        P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.server.prompt")));
-        P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.serverPort.prompt")));
-        P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.external.prompt")));
-        P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.localPort.prompt")));
-        P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.username.prompt")));
-        P.add(new JLabel(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.password.prompt")));
+        P.add(new JLabel(accessor.getMessage("LoginDialog.server.prompt")));
+        P.add(new JLabel(accessor.getMessage("LoginDialog.serverPort.prompt")));
+        P.add(new JLabel(accessor.getMessage("LoginDialog.external.prompt")));
+        P.add(new JLabel(accessor.getMessage("LoginDialog.localPort.prompt")));
+        P.add(new JLabel(accessor.getMessage("LoginDialog.username.prompt")));
+        P.add(new JLabel(accessor.getMessage("LoginDialog.password.prompt")));
         localContentPane.add(P, BorderLayout.WEST);
 
         // Add the fields
@@ -114,9 +115,9 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         localContentPane.add(P, BorderLayout.CENTER);
 
         P=new JPanel(new FlowLayout());
-        P.add(okButton=new JButton(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.ok.label")));
+        P.add(okButton=new JButton(accessor.getMessage("LoginDialog.ok.label")));
         okButton.addActionListener(this);
-        P.add(cancelButton=new JButton(ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.cancel.label")));
+        P.add(cancelButton=new JButton(accessor.getMessage("LoginDialog.cancel.label")));
         cancelButton.addActionListener(this);
         localContentPane.add(P, BorderLayout.SOUTH);
 
@@ -289,7 +290,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                                         ssf
                                                     );
                                                 } catch(RemoteException err) {
-                                                    new ErrorDialog(owner, ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.login.rmiError"), err, null).setVisible(true);
+                                                    new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiError"), err, null).setVisible(true);
                                                     serverField.setEditable(true);
                                                     serverPortField.setEditable(true);
                                                     externalField.setEditable(true);
@@ -313,7 +314,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                         new Runnable() {
                                             @Override
                                             public void run() {
-                                                new ErrorDialog(owner, ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.login.ioError"), err, null).setVisible(true);
+                                                new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.ioError"), err, null).setVisible(true);
                                                 serverField.setEditable(true);
                                                 serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
@@ -336,7 +337,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                         new Runnable() {
                                             @Override
                                             public void run() {
-                                                new ErrorDialog(owner, ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.login.rmiNotBoundError"), err, null).setVisible(true);
+                                                new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiNotBoundError"), err, null).setVisible(true);
                                                 serverField.setEditable(true);
                                                 serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
@@ -359,7 +360,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                         new Runnable() {
                                             @Override
                                             public void run() {
-                                                new ErrorDialog(owner, ApplicationResourcesAccessor.getMessage(Locale.getDefault(), "LoginDialog.login.runtimeError"), err, null).setVisible(true);
+                                                new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.runtimeError"), err, null).setVisible(true);
                                                 serverField.setEditable(true);
                                                 serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
