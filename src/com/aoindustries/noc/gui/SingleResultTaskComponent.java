@@ -168,7 +168,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
                 Locale locale = Locale.getDefault();
                 DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
                 StringBuilder text = new StringBuilder();
-                String formattedDate = df.format(new Date(singleResult.getTime()));
+                String formattedDate = df.format(singleResult.getDate());
                 long latency = singleResult.getLatency();
                 text.append(
                     latency < 1000000

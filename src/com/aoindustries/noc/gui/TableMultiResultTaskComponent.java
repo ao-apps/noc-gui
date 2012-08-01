@@ -241,7 +241,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                                         accessor.getMessage(
                                             //locale,
                                             "TableMultiResultTaskComponent.time",
-                                            df.format(new Date(result.getTime()))
+                                            df.format(result.getTime())
                                         )
                                     ),
                                     row,

@@ -219,7 +219,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             // Update the data in the table
             Locale locale = Locale.getDefault();
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
-            String formattedDate = df.format(new Date(tableResult.getTime()));
+            String formattedDate = df.format(tableResult.getDate());
             long latency = tableResult.getLatency();
             String retrievedLine =
                 latency < 1000000
