@@ -268,6 +268,7 @@ public class Preferences {
         prefs.put("Preferences.server", server);
     }
 
+    // TODO: Remove all server and serverPort
     public String getServerPort() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 

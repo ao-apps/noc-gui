@@ -57,14 +57,15 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
      * TODO: Fetch this hard-coded set of servers from a DNS CNAME.
      */
     private static final String[] servers = {
-        "fc.us.monitor.accuratealerts.com",
-        "kc.us.monitor.accuratealerts.com"
+        //"fc.us.monitor.accuratealerts.com",
+        //"kc.us.monitor.accuratealerts.com"
+        "localhost"
     };
 
     /**
      * TODO: Fetch this hard-coded port on a per-server from DNS TXT.
      */
-    private static final int SERVER_PORT = 4584;
+    private static final int SERVER_PORT = Monitor.DEFAULT_RMI_SERVER_PORT;
 
     /**
      * Gets the monitor for the provided username and password.
@@ -96,7 +97,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
             publicAddress,
             null,
             listenPort,
-            servers[1],
+            servers[0],
             SERVER_PORT
         );
     }
