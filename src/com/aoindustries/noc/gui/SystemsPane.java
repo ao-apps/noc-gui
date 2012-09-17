@@ -463,12 +463,15 @@ public class SystemsPane extends JPanel {
         for(int scanIndex = index; scanIndex<parent.getChildCount() ; scanIndex++) {
             SystemsTreeNode scanNode = (SystemsTreeNode)parent.getChildAt(scanIndex);
             if(scanNode.getNode().equals(childNode)) {
+                System.err.println("DEBUG: SystemsPane: node found");
                 // Found existing, remove any extra nodes up to it (if any)
                 for(int deleteIndex = scanIndex-1; deleteIndex>=index ; deleteIndex--) {
                     SystemsTreeNode deletingNode = (SystemsTreeNode)parent.getChildAt(deleteIndex);
                     recursiveRemoveNodeFromParent(deletingNode);
                 }
                 return scanNode;
+            } else {
+                System.err.println("DEBUG: SystemsPane: node not found");
             }
         }
         // Not found, insert into correct position

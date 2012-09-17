@@ -62,7 +62,8 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
     private static final String[] servers = {
         //"fc.us.monitor.accuratealerts.com",
         //"kc.us.monitor.accuratealerts.com"
-        "localhost"
+        "dapad.aoindustries.com"
+        //"localhost"
     };
 
     /**
@@ -124,8 +125,6 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
 
     private final NOC noc;
     private final Component owner;
-    private JTextField serverField;
-    private JTextField serverPortField;
     private JTextField externalField;
     private JTextField localPortField;
     private JTextField usernameField;
@@ -144,9 +143,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         JRootPane localRootPane = getRootPane();
 
         // Add the labels
-        JPanel P=new JPanel(new GridLayout(6, 1, 0, 2));
-        P.add(new JLabel(accessor.getMessage("LoginDialog.server.prompt")));
-        P.add(new JLabel(accessor.getMessage("LoginDialog.serverPort.prompt")));
+        JPanel P=new JPanel(new GridLayout(4, 1, 0, 2));
         P.add(new JLabel(accessor.getMessage("LoginDialog.external.prompt")));
         P.add(new JLabel(accessor.getMessage("LoginDialog.localPort.prompt")));
         P.add(new JLabel(accessor.getMessage("LoginDialog.username.prompt")));
@@ -154,13 +151,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         localContentPane.add(P, BorderLayout.WEST);
 
         // Add the fields
-        P=new JPanel(new GridLayout(6, 1, 0, 2));
-        P.add(serverField=new JTextField(16));
-        serverField.addActionListener(this);
-        serverField.setText(noc.preferences.getServer());
-        P.add(serverPortField=new JTextField(6));
-        serverPortField.addActionListener(this);
-        serverPortField.setText(noc.preferences.getServerPort());
+        P=new JPanel(new GridLayout(4, 1, 0, 2));
         P.add(externalField=new JTextField(16));
         externalField.addActionListener(this);
         externalField.setText(noc.preferences.getExternal());
@@ -215,13 +206,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         Object source=e.getSource();
-        if(source==serverField) {
-            serverPortField.selectAll();
-            serverPortField.requestFocus();
-        } else if(source==serverPortField) {
-            externalField.selectAll();
-            externalField.requestFocus();
-        } else if(source==externalField) {
+        if(source==externalField) {
             localPortField.selectAll();
             localPortField.requestFocus();
         } else if(source==localPortField) {
@@ -233,15 +218,11 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         } else if(source==passwordField || source==okButton) {
             synchronized(loginLock) {
                 if(loginThread==null) {
-                    serverField.setEditable(false);
-                    serverPortField.setEditable(false);
                     externalField.setEditable(false);
                     localPortField.setEditable(false);
                     usernameField.setEditable(false);
                     passwordField.setEditable(false);
                     okButton.setEnabled(false);
-                    final String server = serverField.getText();
-                    final String serverPort = serverPortField.getText();
                     final String external = externalField.getText();
                     final String localPort = localPortField.getText();
                     final String username = usernameField.getText();
@@ -292,8 +273,6 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                                     conn,
                                                     rootNode,
                                                     rootNodeLabel,
-                                                    server,
-                                                    serverPort,
                                                     external,
                                                     localPort,
                                                     username
@@ -301,15 +280,13 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                                 /*
                                                 } catch(RemoteException err) {
                                                     new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiError"), err, null).setVisible(true);
-                                                    serverField.setEditable(true);
-                                                    serverPortField.setEditable(true);
                                                     externalField.setEditable(true);
                                                     localPortField.setEditable(true);
                                                     usernameField.setEditable(true);
                                                     passwordField.setEditable(true);
                                                     okButton.setEnabled(true);
-                                                    serverField.selectAll();
-                                                    serverField.requestFocus();
+                                                    externalField.selectAll();
+                                                    externalField.requestFocus();
                                                 }
                                                  */
                                             }
@@ -326,15 +303,13 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             @Override
                                             public void run() {
                                                 new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.ioError"), err, null).setVisible(true);
-                                                serverField.setEditable(true);
-                                                serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
                                                 localPortField.setEditable(true);
                                                 usernameField.setEditable(true);
                                                 passwordField.setEditable(true);
                                                 okButton.setEnabled(true);
-                                                serverField.selectAll();
-                                                serverField.requestFocus();
+                                                externalField.selectAll();
+                                                externalField.requestFocus();
                                             }
                                         }
                                     );
@@ -350,15 +325,13 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             @Override
                                             public void run() {
                                                 new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiNotBoundError"), err, null).setVisible(true);
-                                                serverField.setEditable(true);
-                                                serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
                                                 localPortField.setEditable(true);
                                                 usernameField.setEditable(true);
                                                 passwordField.setEditable(true);
                                                 okButton.setEnabled(true);
-                                                serverField.selectAll();
-                                                serverField.requestFocus();
+                                                externalField.selectAll();
+                                                externalField.requestFocus();
                                             }
                                         }
                                     );
@@ -374,15 +347,13 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             @Override
                                             public void run() {
                                                 new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.runtimeError"), err, null).setVisible(true);
-                                                serverField.setEditable(true);
-                                                serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
                                                 localPortField.setEditable(true);
                                                 usernameField.setEditable(true);
                                                 passwordField.setEditable(true);
                                                 okButton.setEnabled(true);
-                                                serverField.selectAll();
-                                                serverField.requestFocus();
+                                                externalField.selectAll();
+                                                externalField.requestFocus();
                                             }
                                         }
                                     );

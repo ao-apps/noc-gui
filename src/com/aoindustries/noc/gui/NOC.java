@@ -680,14 +680,12 @@ public class NOC {
     }
 
     /**
-     * @param  port  the port for the local objects, not the server port.
+     * @param  localPort  the port for the local objects, not the server port.
      */
     void loginCompleted(
         AOServConnector conn,
         RootNode rootNode,
         String rootNodeLabel,
-        String server,
-        String serverPort,
         String external,
         String localPort,
         String username
@@ -703,8 +701,6 @@ public class NOC {
             setTrayIconImage(trayIconEnabledImage);
             loginMenuItem.setLabel(accessor.getMessage("NOC.trayIcon.popup.logout"));
         }
-        preferences.setServer(server);
-        preferences.setServerPort(serverPort);
         preferences.setExternal(external);
         preferences.setLocalPort(localPort);
         preferences.setUsername(username);
