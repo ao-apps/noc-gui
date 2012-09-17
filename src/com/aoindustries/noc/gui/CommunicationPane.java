@@ -1,10 +1,10 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2007-2009 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.aoserv.client.AOServPermission;
@@ -49,7 +49,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -571,7 +570,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 
     // <editor-fold defaultstate="collapsed" desc="Refreshing">
     @Override
-    public void tableUpdated(Table table) {
+    public void tableUpdated(Table<?> table) {
         /*try {
             System.out.println("tableUpdated: "+table.getTableName());
         } catch(Exception err) {
@@ -620,7 +619,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                         if(treeNode==categoriesRootNode) {
                             myIncludeUncategorized = true;
                         } else {
-                            TicketCategory ticketCategory = (TicketCategory)((SynchronizingMutableTreeNode)treeNode).getUserObject();
+                            TicketCategory ticketCategory = (TicketCategory)((SynchronizingMutableTreeNode<?>)treeNode).getUserObject();
                             selectedCategories.add(ticketCategory);
                         }
                     }
@@ -642,7 +641,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                         if(treeNode==businessesRootNode) {
                             myIncludeNoBusiness = true;
                         } else {
-                            Business business = (Business)((SynchronizingMutableTreeNode)treeNode).getUserObject();
+                            Business business = (Business)((SynchronizingMutableTreeNode<?>)treeNode).getUserObject();
                             selectedBusinesses.add(business);
                         }
                     }
@@ -659,7 +658,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     for(TreePath treePath : selectedBrandPaths) {
                         TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
                         if(treeNode!=brandsRootNode) {
-                            Brand brand = (Brand)((SynchronizingMutableTreeNode)treeNode).getUserObject();
+                            Brand brand = (Brand)((SynchronizingMutableTreeNode<?>)treeNode).getUserObject();
                             selectedBrands.add(brand);
                         }
                     }
@@ -675,7 +674,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     for(TreePath treePath : selectedResellerPaths) {
                         TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
                         if(treeNode!=resellersRootNode) {
-                            Reseller reseller = (Reseller)((SynchronizingMutableTreeNode)treeNode).getUserObject();
+                            Reseller reseller = (Reseller)((SynchronizingMutableTreeNode<?>)treeNode).getUserObject();
                             selectedResellers.add(reseller);
                         }
                     }
@@ -1096,8 +1095,8 @@ public class CommunicationPane extends JPanel implements TableListener {
         @Override
         public boolean equals(Object O) {
             if(O==null) return false;
-            if(!(O instanceof TicketCell)) return false;
-            TicketCell other = (TicketCell)O;
+            if(!(O instanceof TicketCell<?>)) return false;
+            TicketCell<?> other = (TicketCell<?>)O;
             return
                 (isStrikethrough==other.isStrikethrough)
                 && value.equals(other.value)
@@ -1232,12 +1231,12 @@ public class CommunicationPane extends JPanel implements TableListener {
             } else {
                 Integer ticketNumber = ticketRow.ticketNumber;
                 boolean needsCheckCells;
-                if(!ticketNumber.equals(((TicketCell)ticketsTableModel.getValueAt(index, 0)).value)) {
+                if(!ticketNumber.equals(((TicketCell<?>)ticketsTableModel.getValueAt(index, 0)).value)) {
                     // Objects don't match
                     // If this object is found further down the list, then move it to this address
                     int foundIndex = -1;
                     for(int searchIndex = index+1; searchIndex<ticketsTableModel.getRowCount(); searchIndex++) {
-                        if(ticketNumber.equals(((TicketCell)ticketsTableModel.getValueAt(searchIndex, 0)).value)) {
+                        if(ticketNumber.equals(((TicketCell<?>)ticketsTableModel.getValueAt(searchIndex, 0)).value)) {
                             foundIndex = searchIndex;
                             break;
                         }
@@ -1260,7 +1259,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     boolean isStrikethrough = ticketRow.isStrikethrough;
                     // ticketNumber
                     {
-                        TicketCell ticketCell = (TicketCell)ticketsTableModel.getValueAt(index, 0);
+                        TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 0);
                         if(
                             ticketCell.isStrikethrough!=isStrikethrough
                             || !ticketCell.value.equals(ticketRow.ticketNumber)
@@ -1279,7 +1278,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     }
                     // priority
                     {
-                        TicketCell ticketCell = (TicketCell)ticketsTableModel.getValueAt(index, 1);
+                        TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 1);
                         if(
                             ticketCell.isStrikethrough!=isStrikethrough
                             || !ticketCell.value.equals(ticketRow.priority)
@@ -1298,7 +1297,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     }
                     // status
                     {
-                        TicketCell ticketCell = (TicketCell)ticketsTableModel.getValueAt(index, 2);
+                        TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 2);
                         if(
                             ticketCell.isStrikethrough!=isStrikethrough
                             || !ticketCell.value.equals(ticketRow.status)
@@ -1336,7 +1335,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     }
                     // openedBy
                     {
-                        TicketCell ticketCell = (TicketCell)ticketsTableModel.getValueAt(index, 4);
+                        TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 4);
                         if(
                             ticketCell.isStrikethrough!=isStrikethrough
                             || !ticketCell.value.equals(ticketRow.openedBy)
@@ -1355,7 +1354,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     }
                     // business
                     {
-                        TicketCell ticketCell = (TicketCell)ticketsTableModel.getValueAt(index, 5);
+                        TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 5);
                         if(
                             ticketCell.isStrikethrough!=isStrikethrough
                             || !ticketCell.value.equals(ticketRow.business)
@@ -1374,7 +1373,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     }
                     // summary
                     {
-                        TicketCell ticketCell = (TicketCell)ticketsTableModel.getValueAt(index, 6);
+                        TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 6);
                         if(
                             ticketCell.isStrikethrough!=isStrikethrough
                             || !ticketCell.value.equals(ticketRow.summary)
@@ -1413,8 +1412,8 @@ public class CommunicationPane extends JPanel implements TableListener {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             if(value==null) {
                 return wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            } else if(value instanceof TicketCell) {
-                TicketCell ticketCell = (TicketCell)value;
+            } else if(value instanceof TicketCell<?>) {
+                TicketCell<?> ticketCell = (TicketCell<?>)value;
                 value = ticketCell.getRendererValue();
                 Component component = wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 component.setForeground(ticketCell.foregroundColor);

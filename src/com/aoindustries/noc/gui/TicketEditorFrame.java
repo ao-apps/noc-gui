@@ -1,10 +1,10 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2009 by AO Industries, Inc.,
+ * Copyright 2009-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import java.awt.BorderLayout;
@@ -15,7 +15,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -28,6 +27,8 @@ import javax.swing.WindowConstants;
  * @author  AO Industries, Inc.
  */
 public class TicketEditorFrame extends JFrame {
+
+    private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 

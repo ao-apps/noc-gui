@@ -1,10 +1,10 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2009 by AO Industries, Inc.,
+ * Copyright 2009-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.aoserv.client.Brand;
@@ -14,11 +14,11 @@ import com.aoindustries.aoserv.client.Ticket;
 import com.aoindustries.aoserv.client.TicketStatus;
 import com.aoindustries.aoserv.client.TicketType;
 import com.aoindustries.awt.LabelledGridLayout;
+import com.aoindustries.lang.ObjectUtils;
 import com.aoindustries.sql.SQLUtility;
 import com.aoindustries.swing.SynchronizingComboBoxModel;
 import com.aoindustries.table.Table;
 import com.aoindustries.table.TableListener;
-import com.aoindustries.util.StringUtility;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.FocusAdapter;
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -244,7 +243,7 @@ public class TicketEditor extends JPanel implements TableListener {
                             if(currentTicket!=null) {
                                 try {
                                     Business oldBusiness = currentTicket.getBusiness();
-                                    if(!StringUtility.equals(newBusiness, oldBusiness)) {
+                                    if(!ObjectUtils.equals(newBusiness, oldBusiness)) {
                                         System.out.println("DEBUG: currentTicket.setBusiness("+newBusiness+");");
                                         currentTicket.setBusiness(oldBusiness, newBusiness);
                                         Ticket newTicket = currentTicket.getTable().get(currentTicket.getKey());
@@ -516,7 +515,7 @@ public class TicketEditor extends JPanel implements TableListener {
                     }
                     // Ignore request when ticket ID hasn't changed
                     Integer currentTicketId = currentTicket==null ? null : currentTicket.getKey();
-                    if(!StringUtility.equals(ticketId, currentTicketId)) {
+                    if(!ObjectUtils.equals(ticketId, currentTicketId)) {
                         // System.out.println("DEBUG: TicketEditor: showTicket("+ticket+")");
 
                         // Hide if necessary
@@ -558,7 +557,7 @@ public class TicketEditor extends JPanel implements TableListener {
     }
 
     @Override
-    public void tableUpdated(Table table) {
+    public void tableUpdated(Table<?> table) {
         // Run in a background thread to avoid deadlock while waiting for lock
         currentTicketExecutorService.submit(
             new Runnable() {

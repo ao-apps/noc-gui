@@ -1,11 +1,11 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2008-2009 by AO Industries, Inc.,
+ * Copyright 2008-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
-import com.aoindustries.noc.common.AlertLevel;
+package com.aoindustries.noc.gui;
+
+import com.aoindustries.noc.monitor.common.AlertLevel;
 
 /**
  * One task.

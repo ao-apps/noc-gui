@@ -1,25 +1,21 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2008-2009 by AO Industries, Inc.,
+ * Copyright 2008-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
-import com.aoindustries.noc.common.AlertLevel;
-import com.aoindustries.noc.common.SingleResultListener;
-import com.aoindustries.noc.common.SingleResultNode;
-import com.aoindustries.noc.common.SingleResult;
-import com.aoindustries.noc.common.Node;
+import com.aoindustries.noc.monitor.common.AlertLevel;
+import com.aoindustries.noc.monitor.common.SingleResultListener;
+import com.aoindustries.noc.monitor.common.SingleResultNode;
+import com.aoindustries.noc.monitor.common.SingleResult;
+import com.aoindustries.noc.monitor.common.Node;
 import com.aoindustries.sql.SQLUtility;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,7 +80,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
     };
 
     @Override
-    public void start(Node node, JComponent validationComponent) throws RemoteException {
+    public void start(Node node, JComponent validationComponent) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         if(!(node instanceof SingleResultNode)) throw new AssertionError("node is not a SingleResultNode: "+node.getClass().getName());
@@ -98,10 +94,6 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
         JScrollBar horizontalScrollBar = scrollPane.getHorizontalScrollBar();
         verticalScrollBar.setValue(verticalScrollBar.getMinimum());
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
-
-        final int port = noc.port;
-        final RMIClientSocketFactory csf = noc.csf;
-        final RMIServerSocketFactory ssf = noc.ssf;
 
         noc.executorService.submit(
             new Runnable() {
@@ -120,9 +112,6 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
                                 }
                             }
                         );
-
-                        UnicastRemoteObject.exportObject(singleResultListener, port, csf, ssf);
-
                         localSingleResultNode.addSingleResultListener(singleResultListener);
                     } catch(RemoteException err) {
                         logger.log(Level.SEVERE, null, err);
@@ -133,7 +122,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
     }
 
     @Override
-    public void stop() throws RemoteException {
+    public void stop() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         final SingleResultNode localSingleResultNode = this.singleResultNode;
@@ -145,7 +134,6 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
                     public void run() {
                         try {
                             localSingleResultNode.removeSingleResultListener(singleResultListener);
-                            noc.unexportObject(singleResultListener);
                         } catch(RemoteException err) {
                             logger.log(Level.SEVERE, null, err);
                         }

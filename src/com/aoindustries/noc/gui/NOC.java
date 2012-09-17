@@ -1,17 +1,16 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2007-2009 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
-import com.aoindustries.noc.common.AlertLevel;
-import com.aoindustries.noc.common.RootNode;
+import com.aoindustries.noc.monitor.common.AlertLevel;
+import com.aoindustries.noc.monitor.common.RootNode;
 import com.aoindustries.util.BufferManager;
 import com.aoindustries.util.ErrorPrinter;
-import com.aoindustries.util.WrappedException;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -37,14 +36,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.rmi.NoSuchObjectException;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -148,9 +140,6 @@ public class NOC {
     // Encapsulate with getter/setter to enforce?
     AOServConnector conn;
     RootNode rootNode;
-    int port;
-    RMIClientSocketFactory csf;
-    RMIServerSocketFactory ssf;
 
     final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -236,21 +225,17 @@ public class NOC {
         WindowAdapter windowAdapter = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                try {
-                    // Put back in the parent if there is one
-                    if(NOC.this.parent!=null) {
-                        currentDisplayMode = Preferences.DisplayMode.TABS;
-                        configureDisplayMode();
-                    } else if(NOC.this.singleFrame!=null) {
-                        // Stays running in the background to popup alerts
-                        singleFrame.setVisible(false);
-                        alertsFrame.setVisible(false);
-                        communicationFrame.setVisible(false);
-                        systemsFrame.setVisible(false);
-                    } else throw new AssertionError("Both parent and singleFrame are null");
-                } catch(RemoteException err) {
-                    throw new WrappedException(err);
-                }
+                // Put back in the parent if there is one
+                if(NOC.this.parent!=null) {
+                    currentDisplayMode = Preferences.DisplayMode.TABS;
+                    configureDisplayMode();
+                } else if(NOC.this.singleFrame!=null) {
+                    // Stays running in the background to popup alerts
+                    singleFrame.setVisible(false);
+                    alertsFrame.setVisible(false);
+                    communicationFrame.setVisible(false);
+                    systemsFrame.setVisible(false);
+                } else throw new AssertionError("Both parent and singleFrame are null");
             }
         };
         if(singleFrame!=null) {
@@ -295,14 +280,10 @@ public class NOC {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        try {
-                            if(NOC.this.rootNode!=null) {
-                                logout();
-                            } else {
-                                login();
-                            }
-                        } catch(RemoteException err) {
-                            throw new WrappedException(err);
+                        if(NOC.this.rootNode!=null) {
+                            logout();
+                        } else {
+                            login();
                         }
                     }
                 }
@@ -321,11 +302,7 @@ public class NOC {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        try {
-                            exitApplication();
-                        } catch(RemoteException err) {
-                            throw new WrappedException(err);
-                        }
+                        exitApplication();
                     }
                 }
             );
@@ -410,7 +387,7 @@ public class NOC {
         }
     }
 
-    private void exitApplication() throws RemoteException {
+    private void exitApplication() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         // Put back in the parent if there is one
@@ -491,7 +468,7 @@ public class NOC {
     /**
      * Sets the display mode.
      */
-    void setDisplayMode(Preferences.DisplayMode displayMode) throws RemoteException {
+    void setDisplayMode(Preferences.DisplayMode displayMode) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         preferences.setDisplayMode(displayMode);
@@ -503,7 +480,7 @@ public class NOC {
      * Should be called either at start-up or when the display mode has been changed.
      * The preferences should be updated before calling this.
      */
-    private void configureDisplayMode() throws RemoteException {
+    private void configureDisplayMode() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         switch(currentDisplayMode) {
@@ -601,7 +578,7 @@ public class NOC {
      *
      * @see  #configureDisplayMode()
      */
-    private void initTabs(Container parent) throws RemoteException {
+    private void initTabs(Container parent) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         parent.removeAll();
@@ -653,12 +630,8 @@ public class NOC {
             new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        if(rootNode==null) login();
-                        else logout();
-                    } catch(RemoteException err) {
-                        throw new WrappedException(err);
-                    }
+                    if(rootNode==null) login();
+                    else logout();
                 }
             }
         );
@@ -673,11 +646,7 @@ public class NOC {
                     new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            try {
-                                setDisplayMode(Preferences.DisplayMode.TABS);
-                            } catch(RemoteException err) {
-                                throw new WrappedException(err);
-                            }
+                            setDisplayMode(Preferences.DisplayMode.TABS);
                         }
                     }
                 );
@@ -691,11 +660,7 @@ public class NOC {
                     new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            try {
-                                setDisplayMode(Preferences.DisplayMode.FRAMES);
-                            } catch(RemoteException err) {
-                                throw new WrappedException(err);
-                            }
+                            setDisplayMode(Preferences.DisplayMode.FRAMES);
                         }
                     }
                 );
@@ -725,11 +690,8 @@ public class NOC {
         String serverPort,
         String external,
         String localPort,
-        String username,
-        int port,
-        RMIClientSocketFactory csf,
-        RMIServerSocketFactory ssf
-    ) throws RemoteException {
+        String username
+    ) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         String logoutLabel = accessor.getMessage("NOC.logoutButton.label");
@@ -748,9 +710,6 @@ public class NOC {
         preferences.setUsername(username);
         this.conn = conn;
         this.rootNode = rootNode;
-        this.port = port;
-        this.csf = csf;
-        this.ssf = ssf;
         alerts.start();
         communication.start(conn);
         systems.start(rootNode, rootNodeLabel);
@@ -762,7 +721,7 @@ public class NOC {
         if(image!=trayIcon.getImage()) trayIcon.setImage(image);
     }
 
-    void logout() throws RemoteException {
+    void logout() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         if(this.rootNode!=null) {
@@ -772,9 +731,6 @@ public class NOC {
         }
         this.conn = null;
         this.rootNode = null;
-        this.port = -1;
-        this.csf = null;
-        this.ssf = null;
         String loginLabel = accessor.getMessage("NOC.loginButton.label");
         if(singleLoginButton!=null) singleLoginButton.setText(loginLabel);
         if(alertsLoginButton!=null) alertsLoginButton.setText(loginLabel);
@@ -883,32 +839,5 @@ public class NOC {
         }
 
         alerts.alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage);
-    }
-    
-    /**
-     * Tries for up to ten seconds to gracefully unexport an object.  If still not successful, logs a warning and forcefully unexports.
-     */
-    void unexportObject(Remote remote) {
-        assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
-        try {
-            boolean unexported = false;
-            for(int c=0;c<100;c++) {
-                if(UnicastRemoteObject.unexportObject(remote, false)) {
-                    unexported = true;
-                    break;
-                }
-                try {
-                    Thread.sleep(100);
-                } catch(InterruptedException err) {
-                    logger.log(Level.WARNING, null, err);
-                }
-            }
-            if(!unexported) {
-                logger.log(Level.WARNING, null, new RuntimeException("Unable to unexport Object, now being forceful"));
-                UnicastRemoteObject.unexportObject(remote, true);
-            }
-        } catch(NoSuchObjectException err) {
-            logger.log(Level.WARNING, null, err);
-        }
     }
 }

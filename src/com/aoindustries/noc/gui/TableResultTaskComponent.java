@@ -1,26 +1,22 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2008-2009 by AO Industries, Inc.,
+ * Copyright 2008-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
-import com.aoindustries.noc.common.AlertLevel;
-import com.aoindustries.noc.common.Node;
-import com.aoindustries.noc.common.TableResultListener;
-import com.aoindustries.noc.common.TableResultNode;
-import com.aoindustries.noc.common.TableResult;
+import com.aoindustries.noc.monitor.common.AlertLevel;
+import com.aoindustries.noc.monitor.common.Node;
+import com.aoindustries.noc.monitor.common.TableResultListener;
+import com.aoindustries.noc.monitor.common.TableResultNode;
+import com.aoindustries.noc.monitor.common.TableResult;
 import com.aoindustries.sql.SQLUtility;
 import java.awt.BorderLayout;
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -92,10 +88,9 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             );
         }
     };
-    volatile private boolean tableResultListenerExported = false;
 
     @Override
-    public void start(Node node, JComponent validationComponent) throws RemoteException {
+    public void start(Node node, JComponent validationComponent) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         if(!(node instanceof TableResultNode)) throw new AssertionError("node is not a TableResultNode: "+node.getClass().getName());
@@ -109,10 +104,6 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
         JScrollBar horizontalScrollBar = scrollPane.getHorizontalScrollBar();
         verticalScrollBar.setValue(verticalScrollBar.getMinimum());
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
-
-        final int port = noc.port;
-        final RMIClientSocketFactory csf = noc.csf;
-        final RMIServerSocketFactory ssf = noc.ssf;
 
         noc.executorService.submit(
             new Runnable() {
@@ -132,10 +123,6 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                             }
                         );
 
-                        if(!tableResultListenerExported) {
-                            UnicastRemoteObject.exportObject(tableResultListener, port, csf, ssf);
-                            tableResultListenerExported = true;
-                        }
                         //noc.unexportObject(tableResultListener);
                         localTableResultNode.addTableResultListener(tableResultListener);
                     } catch(RemoteException err) {
@@ -147,7 +134,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
     }
 
     @Override
-    public void stop() throws RemoteException {
+    public void stop() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         final TableResultNode localTableResultNode = this.tableResultNode;

@@ -1,16 +1,12 @@
 /*
- * Copyright 2007-2009 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
-import java.util.Locale;
-
 /**
  * Provides a simplified interface for obtaining localized values from the ApplicationResources.properties files.
- *
- * @version  1.0
  *
  * @author  AO Industries, Inc.
  */

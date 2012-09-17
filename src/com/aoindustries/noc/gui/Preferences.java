@@ -1,12 +1,12 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2007-2009 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
-import com.aoindustries.noc.common.AlertLevel;
-import com.aoindustries.noc.common.Monitor;
+package com.aoindustries.noc.gui;
+
+import com.aoindustries.noc.monitor.common.AlertLevel;
+import com.aoindustries.noc.monitor.common.Monitor;
 import java.awt.Rectangle;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;

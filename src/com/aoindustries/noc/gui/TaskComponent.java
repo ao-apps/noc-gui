@@ -1,13 +1,12 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2008-2009 by AO Industries, Inc.,
+ * Copyright 2008-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
-import com.aoindustries.noc.common.AlertLevel;
-import com.aoindustries.noc.common.Node;
-import java.rmi.RemoteException;
+package com.aoindustries.noc.gui;
+
+import com.aoindustries.noc.monitor.common.AlertLevel;
+import com.aoindustries.noc.monitor.common.Node;
 import javax.swing.JComponent;
 
 /**
@@ -21,16 +20,16 @@ public interface TaskComponent {
      * Gets the component that should be added to the task area.
      */
     JComponent getComponent();
-    
+
     /**
      * Called just after the component has been added.
      */
-    void start(Node node, JComponent validationComponent) throws RemoteException;
+    void start(Node node, JComponent validationComponent);
 
     /**
      * Called just before the component is removed.
      */
-    void stop() throws RemoteException ;
+    void stop();
 
     /**
      * Called just after the systems alert level is changed.

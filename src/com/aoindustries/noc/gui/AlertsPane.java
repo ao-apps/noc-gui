@@ -1,13 +1,13 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2007-2009 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
-import com.aoindustries.noc.common.AlertLevel;
+import com.aoindustries.noc.monitor.common.AlertLevel;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -40,6 +40,8 @@ public class AlertsPane extends JPanel {
      * The number of milliseconds between buzzers.
      */
     private static final int BUZZER_INTERVAL = 120000;
+
+    private static final long serialVersionUID = 1L;
 
     private final NOC noc;
 
@@ -95,6 +97,8 @@ public class AlertsPane extends JPanel {
         table.getActionMap().put(
             "deleteSelectedRows",
              new AbstractAction() {
+                private static final long serialVersionUID = 1L;
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     int[] selectedRows = table.getSelectedRows();

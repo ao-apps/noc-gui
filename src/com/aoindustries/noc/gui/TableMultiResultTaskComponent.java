@@ -1,26 +1,22 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2008-2009 by AO Industries, Inc.,
+ * Copyright 2008-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
-import com.aoindustries.noc.common.AlertLevel;
-import com.aoindustries.noc.common.NanoTimeSpan;
-import com.aoindustries.noc.common.Node;
-import com.aoindustries.noc.common.TableMultiResult;
-import com.aoindustries.noc.common.TableMultiResultListener;
-import com.aoindustries.noc.common.TableMultiResultNode;
+import com.aoindustries.noc.monitor.common.AlertLevel;
+import com.aoindustries.noc.monitor.common.NanoTimeSpan;
+import com.aoindustries.noc.monitor.common.Node;
+import com.aoindustries.noc.monitor.common.TableMultiResult;
+import com.aoindustries.noc.monitor.common.TableMultiResultListener;
+import com.aoindustries.noc.monitor.common.TableMultiResultNode;
 import java.awt.GridLayout;
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -93,17 +89,15 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
             }
         }
     };
-    volatile private boolean tableMultiResultListenerExported = false;
 
     @Override
-    public void start(Node node, JComponent validationComponent) throws RemoteException {
+    public void start(Node node, JComponent validationComponent) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        if(!(node instanceof TableMultiResultNode)) throw new AssertionError("node is not a TableMultiResultNode: "+node.getClass().getName());
+        if(!(node instanceof TableMultiResultNode<?>)) throw new AssertionError("node is not a TableMultiResultNode: "+node.getClass().getName());
         if(validationComponent==null) throw new IllegalArgumentException("validationComponent is null");
 
-        @SuppressWarnings("unchecked")
-        final TableMultiResultNode<? extends TableMultiResult> localTableMultiResultNode = this.tableMultiResultNode = (TableMultiResultNode)node;
+        final TableMultiResultNode<? extends TableMultiResult> localTableMultiResultNode = this.tableMultiResultNode = (TableMultiResultNode<? extends TableMultiResult>)node;
 
         this.validationComponent = validationComponent;
 
@@ -113,10 +107,6 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
         verticalScrollBar.setValue(verticalScrollBar.getMinimum());
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
 
-        final int port = noc.port;
-        final RMIClientSocketFactory csf = noc.csf;
-        final RMIServerSocketFactory ssf = noc.ssf;
-
         noc.executorService.submit(
             new Runnable() {
                 @Override
@@ -124,11 +114,6 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                     try {
                         updateValues();
 
-                        if(!tableMultiResultListenerExported) {
-                            UnicastRemoteObject.exportObject(tableMultiResultListener, port, csf, ssf);
-                            tableMultiResultListenerExported = true;
-                        }
-                        //noc.unexportObject(tableResultListener);
                         localTableMultiResultNode.addTableMultiResultListener(tableMultiResultListener);
                     } catch(RemoteException err) {
                         logger.log(Level.SEVERE, null, err);
@@ -139,7 +124,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
     }
 
     @Override
-    public void stop() throws RemoteException {
+    public void stop() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         final TableMultiResultNode<? extends TableMultiResult> localTableMultiResultNode = this.tableMultiResultNode;

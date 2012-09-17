@@ -1,20 +1,16 @@
-package com.aoindustries.noc.gui;
-
 /*
- * Copyright 2007-2009 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
+package com.aoindustries.noc.gui;
+
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
-import com.aoindustries.noc.common.Monitor;
-import com.aoindustries.rmi.RMIClientSocketFactorySSL;
-import com.aoindustries.rmi.RMIClientSocketFactoryTCP;
-import com.aoindustries.rmi.RMIServerSocketFactorySSL;
-import com.aoindustries.rmi.RMIServerSocketFactoryTCP;
-import com.aoindustries.noc.common.RootNode;
-import com.aoindustries.noc.monitor.MonitorImpl;
-import com.aoindustries.noc.monitor.client.MonitorClient;
+import com.aoindustries.noc.monitor.common.Monitor;
+import com.aoindustries.noc.monitor.common.RootNode;
+import com.aoindustries.noc.monitor.noswing.NoswingMonitor;
+import com.aoindustries.noc.monitor.rmi.client.RmiClientMonitor;
 import com.aoindustries.swing.ErrorDialog;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -27,13 +23,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
 import java.util.Locale;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -61,6 +52,54 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
     private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Logger.getLogger(LoginDialog.class.getName());
+
+    /**
+     * TODO: Fetch this hard-coded set of servers from a DNS CNAME.
+     */
+    private static final String[] servers = {
+        "fc.us.monitor.accuratealerts.com",
+        "kc.us.monitor.accuratealerts.com"
+    };
+
+    /**
+     * TODO: Fetch this hard-coded port on a per-server from DNS TXT.
+     */
+    private static final int SERVER_PORT = 4584;
+
+    /**
+     * Gets the monitor for the provided username and password.
+     * This monitor connects to multiple servers and aggregates the results.
+     *
+     * TODO: Use blender to merge results from multiple monitoring points.
+     */
+    private static Monitor getBlendedMonitor(
+        String publicAddress,
+        int listenPort
+    ) throws RemoteException {
+        /* TODO: Get off the classpath, copy to temp file if necessary
+        // SSL for anything else
+        if(System.getProperty("javax.net.ssl.keyStorePassword")==null) {
+            System.setProperty(
+                "javax.net.ssl.keyStorePassword",
+                "changeit"
+            );
+        }
+        if(System.getProperty("javax.net.ssl.keyStore")==null) {
+            System.setProperty(
+                "javax.net.ssl.keyStore",
+                System.getProperty("user.home")+File.separatorChar+".keystore"
+            );
+        }
+         */
+        // TODO: Retry monitor, too
+        return RmiClientMonitor.getInstance(
+            publicAddress,
+            null,
+            listenPort,
+            servers[1],
+            SERVER_PORT
+        );
+    }
 
     private final NOC noc;
     private final Component owner;
@@ -192,69 +231,21 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                             public void run() {
                                 try {
                                     // First try to login to local AOServConnector
+                                    // TODO: No longer require this login, because can't connect to monitoring when master down or inaccessible
                                     final AOServConnector conn = AOServConnector.getConnector(
                                         username,
                                         password,
                                         logger
                                     );
-                                    Monitor monitor;
-                                    final RMIClientSocketFactory csf;
-                                    final RMIServerSocketFactory ssf;
-                                    if(server.trim().length()==0) {
-                                        // Setup the RMI system properties
-                                        System.clearProperty("java.rmi.server.hostname");
-                                        System.clearProperty("java.rmi.server.randomIDs");
-                                        System.clearProperty("java.rmi.server.useCodebaseOnly");
-                                        System.clearProperty("java.rmi.server.disableHttp");
 
-                                        // Non-SSL for anything loopback
-                                        csf = new RMIClientSocketFactoryTCP("127.0.0.1");
-                                        ssf = new RMIServerSocketFactoryTCP("127.0.0.1");
-                                        monitor = new MonitorImpl(
-                                            Integer.parseInt(localPort),
-                                            csf,
-                                            ssf
-                                        );
-                                    } else {
-                                        // Setup the RMI system properties
-                                        if(external.trim().length()>0) {
-                                            System.setProperty("java.rmi.server.hostname", external.trim());
-                                        } else {
-                                            System.clearProperty("java.rmi.server.hostname");
-                                        }
-                                        System.setProperty("java.rmi.server.randomIDs", "true");
-                                        System.setProperty("java.rmi.server.useCodebaseOnly", "true");
-                                        System.setProperty("java.rmi.server.disableHttp", "true");
+                                    // Get the aggregated monitor
+                                    Monitor monitor = getBlendedMonitor(
+                                        external,
+                                        Integer.parseInt(localPort)
+                                    );
 
-                                        String hostname = server.trim();
-                                        if(
-                                            hostname.equalsIgnoreCase("localhost")
-                                            || hostname.equalsIgnoreCase("localhost.localdomain")
-                                            || hostname.equals("127.0.0.1")
-                                            || InetAddress.getByName(hostname).isLoopbackAddress()
-                                        ) {
-                                            // Non-SSL for anything loopback
-                                            csf = new RMIClientSocketFactoryTCP();
-                                            ssf = new RMIServerSocketFactoryTCP(hostname);
-                                        } else {
-                                            // SSL for anything else
-                                            if(System.getProperty("javax.net.ssl.keyStorePassword")==null) {
-                                                System.setProperty(
-                                                    "javax.net.ssl.keyStorePassword",
-                                                    "changeit"
-                                                );
-                                            }
-                                            if(System.getProperty("javax.net.ssl.keyStore")==null) {
-                                                System.setProperty(
-                                                    "javax.net.ssl.keyStore",
-                                                    System.getProperty("user.home")+File.separatorChar+".keystore"
-                                                );
-                                            }
-                                            csf = new RMIClientSocketFactorySSL();
-                                            ssf = new RMIServerSocketFactorySSL();
-                                        }
-                                        monitor = new MonitorClient(hostname, Integer.parseInt(serverPort), csf);
-                                    }
+                                    // Make sure no I/O on Swing event dispatch thread to aid in debugging
+                                    monitor = NoswingMonitor.getInstance(monitor);
 
                                     // Do the login (get the root node)
                                     final RootNode rootNode = monitor.login(Locale.getDefault(), username, password);
@@ -274,21 +265,19 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                         new Runnable() {
                                             @Override
                                             public void run() {
-                                                try {
-                                                    setVisible(false);
-                                                    noc.loginCompleted(
-                                                        conn,
-                                                        rootNode,
-                                                        rootNodeLabel,
-                                                        server,
-                                                        serverPort,
-                                                        external,
-                                                        localPort,
-                                                        username,
-                                                        Integer.parseInt(localPort),
-                                                        csf,
-                                                        ssf
-                                                    );
+                                                //try {
+                                                setVisible(false);
+                                                noc.loginCompleted(
+                                                    conn,
+                                                    rootNode,
+                                                    rootNodeLabel,
+                                                    server,
+                                                    serverPort,
+                                                    external,
+                                                    localPort,
+                                                    username
+                                                );
+                                                /*
                                                 } catch(RemoteException err) {
                                                     new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiError"), err, null).setVisible(true);
                                                     serverField.setEditable(true);
@@ -301,6 +290,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                                     serverField.selectAll();
                                                     serverField.requestFocus();
                                                 }
+                                                 */
                                             }
                                         }
                                     );
@@ -327,6 +317,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             }
                                         }
                                     );
+                                /*
                                 } catch(final NotBoundException err) {
                                     // Check if canceled
                                     synchronized(loginLock) {
@@ -350,6 +341,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             }
                                         }
                                     );
+                                 */
                                 } catch(final Exception err) {
                                     // Check if canceled
                                     synchronized(loginLock) {
