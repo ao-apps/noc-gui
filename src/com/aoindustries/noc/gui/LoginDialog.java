@@ -7,6 +7,7 @@ package com.aoindustries.noc.gui;
 
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.io.FileUtils;
 import com.aoindustries.noc.monitor.common.Monitor;
 import com.aoindustries.noc.monitor.common.RootNode;
 import com.aoindustries.noc.monitor.noswing.NoswingMonitor;
@@ -23,7 +24,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -76,7 +79,24 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
     private static Monitor getBlendedMonitor(
         String publicAddress,
         int listenPort
-    ) throws RemoteException {
+    ) throws RemoteException, IOException {
+        // Use the trustStore on the classpath if not set
+        if(System.getProperty("javax.net.ssl.trustStorePassword")==null) {
+            System.setProperty(
+                "javax.net.ssl.trustStorePassword",
+                "changeit"
+            );
+        }
+        if(System.getProperty("javax.net.ssl.trustStore")==null) {
+            URL url = LoginDialog.class.getResource("/com/aoindustries/noc/gui/truststore/truststore");
+            if(url==null) throw new IOException("truststore not found");
+            File trustStore = FileUtils.getFile(url, true);
+            System.setProperty(
+                "javax.net.ssl.trustStore",
+                trustStore.getAbsolutePath()
+            );
+        }
+
         /* TODO: Get off the classpath, copy to temp file if necessary
         // SSL for anything else
         if(System.getProperty("javax.net.ssl.keyStorePassword")==null) {
