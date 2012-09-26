@@ -13,6 +13,7 @@ import com.aoindustries.noc.monitor.common.RootNode;
 import com.aoindustries.noc.monitor.noswing.NoswingMonitor;
 import com.aoindustries.noc.monitor.rmi.client.RmiClientMonitor;
 import com.aoindustries.swing.ErrorDialog;
+import com.aoindustries.util.AoCollections;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -28,7 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -57,16 +60,6 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
     private static final Logger logger = Logger.getLogger(LoginDialog.class.getName());
 
     /**
-     * TODO: Fetch this hard-coded set of servers from a DNS CNAME.
-     */
-    private static final String[] servers = {
-        //"fc.us.monitor.accuratealerts.com",
-        //"kc.us.monitor.accuratealerts.com"
-        "dapad.aoindustries.com"
-        //"localhost"
-    };
-
-    /**
      * TODO: Fetch this hard-coded port on a per-server from DNS TXT.
      */
     private static final int SERVER_PORT = Monitor.DEFAULT_RMI_SERVER_PORT;
@@ -77,10 +70,13 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
      *
      * TODO: Use blender to merge results from multiple monitoring points.
      */
-    private static Monitor getBlendedMonitor(
+    private static Monitor getMonitor(
         String publicAddress,
-        int listenPort
+        int listenPort,
+        Collection<String> monitoringPoints
     ) throws RemoteException, IOException {
+        if(monitoringPoints.isEmpty()) throw new IllegalArgumentException("monitoringPoints is empty");
+
         // Use the trustStore on the classpath if not set
         if(System.getProperty("javax.net.ssl.trustStorePassword")==null) {
             System.setProperty(
@@ -98,33 +94,27 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
             );
         }
 
-        /* TODO: Get off the classpath, copy to temp file if necessary
-        // SSL for anything else
-        if(System.getProperty("javax.net.ssl.keyStorePassword")==null) {
-            System.setProperty(
-                "javax.net.ssl.keyStorePassword",
-                "changeit"
-            );
-        }
-        if(System.getProperty("javax.net.ssl.keyStore")==null) {
-            System.setProperty(
-                "javax.net.ssl.keyStore",
-                System.getProperty("user.home")+File.separatorChar+".keystore"
-            );
-        }
-         */
-        // TODO: Retry monitor, too
-        return RmiClientMonitor.getInstance(
+        Monitor monitor = RmiClientMonitor.getInstance(
             publicAddress,
             null,
             listenPort,
-            servers[0],
+            monitoringPoints.iterator().next(),
             SERVER_PORT
         );
+
+        // TODO: Retry monitor, too
+
+        // TODO: Blender
+
+        // Make sure no I/O on Swing event dispatch thread to aid in debugging
+        monitor = NoswingMonitor.getInstance(monitor);
+
+        return monitor;
     }
 
     private final NOC noc;
     private final Component owner;
+    private final Collection<String> monitoringPoints;
     private JTextField externalField;
     private JTextField localPortField;
     private JTextField usernameField;
@@ -132,12 +122,14 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
     private JButton okButton;
     private JButton cancelButton;
 
-    public LoginDialog(NOC noc, Component owner) {
+    public LoginDialog(NOC noc, Component owner, Collection<String> monitoringPoints) {
         super((owner instanceof JFrame) ? (JFrame)owner : new JFrame(), accessor.getMessage("LoginDialog.title"), true);
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         this.noc = noc;
         this.owner = owner;
+        this.monitoringPoints = AoCollections.unmodifiableCopyCollection(monitoringPoints);
+
         Container localContentPane = getContentPane();
         localContentPane.setLayout(new BorderLayout());
         JRootPane localRootPane = getRootPane();
@@ -241,17 +233,16 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                     );
 
                                     // Get the aggregated monitor
-                                    Monitor monitor = getBlendedMonitor(
+                                    Monitor monitor = getMonitor(
                                         external,
-                                        Integer.parseInt(localPort)
+                                        Integer.parseInt(localPort),
+                                        monitoringPoints
                                     );
-
-                                    // Make sure no I/O on Swing event dispatch thread to aid in debugging
-                                    monitor = NoswingMonitor.getInstance(monitor);
 
                                     // Do the login (get the root node)
                                     final RootNode rootNode = monitor.login(Locale.getDefault(), username, password);
                                     final String rootNodeLabel = rootNode.getLabel();
+                                    final UUID rootNodeUuid = rootNode.getUuid();
 
                                     // Check if canceled
                                     synchronized(loginLock) {
@@ -273,6 +264,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                                     conn,
                                                     rootNode,
                                                     rootNodeLabel,
+                                                    rootNodeUuid,
                                                     external,
                                                     localPort,
                                                     username

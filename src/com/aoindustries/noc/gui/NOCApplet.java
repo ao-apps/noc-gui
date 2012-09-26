@@ -7,6 +7,7 @@ package com.aoindustries.noc.gui;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JApplet;
@@ -62,7 +63,12 @@ public class NOCApplet extends JApplet {
             }
         } else {
             try {
-                this.noc = new NOC(getContentPane());
+                this.noc = new NOC(
+                    getContentPane(),
+                    Collections.singletonList(
+                        getCodeBase().getHost()
+                    )
+                );
             } catch(IOException err) {
                 logger.log(Level.SEVERE, null, err);
             }

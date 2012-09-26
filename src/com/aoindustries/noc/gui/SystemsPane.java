@@ -29,6 +29,7 @@ import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -250,10 +251,10 @@ public class SystemsPane extends JPanel {
     /**
      * start() should only be called when we have a login established.
      */
-    void start(final RootNode rootNode, final String rootNodeLabel) {
+    void start(final RootNode rootNode, final String rootNodeLabel, final UUID rootNodeUuid) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        SystemsTreeNode newRootNode = new SystemsTreeNode(rootNodeLabel, rootNode, true);
+        SystemsTreeNode newRootNode = new SystemsTreeNode(rootNodeLabel, rootNode, true, rootNodeUuid);
         treeModel.insertNodeInto(newRootNode, rootTreeNode, 0);
         final TreeListener newTreeListener = new TreeListener() {
             @Override
@@ -457,25 +458,22 @@ public class SystemsPane extends JPanel {
     private SystemsTreeNode findOrInsertChild(DefaultTreeModel treeModel, SystemsTreeNode parent, NodeSnapshot child, int index) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        Node childNode = child.getNode();
+        //Node childNode = child.getNode();
 
         // Look for an existing match anywhere at the correct position or later in the children
         for(int scanIndex = index; scanIndex<parent.getChildCount() ; scanIndex++) {
             SystemsTreeNode scanNode = (SystemsTreeNode)parent.getChildAt(scanIndex);
-            if(scanNode.getNode().equals(childNode)) {
-                System.err.println("DEBUG: SystemsPane: node found");
+            if(scanNode.getUuid().equals(child.getUuid())) {
                 // Found existing, remove any extra nodes up to it (if any)
                 for(int deleteIndex = scanIndex-1; deleteIndex>=index ; deleteIndex--) {
                     SystemsTreeNode deletingNode = (SystemsTreeNode)parent.getChildAt(deleteIndex);
                     recursiveRemoveNodeFromParent(deletingNode);
                 }
                 return scanNode;
-            } else {
-                System.err.println("DEBUG: SystemsPane: node not found");
             }
         }
         // Not found, insert into correct position
-        SystemsTreeNode childTreeNode = new SystemsTreeNode(child.getLabel(), childNode, child.getAllowsChildren());
+        SystemsTreeNode childTreeNode = new SystemsTreeNode(child.getLabel(), child.getNode(), child.getAllowsChildren(), child.getUuid());
         treeModel.insertNodeInto(childTreeNode, parent, index);
         return childTreeNode;
     }
@@ -507,14 +505,16 @@ public class SystemsPane extends JPanel {
         private static final long serialVersionUID = 1L;
 
         final private Node node;
+        final private UUID uuid;
 
         private AlertLevel alertLevel = AlertLevel.UNKNOWN;
 
-        SystemsTreeNode(String label, Node node, boolean allowsChildren) {
+        SystemsTreeNode(String label, Node node, boolean allowsChildren, UUID uuid) {
             super(label, allowsChildren);
             assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
             this.node = node;
+            this.uuid = uuid;
         }
 
         void setAlertLevel(AlertLevel alertLevel) {
@@ -527,6 +527,12 @@ public class SystemsPane extends JPanel {
             assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
             return node;
+        }
+
+        UUID getUuid() {
+            assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+            return uuid;
         }
     }
 
@@ -638,8 +644,7 @@ public class SystemsPane extends JPanel {
                 } else {
                     setDisabledIcon(getClosedIcon());
                 }
-            }
-            else {
+            } else {
                 setEnabled(true);
                 if (leaf) {
                     setIcon(getLeafIcon());

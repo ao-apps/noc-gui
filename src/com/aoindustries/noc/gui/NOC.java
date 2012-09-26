@@ -9,6 +9,7 @@ import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.RootNode;
+import com.aoindustries.util.AoCollections;
 import com.aoindustries.util.BufferManager;
 import com.aoindustries.util.ErrorPrinter;
 import java.awt.AWTException;
@@ -36,8 +37,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -69,6 +73,18 @@ public class NOC {
     private static final Logger logger = Logger.getLogger(NOC.class.getName());
 
     /**
+     * TODO: Fetch this hard-coded set of servers from a DNS CNAME.
+     */
+    private static Collection<String> getDefaultMonitoringPoints() {
+        return Arrays.asList(
+            "fc.us.monitor.accuratealerts.com",
+            "kc.us.monitor.accuratealerts.com"
+            //"dapad.aoindustries.com"
+            //"localhost"
+        );
+    }
+
+    /**
      * Running as a standalone application.
      *
      * May we include the security policy with the source code?
@@ -79,8 +95,10 @@ public class NOC {
                 System.setSecurityManager(new SecurityManager());
             }
 
+            final Collection<String> monitoringPoints = args.length==0 ? getDefaultMonitoringPoints() : Arrays.asList(args);
+
             if(SwingUtilities.isEventDispatchThread()) {
-                NOC noc = new NOC(null);
+                NOC noc = new NOC(null, monitoringPoints);
             } else {
                 // If running standalone, start in proper mode
                 SwingUtilities.invokeAndWait(
@@ -88,7 +106,7 @@ public class NOC {
                         @Override
                         public void run() {
                             try {
-                                NOC noc = new NOC(null);
+                                NOC noc = new NOC(null, monitoringPoints);
                             } catch(IOException err) {
                                 ErrorPrinter.printStackTraces(err);
                             }
@@ -108,7 +126,7 @@ public class NOC {
     }
 
     final Preferences preferences;
-
+    private final Collection<String> monitoringPoints;
     private final Container parent;
     final JFrame singleFrame;
     final JFrame alertsFrame;
@@ -148,10 +166,11 @@ public class NOC {
      *
      * @param  parent  the parent component for this NOC (where it will embed itself during Tabbed mode) or <code>null</code> if there is no parent.
      */
-    public NOC(Container parent) throws IOException {
+    public NOC(Container parent, Collection<String> monitoringPoints) throws IOException {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         this.preferences = new Preferences(this);
+        this.monitoringPoints = AoCollections.unmodifiableCopyCollection(monitoringPoints);
 
         // Either one of parent or singleFrame should exist
         this.parent = parent;
@@ -675,7 +694,7 @@ public class NOC {
     private void login() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        LoginDialog loginDialog = new LoginDialog(this, getDefaultDialogOwner());
+        LoginDialog loginDialog = new LoginDialog(this, getDefaultDialogOwner(), monitoringPoints);
         loginDialog.setVisible(true);
     }
 
@@ -686,6 +705,7 @@ public class NOC {
         AOServConnector conn,
         RootNode rootNode,
         String rootNodeLabel,
+        UUID rootNodeUuid,
         String external,
         String localPort,
         String username
@@ -708,7 +728,7 @@ public class NOC {
         this.rootNode = rootNode;
         alerts.start();
         communication.start(conn);
-        systems.start(rootNode, rootNodeLabel);
+        systems.start(rootNode, rootNodeLabel, rootNodeUuid);
     }
 
     void setTrayIconImage(Image image) {
