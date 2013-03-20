@@ -45,7 +45,7 @@ grant codeBase "file:${user.dir}/lib/aoserv-client.jar" {
   permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
   permission java.security.SecurityPermission "insertProvider.SunJSSE";
 };
-grant codeBase "file:${user.dir}/lib/noc-common.jar" {
+grant codeBase "file:${user.dir}/lib/noc-monitor-common.jar" {
   permission java.net.SocketPermission        "127.0.0.1:4584",                  "connect,resolve";
   permission java.net.SocketPermission        "monitor.aoindustries.com",        "resolve";
   permission java.net.SocketPermission        "70.91.161.42:4584",               "connect,resolve";
