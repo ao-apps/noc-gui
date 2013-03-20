@@ -34,7 +34,7 @@ import javax.swing.SwingUtilities;
  */
 public class AlertsPane extends JPanel {
 
-    private static final int MAX_HISTORY_SIZE = 1000;
+    private static final int MAX_HISTORY_SIZE = Integer.MAX_VALUE; // 1000;
 
     /**
      * The number of milliseconds between buzzers.

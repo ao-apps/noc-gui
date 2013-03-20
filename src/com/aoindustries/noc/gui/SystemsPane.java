@@ -259,7 +259,8 @@ public class SystemsPane extends JPanel {
         final TreeListener newTreeListener = new TreeListener() {
             @Override
             public void nodeAdded() {
-                assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
+                // It is OK to run from any thread
+                // assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 
                 // TODO: Call system tray?
                 if(treeListener==this) batchValidateTreeNodes();
