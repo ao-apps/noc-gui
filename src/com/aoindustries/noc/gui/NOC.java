@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2012 by AO Industries, Inc.,
+ * Copyright 2007-2013 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -9,7 +9,6 @@ import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.RootNode;
-import com.aoindustries.util.AoCollections;
 import com.aoindustries.util.BufferManager;
 import com.aoindustries.util.ErrorPrinter;
 import java.awt.AWTException;
@@ -37,11 +36,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Collection;
+import java.rmi.NoSuchObjectException;
+import java.rmi.Remote;
+import java.rmi.server.RMIClientSocketFactory;
+import java.rmi.server.RMIServerSocketFactory;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -73,18 +74,6 @@ public class NOC {
     private static final Logger logger = Logger.getLogger(NOC.class.getName());
 
     /**
-     * TODO: Fetch this hard-coded set of servers from a DNS CNAME.
-     */
-    private static Collection<String> getDefaultMonitoringPoints() {
-        return Arrays.asList(
-            "fc.us.monitor.accuratealerts.com",
-            "kc.us.monitor.accuratealerts.com"
-            //"dapad.aoindustries.com"
-            //"localhost"
-        );
-    }
-
-    /**
      * Running as a standalone application.
      *
      * May we include the security policy with the source code?
@@ -95,10 +84,8 @@ public class NOC {
                 System.setSecurityManager(new SecurityManager());
             }
 
-            final Collection<String> monitoringPoints = args.length==0 ? getDefaultMonitoringPoints() : Arrays.asList(args);
-
             if(SwingUtilities.isEventDispatchThread()) {
-                NOC noc = new NOC(null, monitoringPoints);
+                NOC noc = new NOC(null);
             } else {
                 // If running standalone, start in proper mode
                 SwingUtilities.invokeAndWait(
@@ -106,7 +93,7 @@ public class NOC {
                         @Override
                         public void run() {
                             try {
-                                NOC noc = new NOC(null, monitoringPoints);
+                                NOC noc = new NOC(null);
                             } catch(IOException err) {
                                 ErrorPrinter.printStackTraces(err);
                             }
@@ -126,7 +113,7 @@ public class NOC {
     }
 
     final Preferences preferences;
-    private final Collection<String> monitoringPoints;
+
     private final Container parent;
     final JFrame singleFrame;
     final JFrame alertsFrame;
@@ -158,6 +145,9 @@ public class NOC {
     // Encapsulate with getter/setter to enforce?
     AOServConnector conn;
     RootNode rootNode;
+    int port;
+    RMIClientSocketFactory csf;
+    RMIServerSocketFactory ssf;
 
     final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -166,11 +156,10 @@ public class NOC {
      *
      * @param  parent  the parent component for this NOC (where it will embed itself during Tabbed mode) or <code>null</code> if there is no parent.
      */
-    public NOC(Container parent, Collection<String> monitoringPoints) throws IOException {
+    public NOC(Container parent) throws IOException {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         this.preferences = new Preferences(this);
-        this.monitoringPoints = AoCollections.unmodifiableCopyCollection(monitoringPoints);
 
         // Either one of parent or singleFrame should exist
         this.parent = parent;
@@ -244,17 +233,17 @@ public class NOC {
         WindowAdapter windowAdapter = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                // Put back in the parent if there is one
-                if(NOC.this.parent!=null) {
-                    currentDisplayMode = Preferences.DisplayMode.TABS;
-                    configureDisplayMode();
-                } else if(NOC.this.singleFrame!=null) {
-                    // Stays running in the background to popup alerts
-                    singleFrame.setVisible(false);
-                    alertsFrame.setVisible(false);
-                    communicationFrame.setVisible(false);
-                    systemsFrame.setVisible(false);
-                } else throw new AssertionError("Both parent and singleFrame are null");
+				// Put back in the parent if there is one
+				if(NOC.this.parent!=null) {
+					currentDisplayMode = Preferences.DisplayMode.TABS;
+					configureDisplayMode();
+				} else if(NOC.this.singleFrame!=null) {
+					// Stays running in the background to popup alerts
+					singleFrame.setVisible(false);
+					alertsFrame.setVisible(false);
+					communicationFrame.setVisible(false);
+					systemsFrame.setVisible(false);
+				} else throw new AssertionError("Both parent and singleFrame are null");
             }
         };
         if(singleFrame!=null) {
@@ -299,11 +288,11 @@ public class NOC {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if(NOC.this.rootNode!=null) {
-                            logout();
-                        } else {
-                            login();
-                        }
+						if(NOC.this.rootNode!=null) {
+							logout();
+						} else {
+							login();
+						}
                     }
                 }
             );
@@ -321,7 +310,7 @@ public class NOC {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        exitApplication();
+						exitApplication();
                     }
                 }
             );
@@ -649,8 +638,8 @@ public class NOC {
             new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(rootNode==null) login();
-                    else logout();
+					if(rootNode==null) login();
+					else logout();
                 }
             }
         );
@@ -665,7 +654,7 @@ public class NOC {
                     new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            setDisplayMode(Preferences.DisplayMode.TABS);
+							setDisplayMode(Preferences.DisplayMode.TABS);
                         }
                     }
                 );
@@ -679,7 +668,7 @@ public class NOC {
                     new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            setDisplayMode(Preferences.DisplayMode.FRAMES);
+							setDisplayMode(Preferences.DisplayMode.FRAMES);
                         }
                     }
                 );
@@ -694,21 +683,25 @@ public class NOC {
     private void login() {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        LoginDialog loginDialog = new LoginDialog(this, getDefaultDialogOwner(), monitoringPoints);
+        LoginDialog loginDialog = new LoginDialog(this, getDefaultDialogOwner());
         loginDialog.setVisible(true);
     }
 
     /**
-     * @param  localPort  the port for the local objects, not the server port.
+     * @param  port  the port for the local objects, not the server port.
      */
     void loginCompleted(
         AOServConnector conn,
         RootNode rootNode,
         String rootNodeLabel,
-        UUID rootNodeUuid,
+        String server,
+        String serverPort,
         String external,
         String localPort,
-        String username
+        String username,
+        int port,
+        RMIClientSocketFactory csf,
+        RMIServerSocketFactory ssf
     ) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -721,14 +714,19 @@ public class NOC {
             setTrayIconImage(trayIconEnabledImage);
             loginMenuItem.setLabel(accessor.getMessage("NOC.trayIcon.popup.logout"));
         }
+        preferences.setServer(server);
+        preferences.setServerPort(serverPort);
         preferences.setExternal(external);
         preferences.setLocalPort(localPort);
         preferences.setUsername(username);
         this.conn = conn;
         this.rootNode = rootNode;
+        this.port = port;
+        this.csf = csf;
+        this.ssf = ssf;
         alerts.start();
         communication.start(conn);
-        systems.start(rootNode, rootNodeLabel, rootNodeUuid);
+        systems.start(rootNode, rootNodeLabel);
     }
 
     void setTrayIconImage(Image image) {
@@ -747,6 +745,9 @@ public class NOC {
         }
         this.conn = null;
         this.rootNode = null;
+        this.port = -1;
+        this.csf = null;
+        this.ssf = null;
         String loginLabel = accessor.getMessage("NOC.loginButton.label");
         if(singleLoginButton!=null) singleLoginButton.setText(loginLabel);
         if(alertsLoginButton!=null) alertsLoginButton.setText(loginLabel);
@@ -855,5 +856,32 @@ public class NOC {
         }
 
         alerts.alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage);
+    }
+    
+    /**
+     * Tries for up to ten seconds to gracefully unexport an object.  If still not successful, logs a warning and forcefully unexports.
+     */
+    void unexportObject(Remote remote) {
+        assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
+        try {
+            boolean unexported = false;
+            for(int c=0;c<100;c++) {
+                if(UnicastRemoteObject.unexportObject(remote, false)) {
+                    unexported = true;
+                    break;
+                }
+                try {
+                    Thread.sleep(100);
+                } catch(InterruptedException err) {
+                    logger.log(Level.WARNING, null, err);
+                }
+            }
+            if(!unexported) {
+                logger.log(Level.WARNING, null, new RuntimeException("Unable to unexport Object, now being forceful"));
+                UnicastRemoteObject.unexportObject(remote, true);
+            }
+        } catch(NoSuchObjectException err) {
+            logger.log(Level.WARNING, null, err);
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2012 by AO Industries, Inc.,
+ * Copyright 2009-2013 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -27,8 +27,6 @@ import javax.swing.WindowConstants;
  * @author  AO Industries, Inc.
  */
 public class TicketEditorFrame extends JFrame {
-
-    private static final long serialVersionUID = 1L;
 
     private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2012 by AO Industries, Inc.,
+ * Copyright 2007-2013 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -49,6 +49,8 @@ public class Preferences {
     private Rectangle alertsFrameBounds;
     private Rectangle communicationFrameBounds;
     private Rectangle systemsFrameBounds;
+    private String server;
+    private String serverPort;
     private String external;
     private String localPort;
     private String username;
@@ -108,6 +110,8 @@ public class Preferences {
             prefs.getInt("Preferences."+hostname+".systemsFrameBounds.width", 800),
             prefs.getInt("Preferences."+hostname+".systemsFrameBounds.height", 600)
         );
+        server = prefs.get("Preferences.server", "");
+        serverPort = prefs.get("Preferences.serverPort", Integer.toString(Monitor.DEFAULT_RMI_SERVER_PORT));
         external = prefs.get("Preferences."+hostname+".external", "");
         localPort = prefs.get("Preferences."+hostname+".localPort", Integer.toString(Monitor.DEFAULT_RMI_CLIENT_PORT));
         try {
@@ -249,6 +253,32 @@ public class Preferences {
         prefs.putInt("Preferences."+hostname+".systemsFrameBounds.y", systemsFrameBounds.y);
         prefs.putInt("Preferences."+hostname+".systemsFrameBounds.width", systemsFrameBounds.width);
         prefs.putInt("Preferences."+hostname+".systemsFrameBounds.height", systemsFrameBounds.height);
+    }
+
+    public String getServer() {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        return server;
+    }
+
+    public void setServer(String server) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        this.server = server;
+        prefs.put("Preferences.server", server);
+    }
+
+    public String getServerPort() {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        return serverPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+        this.serverPort = serverPort;
+        prefs.put("Preferences.serverPort", serverPort);
     }
 
     public String getExternal() {
