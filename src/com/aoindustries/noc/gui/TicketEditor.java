@@ -620,14 +620,14 @@ public class TicketEditor extends JPanel implements TableListener {
             internalNotes = "";
         } else {
             Brand brandObj = ticket.getBrand();
-            brand = brandObj==null ? "" : brandObj.getKey();
+            brand = brandObj==null ? "" : brandObj.getKey().toString();
             AOServConnector conn = ticket.getTable().getConnector();
             ticketNumber = ticket.getKey();
             ticketTypes = conn.getTicketTypes().getRows();
             ticketType = ticket.getTicketType();
             ticketStatuses = conn.getTicketStatuses().getRows();
             ticketStatus = ticket.getStatus();
-            openDate = ticket.getOpenDate();
+            openDate = ticket.getOpenDate().getTime();
             BusinessAdministrator openedByBA = ticket.getCreatedBy();
             openedBy = openedByBA==null ? "" : openedByBA.getName();
             // TODO: Only show businesses that are a child of the current brandObj (or the current business if not in this set)

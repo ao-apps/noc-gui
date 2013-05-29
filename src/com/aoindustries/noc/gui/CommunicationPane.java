@@ -996,12 +996,12 @@ public class CommunicationPane extends JPanel implements TableListener {
                                                 ticket.getKey(),
                                                 priority,
                                                 ticket.getStatus(),
-                                                ticket.getOpenDate(),
+                                                ticket.getOpenDate().getTime(),
                                                 openedBy==null
                                                     ? (fromAddress==null ? "" : ('('+fromAddress+')'))
                                                     : (fromAddress==null ? openedBy.getKey() : (openedBy.getKey()+" ("+fromAddress+')'))
                                                     ,
-                                                bu==null ? "" : bu.getKey(),
+                                                bu==null ? "" : bu.getKey().toString(),
                                                 ticket.getSummary()
                                             )
                                         );
