@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -7,6 +7,7 @@ package com.aoindustries.noc.gui;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JApplet;
@@ -62,7 +63,12 @@ public class NOCApplet extends JApplet {
             }
         } else {
             try {
-                this.noc = new NOC(getContentPane());
+                this.noc = new NOC(
+                    getContentPane(),
+                    Collections.singletonList(
+                        getCodeBase().getHost()
+                    )
+                );
             } catch(IOException err) {
                 logger.log(Level.SEVERE, null, err);
             }
@@ -90,14 +96,14 @@ public class NOCApplet extends JApplet {
                 logger.log(Level.SEVERE, null, err);
             }
         } else {
-			if(noc!=null) {
-				noc.logout();
-				noc.alertsFrame.setVisible(false);
-				noc.communicationFrame.setVisible(false);
-				noc.systemsFrame.setVisible(false);
-				noc=null;
-			}
-			getContentPane().removeAll();
+            if(noc!=null) {
+                noc.logout();
+                noc.alertsFrame.setVisible(false);
+                noc.communicationFrame.setVisible(false);
+                noc.systemsFrame.setVisible(false);
+                noc=null;
+            }
+            getContentPane().removeAll();
         }
     }
 }

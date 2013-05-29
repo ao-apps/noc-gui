@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -27,11 +27,9 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -115,7 +113,7 @@ public class SystemsPane extends JPanel {
                     if(e.isAddedPath()) {
                         TreePath treePath = e.getPath();
                         if(treePath!=null) {
-							selectNode((SystemsTreeNode)treePath.getLastPathComponent());
+                            selectNode((SystemsTreeNode)treePath.getLastPathComponent());
                         }
                     }
                 }
@@ -167,15 +165,15 @@ public class SystemsPane extends JPanel {
             new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
-					if(e.getStateChange()==ItemEvent.SELECTED) {
-						String command = (String)e.getItem();
-						if(allLabel.equals(command)) setAlertLevel(AlertLevel.NONE);
-						else if(lowLabel.equals(command)) setAlertLevel(AlertLevel.LOW);
-						else if(mediumLabel.equals(command)) setAlertLevel(AlertLevel.MEDIUM);
-						else if(highLabel.equals(command)) setAlertLevel(AlertLevel.HIGH);
-						else if(criticalLabel.equals(command)) setAlertLevel(AlertLevel.CRITICAL);
-						else throw new AssertionError("Unexpected value for command: "+command);
-					}
+                    if(e.getStateChange()==ItemEvent.SELECTED) {
+                        String command = (String)e.getItem();
+                        if(allLabel.equals(command)) setAlertLevel(AlertLevel.NONE);
+                        else if(lowLabel.equals(command)) setAlertLevel(AlertLevel.LOW);
+                        else if(mediumLabel.equals(command)) setAlertLevel(AlertLevel.MEDIUM);
+                        else if(highLabel.equals(command)) setAlertLevel(AlertLevel.HIGH);
+                        else if(criticalLabel.equals(command)) setAlertLevel(AlertLevel.CRITICAL);
+                        else throw new AssertionError("Unexpected value for command: "+command);
+                    }
                 }
             }
         );
@@ -236,7 +234,7 @@ public class SystemsPane extends JPanel {
             if(singleResultTaskComponent==null) singleResultTaskComponent = new SingleResultTaskComponent(noc);
             return singleResultTaskComponent;
         }
-        if(node instanceof TableMultiResultNode) {
+        if(node instanceof TableMultiResultNode<?>) {
             if(tableMultiResultTaskComponent==null) tableMultiResultTaskComponent = new TableMultiResultTaskComponent(noc);
             return tableMultiResultTaskComponent;
         }
@@ -253,78 +251,74 @@ public class SystemsPane extends JPanel {
     /**
      * start() should only be called when we have a login established.
      */
-    void start(final RootNode rootNode, final String rootNodeLabel) {
+    void start(final RootNode rootNode, final String rootNodeLabel, final UUID rootNodeUuid) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		SystemsTreeNode newRootNode = new SystemsTreeNode(rootNodeLabel, rootNode, true);
-		treeModel.insertNodeInto(newRootNode, rootTreeNode, 0);
-		final int port = noc.port;
-		final RMIClientSocketFactory csf = noc.csf;
-		final RMIServerSocketFactory ssf = noc.ssf;
-		final TreeListener newTreeListener = new TreeListener() {
-			@Override
-			public void nodeAdded() {
-				// It is OK to run from any thread
-				// assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
+        SystemsTreeNode newRootNode = new SystemsTreeNode(rootNodeLabel, rootNode, true, rootNodeUuid);
+        treeModel.insertNodeInto(newRootNode, rootTreeNode, 0);
+        final TreeListener newTreeListener = new TreeListener() {
+            @Override
+            public void nodeAdded() {
+                // It is OK to run from any thread
+                // assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 
-				// TODO: Call system tray?
-				if(treeListener==this) batchValidateTreeNodes();
-			}
+                // TODO: Call system tray?
+                if(treeListener==this) batchValidateTreeNodes();
+            }
 
-			@Override
-			public void nodeRemoved() {
-				// It is OK to run from any thread
-				// assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
+            @Override
+            public void nodeRemoved() {
+                // It is OK to run from any thread
+                // assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 
-				// TODO: Call system tray?
-				if(treeListener==this) batchValidateTreeNodes();
-			}
+                // TODO: Call system tray?
+                if(treeListener==this) batchValidateTreeNodes();
+            }
 
-			@Override
-			public void nodeAlertLevelChanged(final List<AlertLevelChange> changes) {
-				assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
+            @Override
+            public void nodeAlertLevelChanged(final List<AlertLevelChange> changes) {
+                assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 
-				if(treeListener==this) {
-					batchValidateTreeNodes();
+                if(treeListener==this) {
+                    batchValidateTreeNodes();
 
-					final TreeListener thisTreeListener = this;
-					SwingUtilities.invokeLater(
-						new Runnable() {
-							@Override
-							public void run() {
-								if(treeListener==thisTreeListener) {
-									for(AlertLevelChange change : changes) {
-										noc.alert(
-											change.getNode(),
-											change.getNodeFullPath(),
-											change.getOldAlertLevel(),
-											change.getNewAlertLevel(),
-											change.getAlertMessage()
-										);
-									}
-								}
-							}
-						}
-					);
-				}
-			}
-		};
-		this.treeListener = newTreeListener;
-		noc.executorService.submit(
-			new Runnable() {
-				@Override
-				public void run() {
-					try {
-						UnicastRemoteObject.exportObject(newTreeListener, port, csf, ssf);
-						rootNode.addTreeListener(newTreeListener);
-					} catch(RemoteException err) {
-						logger.log(Level.SEVERE, null, err);
-					}
-				}
-			}
-		);
-		selectNode(newRootNode);
-		batchValidateTreeNodes();
+                    final TreeListener thisTreeListener = this;
+                    SwingUtilities.invokeLater(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                if(treeListener==thisTreeListener) {
+                                    for(AlertLevelChange change : changes) {
+                                        noc.alert(
+                                            change.getNode(),
+                                            change.getNodeFullPath(),
+                                            change.getOldAlertLevel(),
+                                            change.getNewAlertLevel(),
+                                            change.getAlertMessage()
+                                        );
+                                    }
+                                }
+                            }
+                        }
+                    );
+                }
+            }
+        };
+        this.treeListener = newTreeListener;
+        noc.executorService.submit(
+            new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        rootNode.addTreeListener(newTreeListener);
+                    } catch(RemoteException err) {
+                        logger.log(Level.SEVERE, null, err);
+                    }
+                }
+            }
+        );
+        selectNode(newRootNode);
+        batchValidateTreeNodes();
     }
 
     /**
@@ -345,7 +339,6 @@ public class SystemsPane extends JPanel {
                 public void run() {
                     try {
                         oldRootNode.removeTreeListener(oldTreeListener);
-                        noc.unexportObject(oldTreeListener);
                     } catch(RemoteException err) {
                         logger.log(Level.SEVERE, null, err);
                     }
@@ -423,14 +416,14 @@ public class SystemsPane extends JPanel {
             new Runnable() {
                 @Override
                 public void run() {
-					// Skip if there is no root node
-					if(rootTreeNode.getChildCount()!=0) {
-						AlertLevel alertLevel = noc.preferences.getSystemsAlertLevel();
-						SystemsTreeNode newRootNode = (SystemsTreeNode)rootTreeNode.getChildAt(0);
-						newRootNode.setAlertLevel(rootNodeSnapshot.getAlertLevel());
-						validateTreeNodes(rootNodeSnapshot, newRootNode, alertLevel);
-					}
-					tree.repaint();
+                    // Skip if there is no root node
+                    if(rootTreeNode.getChildCount()!=0) {
+                        AlertLevel alertLevel = noc.preferences.getSystemsAlertLevel();
+                        SystemsTreeNode newRootNode = (SystemsTreeNode)rootTreeNode.getChildAt(0);
+                        newRootNode.setAlertLevel(rootNodeSnapshot.getAlertLevel());
+                        validateTreeNodes(rootNodeSnapshot, newRootNode, alertLevel);
+                    }
+                    tree.repaint();
                 }
             }
         );
@@ -466,12 +459,12 @@ public class SystemsPane extends JPanel {
     private SystemsTreeNode findOrInsertChild(DefaultTreeModel treeModel, SystemsTreeNode parent, NodeSnapshot child, int index) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        Node childNode = child.getNode();
+        //Node childNode = child.getNode();
 
         // Look for an existing match anywhere at the correct position or later in the children
         for(int scanIndex = index; scanIndex<parent.getChildCount() ; scanIndex++) {
             SystemsTreeNode scanNode = (SystemsTreeNode)parent.getChildAt(scanIndex);
-            if(scanNode.getNode().equals(childNode)) {
+            if(scanNode.getUuid().equals(child.getUuid())) {
                 // Found existing, remove any extra nodes up to it (if any)
                 for(int deleteIndex = scanIndex-1; deleteIndex>=index ; deleteIndex--) {
                     SystemsTreeNode deletingNode = (SystemsTreeNode)parent.getChildAt(deleteIndex);
@@ -481,7 +474,7 @@ public class SystemsPane extends JPanel {
             }
         }
         // Not found, insert into correct position
-        SystemsTreeNode childTreeNode = new SystemsTreeNode(child.getLabel(), childNode, child.getAllowsChildren());
+        SystemsTreeNode childTreeNode = new SystemsTreeNode(child.getLabel(), child.getNode(), child.getAllowsChildren(), child.getUuid());
         treeModel.insertNodeInto(childTreeNode, parent, index);
         return childTreeNode;
     }
@@ -513,14 +506,16 @@ public class SystemsPane extends JPanel {
         private static final long serialVersionUID = 1L;
 
         final private Node node;
+        final private UUID uuid;
 
         private AlertLevel alertLevel = AlertLevel.UNKNOWN;
 
-        SystemsTreeNode(String label, Node node, boolean allowsChildren) {
+        SystemsTreeNode(String label, Node node, boolean allowsChildren, UUID uuid) {
             super(label, allowsChildren);
             assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
             this.node = node;
+            this.uuid = uuid;
         }
 
         void setAlertLevel(AlertLevel alertLevel) {
@@ -533,6 +528,12 @@ public class SystemsPane extends JPanel {
             assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
             return node;
+        }
+
+        UUID getUuid() {
+            assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+            return uuid;
         }
     }
 
@@ -644,8 +645,7 @@ public class SystemsPane extends JPanel {
                 } else {
                     setDisabledIcon(getClosedIcon());
                 }
-            }
-            else {
+            } else {
                 setEnabled(true);
                 if (leaf) {
                     setIcon(getLeafIcon());

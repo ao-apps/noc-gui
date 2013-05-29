@@ -1,25 +1,22 @@
 /*
- * Copyright 2008-2013 by AO Industries, Inc.,
+ * Copyright 2008-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
+import com.aoindustries.lang.NullArgumentException;
+import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.common.AlertLevel;
-import com.aoindustries.noc.monitor.common.Node;
-import com.aoindustries.noc.monitor.common.SingleResult;
 import com.aoindustries.noc.monitor.common.SingleResultListener;
 import com.aoindustries.noc.monitor.common.SingleResultNode;
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.noc.monitor.common.SingleResult;
+import com.aoindustries.noc.monitor.common.Node;
 import com.aoindustries.sql.SQLUtility;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +40,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 
     final private NOC noc;
     private SingleResultNode singleResultNode;
+    private SingleResultListener singleResultListener;
     private JComponent validationComponent;
 
     final private JScrollPane scrollPane;
@@ -67,30 +65,46 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
         return this;
     }
     
-    final private SingleResultListener singleResultListener = new SingleResultListener() {
-        @Override
-        public void singleResultUpdated(final SingleResult singleResult) {
-            assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
-
-            SwingUtilities.invokeLater(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        updateValue(singleResult);
-                    }
-                }
-            );
-        }
-    };
-
     @Override
     public void start(Node node, JComponent validationComponent) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         if(!(node instanceof SingleResultNode)) throw new AssertionError("node is not a SingleResultNode: "+node.getClass().getName());
-        if(validationComponent==null) throw new IllegalArgumentException("validationComponent is null");
+        NullArgumentException.checkNotNull(validationComponent, "validationComponent");
 
         final SingleResultNode localSingleResultNode = this.singleResultNode = (SingleResultNode)node;
+        final SingleResultListener localSingleResultListener = singleResultListener = new SingleResultListener() {
+            @Override
+            public void singleResultUpdated(final SingleResult singleResult) {
+                assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
+                final SingleResultListener _this = this;
+                SwingUtilities.invokeLater(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            // Make sure not stopped
+                            if(singleResultListener==_this) {
+                                updateValue(singleResult);
+                            } else {
+                                // Getting extra events, remove self
+                                noc.executorService.submit(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                localSingleResultNode.removeSingleResultListener(_this);
+                                            } catch(RemoteException err) {
+                                                logger.log(Level.SEVERE, null, err);
+                                            }
+                                        }
+                                    }
+                                );
+                            }
+                        }
+                    }
+                );
+            }
+        };
         this.validationComponent = validationComponent;
 
         // Scroll back to the top
@@ -99,31 +113,24 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
         verticalScrollBar.setValue(verticalScrollBar.getMinimum());
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
 
-        final int port = noc.port;
-        final RMIClientSocketFactory csf = noc.csf;
-        final RMIServerSocketFactory ssf = noc.ssf;
-
         noc.executorService.submit(
             new Runnable() {
                 @Override
                 public void run() {
                     try {
+                        localSingleResultNode.addSingleResultListener(localSingleResultListener);
                         final SingleResult result = localSingleResultNode.getLastResult();
                         SwingUtilities.invokeLater(
                             new Runnable() {
                                 @Override
                                 public void run() {
-                                    // When localSingleResultNode doesn't match, we have been stopped already
-                                    if(localSingleResultNode.equals(SingleResultTaskComponent.this.singleResultNode)) {
+                                    // Ignore when stopped
+                                    if(SingleResultTaskComponent.this.singleResultListener==localSingleResultListener) {
                                         updateValue(result);
                                     }
                                 }
                             }
                         );
-
-                        UnicastRemoteObject.exportObject(singleResultListener, port, csf, ssf);
-
-                        localSingleResultNode.addSingleResultListener(singleResultListener);
                     } catch(RemoteException err) {
                         logger.log(Level.SEVERE, null, err);
                     }
@@ -137,15 +144,16 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         final SingleResultNode localSingleResultNode = this.singleResultNode;
-        if(localSingleResultNode!=null) {
-            this.singleResultNode = null;
+        final SingleResultListener localSingleResultListener = this.singleResultListener;
+        this.singleResultNode = null;
+        this.singleResultListener = null;
+        if(localSingleResultNode!=null && localSingleResultListener!=null) {
             noc.executorService.submit(
                 new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            localSingleResultNode.removeSingleResultListener(singleResultListener);
-                            noc.unexportObject(singleResultListener);
+                            localSingleResultNode.removeSingleResultListener(localSingleResultListener);
                         } catch(RemoteException err) {
                             logger.log(Level.SEVERE, null, err);
                         }
@@ -161,45 +169,47 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
     private void updateValue(SingleResult singleResult) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        JComponent localValidationComponent = this.validationComponent;
-        if(localValidationComponent!=null) {
-            if(singleResult==null) textArea.setText("");
-            else {
-                Locale locale = Locale.getDefault();
-                DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
-                StringBuilder text = new StringBuilder();
-                String formattedDate = df.format(new Date(singleResult.getTime()));
-                long latency = singleResult.getLatency();
-                text.append(
-                    latency < 1000000
-                    ? accessor.getMessage(
-                        //locale,
-                        "SingleResultTaskComponent.retrieved.micro",
-                        formattedDate,
-                        SQLUtility.getMilliDecimal(latency)
-                    ) : latency < 1000000000
-                    ? accessor.getMessage(
-                        //locale,
-                        "SingleResultTaskComponent.retrieved.milli",
-                        formattedDate,
-                        SQLUtility.getMilliDecimal(latency/1000)
-                    ) : accessor.getMessage(
-                        //locale,
-                        "SingleResultTaskComponent.retrieved.second",
-                        formattedDate,
-                        SQLUtility.getMilliDecimal(latency/1000000)
-                    )
-                );
-                if(singleResult.getError()!=null) {
-                    text.append("\n----------------------------------------------------------\n").append(singleResult.getError());
-                }
-                if(singleResult.getReport()!=null) {
-                    text.append("\n----------------------------------------------------------\n").append(singleResult.getReport());
-                }
-                textArea.setText(text.toString());
-                localValidationComponent.invalidate();
-                localValidationComponent.validate();
-                localValidationComponent.repaint();
+        if(singleResult==null) textArea.setText("");
+        else {
+            Locale locale = Locale.getDefault();
+            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
+            StringBuilder text = new StringBuilder();
+            String formattedDate = df.format(singleResult.getDate());
+            long latency = singleResult.getLatency();
+            text.append(
+                latency < 1000000
+                ? accessor.getMessage(
+                    //locale,
+                    "SingleResultTaskComponent.retrieved.micro",
+                    formattedDate,
+                    SQLUtility.getMilliDecimal(latency),
+                    singleResult.getMonitoringPoint()
+                ) : latency < 1000000000
+                ? accessor.getMessage(
+                    //locale,
+                    "SingleResultTaskComponent.retrieved.milli",
+                    formattedDate,
+                    SQLUtility.getMilliDecimal(latency/1000),
+                    singleResult.getMonitoringPoint()
+                ) : accessor.getMessage(
+                    //locale,
+                    "SingleResultTaskComponent.retrieved.second",
+                    formattedDate,
+                    SQLUtility.getMilliDecimal(latency/1000000),
+                    singleResult.getMonitoringPoint()
+                )
+            );
+            if(singleResult.getError()!=null) {
+                text.append("\n----------------------------------------------------------\n").append(singleResult.getError());
+            }
+            if(singleResult.getReport()!=null) {
+                text.append("\n----------------------------------------------------------\n").append(singleResult.getReport());
+            }
+            textArea.setText(text.toString());
+            if(validationComponent!=null) {
+                validationComponent.invalidate();
+                validationComponent.validate();
+                validationComponent.repaint();
             }
         }
     }

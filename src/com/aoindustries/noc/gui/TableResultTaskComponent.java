@@ -1,10 +1,11 @@
 /*
- * Copyright 2008-2013 by AO Industries, Inc.,
+ * Copyright 2008-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
+import com.aoindustries.lang.NullArgumentException;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import com.aoindustries.noc.monitor.common.AlertLevel;
@@ -15,12 +16,8 @@ import com.aoindustries.noc.monitor.common.TableResult;
 import com.aoindustries.sql.SQLUtility;
 import java.awt.BorderLayout;
 import java.rmi.RemoteException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
-import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +46,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
     final private NOC noc;
     private TableResultNode tableResultNode;
+    private TableResultListener tableResultListener;
     private JComponent validationComponent;
 
     final private JLabel retrievedLabel;
@@ -76,32 +74,47 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
         return this;
     }
-    
-    final private TableResultListener tableResultListener = new TableResultListener() {
-        @Override
-        public void tableResultUpdated(final TableResult tableResult) {
-            assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
-
-            SwingUtilities.invokeLater(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        updateValue(tableResult);
-                    }
-                }
-            );
-        }
-    };
-    volatile private boolean tableResultListenerExported = false;
 
     @Override
     public void start(Node node, JComponent validationComponent) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         if(!(node instanceof TableResultNode)) throw new AssertionError("node is not a TableResultNode: "+node.getClass().getName());
-        if(validationComponent==null) throw new IllegalArgumentException("validationComponent is null");
+        NullArgumentException.checkNotNull(validationComponent, "validationComponent");
 
         final TableResultNode localTableResultNode = this.tableResultNode = (TableResultNode)node;
+        final TableResultListener localTableResultListener = tableResultListener = new TableResultListener() {
+            @Override
+            public void tableResultUpdated(final TableResult tableResult) {
+                assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
+                final TableResultListener _this = this;
+                SwingUtilities.invokeLater(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            // Make sure not stopped
+                            if(tableResultListener==_this) {
+                                updateValue(tableResult);
+                            } else {
+                                // Getting extra events, remove self
+                                noc.executorService.submit(
+                                    new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                localTableResultNode.removeTableResultListener(_this);
+                                            } catch(RemoteException err) {
+                                                logger.log(Level.SEVERE, null, err);
+                                            }
+                                        }
+                                    }
+                                );
+                            }
+                        }
+                    }
+                );
+            }
+        };
         this.validationComponent = validationComponent;
 
         // Scroll back to the top
@@ -109,10 +122,6 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
         JScrollBar horizontalScrollBar = scrollPane.getHorizontalScrollBar();
         verticalScrollBar.setValue(verticalScrollBar.getMinimum());
         horizontalScrollBar.setValue(horizontalScrollBar.getMinimum());
-
-        final int port = noc.port;
-        final RMIClientSocketFactory csf = noc.csf;
-        final RMIServerSocketFactory ssf = noc.ssf;
 
         noc.executorService.submit(
             new Runnable() {
@@ -132,10 +141,6 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                             }
                         );
 
-                        if(!tableResultListenerExported) {
-                            UnicastRemoteObject.exportObject(tableResultListener, port, csf, ssf);
-                            tableResultListenerExported = true;
-                        }
                         //noc.unexportObject(tableResultListener);
                         localTableResultNode.addTableResultListener(tableResultListener);
                     } catch(RemoteException err) {
@@ -151,14 +156,16 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         final TableResultNode localTableResultNode = this.tableResultNode;
-        if(localTableResultNode!=null) {
-            this.tableResultNode = null;
+        final TableResultListener localTableResultListener = this.tableResultListener;
+        this.tableResultNode = null;
+        this.tableResultListener = null;
+        if(localTableResultNode!=null && localTableResultListener!=null) {
             noc.executorService.submit(
                 new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            localTableResultNode.removeTableResultListener(tableResultListener);
+                            localTableResultNode.removeTableResultListener(localTableResultListener);
                         } catch(RemoteException err) {
                             logger.log(Level.SEVERE, null, err);
                         }
@@ -174,7 +181,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
     private void updateValue(TableResult tableResult) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-        if(tableResult==null) {
+        if(validationComponent==null || tableResult==null) {
             if(table!=null) {
                 scrollPane.setViewport(null);
                 table = null;
@@ -219,7 +226,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             // Update the data in the table
             Locale locale = Locale.getDefault();
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
-            String formattedDate = df.format(new Date(tableResult.getTime()));
+            String formattedDate = df.format(tableResult.getDate());
             long latency = tableResult.getLatency();
             String retrievedLine =
                 latency < 1000000
@@ -227,18 +234,21 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
                     //locale,
                     "TableResultTaskComponent.retrieved.micro",
                     formattedDate,
-                    SQLUtility.getMilliDecimal(latency)
+                    SQLUtility.getMilliDecimal(latency),
+                    tableResult.getMonitoringPoint()
                 ) : latency < 1000000000
                 ? accessor.getMessage(
                     //locale,
                     "TableResultTaskComponent.retrieved.milli",
                     formattedDate,
-                    SQLUtility.getMilliDecimal(latency/1000)
+                    SQLUtility.getMilliDecimal(latency/1000),
+                    tableResult.getMonitoringPoint()
                 ) : accessor.getMessage(
                     //locale,
                     "TableResultTaskComponent.retrieved.second",
                     formattedDate,
-                    SQLUtility.getMilliDecimal(latency/1000000)
+                    SQLUtility.getMilliDecimal(latency/1000000),
+                    tableResult.getMonitoringPoint()
                 )
             ;
             retrievedLabel.setText(retrievedLine);

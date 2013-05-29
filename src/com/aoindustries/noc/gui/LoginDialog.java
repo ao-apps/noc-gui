@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 by AO Industries, Inc.,
+ * Copyright 2007-2012 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -7,15 +7,13 @@ package com.aoindustries.noc.gui;
 
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
-import com.aoindustries.rmi.RMIClientSocketFactorySSL;
-import com.aoindustries.rmi.RMIClientSocketFactoryTCP;
-import com.aoindustries.rmi.RMIServerSocketFactorySSL;
-import com.aoindustries.rmi.RMIServerSocketFactoryTCP;
-import com.aoindustries.noc.monitor.MonitorImpl;
-import com.aoindustries.noc.monitor.client.MonitorClient;
+import com.aoindustries.io.FileUtils;
 import com.aoindustries.noc.monitor.common.Monitor;
 import com.aoindustries.noc.monitor.common.RootNode;
+import com.aoindustries.noc.monitor.noswing.NoswingMonitor;
+import com.aoindustries.noc.monitor.rmi.client.RmiClientMonitor;
 import com.aoindustries.swing.ErrorDialog;
+import com.aoindustries.util.AoCollections;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -29,11 +27,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.rmi.NotBoundException;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
+import java.net.URL;
+import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -61,10 +59,62 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
 
     private static final Logger logger = Logger.getLogger(LoginDialog.class.getName());
 
+    /**
+     * TODO: Fetch this hard-coded port on a per-server from DNS TXT.
+     */
+    private static final int SERVER_PORT = Monitor.DEFAULT_RMI_SERVER_PORT;
+
+    /**
+     * Gets the monitor for the provided username and password.
+     * This monitor connects to multiple servers and aggregates the results.
+     *
+     * TODO: Use blender to merge results from multiple monitoring points.
+     */
+    private static Monitor getMonitor(
+        String publicAddress,
+        int listenPort,
+        Collection<String> monitoringPoints
+    ) throws RemoteException, IOException {
+        if(monitoringPoints.isEmpty()) throw new IllegalArgumentException("monitoringPoints is empty");
+
+        // Use the trustStore on the classpath if not set
+        if(System.getProperty("javax.net.ssl.trustStorePassword")==null) {
+            System.setProperty(
+                "javax.net.ssl.trustStorePassword",
+                "changeit"
+            );
+        }
+        if(System.getProperty("javax.net.ssl.trustStore")==null) {
+            URL url = LoginDialog.class.getResource("/com/aoindustries/noc/gui/truststore/truststore");
+            if(url==null) throw new IOException("truststore not found");
+            File trustStore = FileUtils.getFile(url, true);
+            System.setProperty(
+                "javax.net.ssl.trustStore",
+                trustStore.getAbsolutePath()
+            );
+        }
+
+        Monitor monitor = RmiClientMonitor.getInstance(
+            publicAddress,
+            null,
+            listenPort,
+            monitoringPoints.iterator().next(),
+            SERVER_PORT
+        );
+
+        // TODO: Retry monitor, too
+
+        // TODO: Blender
+
+        // Make sure no I/O on Swing event dispatch thread to aid in debugging
+        monitor = NoswingMonitor.getInstance(monitor);
+
+        return monitor;
+    }
+
     private final NOC noc;
     private final Component owner;
-    private JTextField serverField;
-    private JTextField serverPortField;
+    private final Collection<String> monitoringPoints;
     private JTextField externalField;
     private JTextField localPortField;
     private JTextField usernameField;
@@ -72,20 +122,20 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
     private JButton okButton;
     private JButton cancelButton;
 
-    public LoginDialog(NOC noc, Component owner) {
+    public LoginDialog(NOC noc, Component owner, Collection<String> monitoringPoints) {
         super((owner instanceof JFrame) ? (JFrame)owner : new JFrame(), accessor.getMessage("LoginDialog.title"), true);
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         this.noc = noc;
         this.owner = owner;
+        this.monitoringPoints = AoCollections.unmodifiableCopyCollection(monitoringPoints);
+
         Container localContentPane = getContentPane();
         localContentPane.setLayout(new BorderLayout());
         JRootPane localRootPane = getRootPane();
 
         // Add the labels
-        JPanel P=new JPanel(new GridLayout(6, 1, 0, 2));
-        P.add(new JLabel(accessor.getMessage("LoginDialog.server.prompt")));
-        P.add(new JLabel(accessor.getMessage("LoginDialog.serverPort.prompt")));
+        JPanel P=new JPanel(new GridLayout(4, 1, 0, 2));
         P.add(new JLabel(accessor.getMessage("LoginDialog.external.prompt")));
         P.add(new JLabel(accessor.getMessage("LoginDialog.localPort.prompt")));
         P.add(new JLabel(accessor.getMessage("LoginDialog.username.prompt")));
@@ -93,13 +143,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         localContentPane.add(P, BorderLayout.WEST);
 
         // Add the fields
-        P=new JPanel(new GridLayout(6, 1, 0, 2));
-        P.add(serverField=new JTextField(16));
-        serverField.addActionListener(this);
-        serverField.setText(noc.preferences.getServer());
-        P.add(serverPortField=new JTextField(6));
-        serverPortField.addActionListener(this);
-        serverPortField.setText(noc.preferences.getServerPort());
+        P=new JPanel(new GridLayout(4, 1, 0, 2));
         P.add(externalField=new JTextField(16));
         externalField.addActionListener(this);
         externalField.setText(noc.preferences.getExternal());
@@ -154,13 +198,7 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         Object source=e.getSource();
-        if(source==serverField) {
-            serverPortField.selectAll();
-            serverPortField.requestFocus();
-        } else if(source==serverPortField) {
-            externalField.selectAll();
-            externalField.requestFocus();
-        } else if(source==externalField) {
+        if(source==externalField) {
             localPortField.selectAll();
             localPortField.requestFocus();
         } else if(source==localPortField) {
@@ -172,15 +210,11 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
         } else if(source==passwordField || source==okButton) {
             synchronized(loginLock) {
                 if(loginThread==null) {
-                    serverField.setEditable(false);
-                    serverPortField.setEditable(false);
                     externalField.setEditable(false);
                     localPortField.setEditable(false);
                     usernameField.setEditable(false);
                     passwordField.setEditable(false);
                     okButton.setEnabled(false);
-                    final String server = serverField.getText();
-                    final String serverPort = serverPortField.getText();
                     final String external = externalField.getText();
                     final String localPort = localPortField.getText();
                     final String username = usernameField.getText();
@@ -191,73 +225,24 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                             public void run() {
                                 try {
                                     // First try to login to local AOServConnector
+                                    // TODO: No longer require this login, because can't connect to monitoring when master down or inaccessible
                                     final AOServConnector conn = AOServConnector.getConnector(
                                         username,
                                         password,
                                         logger
                                     );
-                                    Monitor monitor;
-                                    final RMIClientSocketFactory csf;
-                                    final RMIServerSocketFactory ssf;
-                                    if(server.trim().length()==0) {
-                                        // Setup the RMI system properties
-                                        System.clearProperty("java.rmi.server.hostname");
-                                        System.clearProperty("java.rmi.server.randomIDs");
-                                        System.clearProperty("java.rmi.server.useCodebaseOnly");
-                                        System.clearProperty("java.rmi.server.disableHttp");
 
-                                        // Non-SSL for anything loopback
-                                        csf = new RMIClientSocketFactoryTCP("127.0.0.1");
-                                        ssf = new RMIServerSocketFactoryTCP("127.0.0.1");
-                                        monitor = new MonitorImpl(
-                                            Integer.parseInt(localPort),
-                                            csf,
-                                            ssf
-                                        );
-                                    } else {
-                                        // Setup the RMI system properties
-                                        if(external.trim().length()>0) {
-                                            System.setProperty("java.rmi.server.hostname", external.trim());
-                                        } else {
-                                            System.clearProperty("java.rmi.server.hostname");
-                                        }
-                                        System.setProperty("java.rmi.server.randomIDs", "true");
-                                        System.setProperty("java.rmi.server.useCodebaseOnly", "true");
-                                        System.setProperty("java.rmi.server.disableHttp", "true");
-
-                                        String hostname = server.trim();
-                                        if(
-                                            hostname.equalsIgnoreCase("localhost")
-                                            || hostname.equalsIgnoreCase("localhost.localdomain")
-                                            || hostname.equals("127.0.0.1")
-                                            || InetAddress.getByName(hostname).isLoopbackAddress()
-                                        ) {
-                                            // Non-SSL for anything loopback
-                                            csf = new RMIClientSocketFactoryTCP();
-                                            ssf = new RMIServerSocketFactoryTCP(hostname);
-                                        } else {
-                                            // SSL for anything else
-                                            if(System.getProperty("javax.net.ssl.keyStorePassword")==null) {
-                                                System.setProperty(
-                                                    "javax.net.ssl.keyStorePassword",
-                                                    "changeit"
-                                                );
-                                            }
-                                            if(System.getProperty("javax.net.ssl.keyStore")==null) {
-                                                System.setProperty(
-                                                    "javax.net.ssl.keyStore",
-                                                    System.getProperty("user.home")+File.separatorChar+".keystore"
-                                                );
-                                            }
-                                            csf = new RMIClientSocketFactorySSL();
-                                            ssf = new RMIServerSocketFactorySSL();
-                                        }
-                                        monitor = new MonitorClient(hostname, Integer.parseInt(serverPort), csf);
-                                    }
+                                    // Get the aggregated monitor
+                                    Monitor monitor = getMonitor(
+                                        external,
+                                        Integer.parseInt(localPort),
+                                        monitoringPoints
+                                    );
 
                                     // Do the login (get the root node)
                                     final RootNode rootNode = monitor.login(Locale.getDefault(), username, password);
                                     final String rootNodeLabel = rootNode.getLabel();
+                                    final UUID rootNodeUuid = rootNode.getUuid();
 
                                     // Check if canceled
                                     synchronized(loginLock) {
@@ -273,20 +258,29 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                         new Runnable() {
                                             @Override
                                             public void run() {
-												setVisible(false);
-												noc.loginCompleted(
-													conn,
-													rootNode,
-													rootNodeLabel,
-													server,
-													serverPort,
-													external,
-													localPort,
-													username,
-													Integer.parseInt(localPort),
-													csf,
-													ssf
-												);
+                                                //try {
+                                                setVisible(false);
+                                                noc.loginCompleted(
+                                                    conn,
+                                                    rootNode,
+                                                    rootNodeLabel,
+                                                    rootNodeUuid,
+                                                    external,
+                                                    localPort,
+                                                    username
+                                                );
+                                                /*
+                                                } catch(RemoteException err) {
+                                                    new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiError"), err, null).setVisible(true);
+                                                    externalField.setEditable(true);
+                                                    localPortField.setEditable(true);
+                                                    usernameField.setEditable(true);
+                                                    passwordField.setEditable(true);
+                                                    okButton.setEnabled(true);
+                                                    externalField.selectAll();
+                                                    externalField.requestFocus();
+                                                }
+                                                 */
                                             }
                                         }
                                     );
@@ -301,18 +295,17 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             @Override
                                             public void run() {
                                                 new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.ioError"), err, null).setVisible(true);
-                                                serverField.setEditable(true);
-                                                serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
                                                 localPortField.setEditable(true);
                                                 usernameField.setEditable(true);
                                                 passwordField.setEditable(true);
                                                 okButton.setEnabled(true);
-                                                serverField.selectAll();
-                                                serverField.requestFocus();
+                                                externalField.selectAll();
+                                                externalField.requestFocus();
                                             }
                                         }
                                     );
+                                /*
                                 } catch(final NotBoundException err) {
                                     // Check if canceled
                                     synchronized(loginLock) {
@@ -324,18 +317,17 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             @Override
                                             public void run() {
                                                 new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiNotBoundError"), err, null).setVisible(true);
-                                                serverField.setEditable(true);
-                                                serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
                                                 localPortField.setEditable(true);
                                                 usernameField.setEditable(true);
                                                 passwordField.setEditable(true);
                                                 okButton.setEnabled(true);
-                                                serverField.selectAll();
-                                                serverField.requestFocus();
+                                                externalField.selectAll();
+                                                externalField.requestFocus();
                                             }
                                         }
                                     );
+                                 */
                                 } catch(final Exception err) {
                                     // Check if canceled
                                     synchronized(loginLock) {
@@ -347,15 +339,13 @@ final public class LoginDialog extends JDialog implements ActionListener, Window
                                             @Override
                                             public void run() {
                                                 new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.runtimeError"), err, null).setVisible(true);
-                                                serverField.setEditable(true);
-                                                serverPortField.setEditable(true);
                                                 externalField.setEditable(true);
                                                 localPortField.setEditable(true);
                                                 usernameField.setEditable(true);
                                                 passwordField.setEditable(true);
                                                 okButton.setEnabled(true);
-                                                serverField.selectAll();
-                                                serverField.requestFocus();
+                                                externalField.selectAll();
+                                                externalField.requestFocus();
                                             }
                                         }
                                     );
