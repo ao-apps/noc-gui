@@ -7,6 +7,8 @@ package com.aoindustries.noc.gui;
 
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.io.IoUtils;
+import com.aoindustries.lang.NullArgumentException;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.RootNode;
 import com.aoindustries.util.BufferManager;
@@ -32,7 +34,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -429,21 +430,15 @@ public class NOC {
         synchronized(getImageFromResourcesCache) {
             Image image = getImageFromResourcesCache.get(name);
             if(image==null) {
-                InputStream in = NOC.class.getResourceAsStream(name);
-                if(in==null) throw new IOException("Unable to find resource: "+name);
-                try {
-                    ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                    byte[] buff = BufferManager.getBytes();
-                    try {
-                        int ret;
-                        while((ret=in.read(buff, 0, BufferManager.BUFFER_SIZE))!=-1) bout.write(buff, 0, ret);
-                    } finally {
-                        BufferManager.release(buff);
-                    }
-                    image = Toolkit.getDefaultToolkit().createImage(bout.toByteArray());
-                } finally {
-                    in.close();
-                }
+				byte[] imageData;
+				InputStream in = NOC.class.getResourceAsStream(name);
+				if(in==null) throw new IOException("Unable to find resource: "+name);
+				try {
+					imageData = IoUtils.readFully(in);
+				} finally {
+					in.close();
+				}
+				image = Toolkit.getDefaultToolkit().createImage(imageData);
                 getImageFromResourcesCache.put(name, image);
             }
             return image;
@@ -775,7 +770,14 @@ public class NOC {
                         @Override
                         public void run() {
                             try {
-                                playSound(SystemsPane.class.getResourceAsStream("buzzer.wav"));
+								byte[] buffered;
+								InputStream in = SystemsPane.class.getResourceAsStream("buzzer.wav");
+								try {
+									buffered = IoUtils.readFully(in);
+								} finally {
+									in.close();
+								}
+								playSound(buffered);
                             } catch(Exception err) {
                                 logger.log(Level.SEVERE, null, err);
                             } finally {
@@ -795,36 +797,33 @@ public class NOC {
      *
      * Source: http://www.anyexample.com/programming/java/java_play_wav_sound_file.xml
      */
-    void playSound(final InputStream in) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+    void playSound(final byte[] audioFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
+		NullArgumentException.checkNotNull(audioFile, "audioFile");
 
-        if(in==null) throw new IllegalArgumentException("in is null");
-        // Load into buffer
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        byte[] abData = new byte[4096];
-        int nBytesRead;
-        while((nBytesRead=in.read(abData, 0, abData.length))!=-1) {
-            bout.write(abData, 0, nBytesRead);
-        }
-        ByteArrayInputStream bin = new ByteArrayInputStream(bout.toByteArray());
-
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bin);
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new ByteArrayInputStream(audioFile));
         AudioFormat format = audioInputStream.getFormat();
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
         SourceDataLine auline = (SourceDataLine) AudioSystem.getLine(info);
         auline.open(format);
         auline.start();
         try {
-            while ((nBytesRead = audioInputStream.read(abData, 0, abData.length)) != -1) {
-                if(nBytesRead>0) auline.write(abData, 0, nBytesRead);
-            }
+			byte[] buff = BufferManager.getBytes();
+			try {
+				int nBytesRead;
+				while ((nBytesRead = audioInputStream.read(buff)) != -1) {
+					/*if(nBytesRead>0)*/ auline.write(buff, 0, nBytesRead);
+				}
+			} finally {
+				BufferManager.release(buff, false);
+			}
         } finally {
             auline.drain();
             auline.close();
         }
     }
-    
-    void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage) {
+
+	void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage) {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
         // Call system tray
