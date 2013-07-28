@@ -74,6 +74,13 @@ public class NOC {
 
     private static final Logger logger = Logger.getLogger(NOC.class.getName());
 
+	/**
+	 * In Java 7 and Debian 7, the keyboard stops working in the noc-gui the first
+	 * time a popup message is displayed.  This disables the alerts to try to
+	 * workaround this issue.
+	 */
+	private static final boolean ENABLE_TRAY_ICON_ALERTS = false;
+
     /**
      * Running as a standalone application.
      *
@@ -842,12 +849,14 @@ public class NOC {
                 )
             ) {
                 if(trayIcon!=null) {
-                    String totalMessage = sourceDisplay+" \r\n"+alertMessage;
-                    trayIcon.displayMessage(
-                        accessor.getMessage("NOC.trayIcon.alertMessage.caption"),
-                        totalMessage.toString(),
-                        newAlertLevel.compareTo(AlertLevel.HIGH)==0 ? TrayIcon.MessageType.WARNING : TrayIcon.MessageType.ERROR
-                    );
+					if(ENABLE_TRAY_ICON_ALERTS) {
+						String totalMessage = sourceDisplay+" \r\n"+alertMessage;
+						trayIcon.displayMessage(
+							accessor.getMessage("NOC.trayIcon.alertMessage.caption"),
+							totalMessage.toString(),
+							newAlertLevel.compareTo(AlertLevel.HIGH)==0 ? TrayIcon.MessageType.WARNING : TrayIcon.MessageType.ERROR
+						);
+					}
                 } else {
                     // TODO: Bring the alerts to the foreground, much like the open action of the trayIcon
                 }
