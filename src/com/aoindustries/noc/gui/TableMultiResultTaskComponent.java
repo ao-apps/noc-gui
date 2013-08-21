@@ -8,11 +8,11 @@ package com.aoindustries.noc.gui;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import com.aoindustries.noc.monitor.common.AlertLevel;
-import com.aoindustries.noc.monitor.common.NanoTimeSpan;
 import com.aoindustries.noc.monitor.common.Node;
 import com.aoindustries.noc.monitor.common.TableMultiResult;
 import com.aoindustries.noc.monitor.common.TableMultiResultListener;
 import com.aoindustries.noc.monitor.common.TableMultiResultNode;
+import com.aoindustries.sql.NanoInterval;
 import java.awt.GridLayout;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
@@ -254,7 +254,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                                         alertLevel,
                                         (error!=null && columns==2)
                                         ? error
-                                        : NanoTimeSpan.toString(latency)
+                                        : NanoInterval.toString(latency)
                                     ),
                                     row,
                                     1
