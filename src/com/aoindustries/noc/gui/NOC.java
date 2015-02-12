@@ -7,6 +7,7 @@ package com.aoindustries.noc.gui;
 
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.awt.image.Images;
 import com.aoindustries.io.IoUtils;
 import com.aoindustries.lang.NullArgumentException;
 import com.aoindustries.noc.monitor.common.AlertLevel;
@@ -23,7 +24,6 @@ import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -109,13 +109,7 @@ public class NOC {
                     }
                 );
             }
-        } catch(RuntimeException err) {
-            ErrorPrinter.printStackTraces(err);
-        } catch(IOException err) {
-            ErrorPrinter.printStackTraces(err);
-        } catch(InterruptedException err) {
-            ErrorPrinter.printStackTraces(err);
-        } catch(InvocationTargetException err) {
+        } catch(RuntimeException | IOException | InterruptedException | InvocationTargetException err) {
             ErrorPrinter.printStackTraces(err);
         }
     }
@@ -431,21 +425,13 @@ public class NOC {
         } else throw new AssertionError("Both parent and singleFrame are null");
     }
 
-    private static final Map<String,Image> getImageFromResourcesCache = new HashMap<String,Image>();
+    private static final Map<String,Image> getImageFromResourcesCache = new HashMap<>();
 
     static Image getImageFromResources(String name) throws IOException {
         synchronized(getImageFromResourcesCache) {
             Image image = getImageFromResourcesCache.get(name);
             if(image==null) {
-				byte[] imageData;
-				InputStream in = NOC.class.getResourceAsStream(name);
-				if(in==null) throw new IOException("Unable to find resource: "+name);
-				try {
-					imageData = IoUtils.readFully(in);
-				} finally {
-					in.close();
-				}
-				image = Toolkit.getDefaultToolkit().createImage(imageData);
+				image = Images.getImageFromResources(NOC.class, name);
                 getImageFromResourcesCache.put(name, image);
             }
             return image;
@@ -778,14 +764,11 @@ public class NOC {
                         public void run() {
                             try {
 								byte[] buffered;
-								InputStream in = SystemsPane.class.getResourceAsStream("buzzer.wav");
-								try {
+								try (InputStream in = SystemsPane.class.getResourceAsStream("buzzer.wav")) {
 									buffered = IoUtils.readFully(in);
-								} finally {
-									in.close();
 								}
 								playSound(buffered);
-                            } catch(Exception err) {
+                            } catch(RuntimeException | IOException | UnsupportedAudioFileException | LineUnavailableException err) {
                                 logger.log(Level.SEVERE, null, err);
                             } finally {
                                 synchronized(buzzerLock) {
