@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -19,77 +19,59 @@ import javax.swing.SwingUtilities;
  */
 public class NOCApplet extends JApplet {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private static final Logger logger = Logger.getLogger(NOCApplet.class.getName());
+	private static final Logger logger = Logger.getLogger(NOCApplet.class.getName());
 
-    private NOC noc;
+	private NOC noc;
 
-    /**
-     * Running as an applet.
-     */
-    /*
-    public void init() {
-        if(!SwingUtilities.isEventDispatchThread()) {
-            try {
-                SwingUtilities.invokeAndWait(new Runnable() {public void run() {init();}});
-            } catch(InterruptedException err) {
-                reportError(err, null);
-            } catch(InvocationTargetException err) {
-                reportError(err, null);
-            }
-        } else {
-            // TODO: init
-        }
-    }*/
-    
-    @Override
-    public void start() {
-        if(!SwingUtilities.isEventDispatchThread()) {
-            try {
-                SwingUtilities.invokeAndWait(
-                    new Runnable() {
-                    @Override
-                        public void run() {
-                            start();
-                        }
-                    }
-                );
-            } catch(InterruptedException err) {
-                logger.log(Level.SEVERE, null, err);
-            } catch(InvocationTargetException err) {
-                logger.log(Level.SEVERE, null, err);
-            }
-        } else {
-            try {
-                this.noc = new NOC(getContentPane());
-            } catch(IOException err) {
-                logger.log(Level.SEVERE, null, err);
-            }
-        }
-    }
+	/**
+	 * Running as an applet.
+	 */
+	/*
+	public void init() {
+		if(!SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtilities.invokeAndWait(new Runnable() {public void run() {init();}});
+			} catch(InterruptedException err) {
+				reportError(err, null);
+			} catch(InvocationTargetException err) {
+				reportError(err, null);
+			}
+		} else {
+			// TODO: init
+		}
+	}*/
 
-    /**
-     * Auto logs-out on stop.
-     */
-    @Override
-    public void stop() {
-        if(!SwingUtilities.isEventDispatchThread()) {
-            try {
-                SwingUtilities.invokeAndWait(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            stop();
-                        }
-                    }
-                );
-            } catch(InterruptedException err) {
-                logger.log(Level.SEVERE, null, err);
-            } catch(InvocationTargetException err) {
-                logger.log(Level.SEVERE, null, err);
-            }
-        } else {
+	@Override
+	public void start() {
+		if(!SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtilities.invokeAndWait(this::start);
+			} catch(InterruptedException | InvocationTargetException err) {
+				logger.log(Level.SEVERE, null, err);
+			}
+		} else {
+			try {
+				this.noc = new NOC(getContentPane());
+			} catch(IOException err) {
+				logger.log(Level.SEVERE, null, err);
+			}
+		}
+	}
+
+	/**
+	 * Auto logs-out on stop.
+	 */
+	@Override
+	public void stop() {
+		if(!SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtilities.invokeAndWait(this::stop);
+			} catch(InterruptedException | InvocationTargetException err) {
+				logger.log(Level.SEVERE, null, err);
+			}
+		} else {
 			if(noc!=null) {
 				noc.logout();
 				noc.alertsFrame.setVisible(false);
@@ -98,6 +80,6 @@ public class NOCApplet extends JApplet {
 				noc=null;
 			}
 			getContentPane().removeAll();
-        }
-    }
+		}
+	}
 }

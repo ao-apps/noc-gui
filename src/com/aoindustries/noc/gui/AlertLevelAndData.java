@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013 by AO Industries, Inc.,
+ * Copyright 2008-2013, 2016 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -14,16 +14,16 @@ import com.aoindustries.noc.monitor.common.AlertLevel;
  */
 class AlertLevelAndData {
 
-    final AlertLevel alertLevel;
-    final Object data;
+	final AlertLevel alertLevel;
+	final Object data;
 
-    AlertLevelAndData(AlertLevel alertLevel, Object data) {
-        this.alertLevel = alertLevel;
-        this.data = data;
-    }
+	AlertLevelAndData(AlertLevel alertLevel, Object data) {
+		this.alertLevel = alertLevel;
+		this.data = data;
+	}
 
-    @Override
-    public String toString() {
-        return data==null ? "null" : data.toString();
-    }
+	@Override
+	public String toString() {
+		return data==null ? "null" : data.toString();
+	}
 }

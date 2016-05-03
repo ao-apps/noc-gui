@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013 by AO Industries, Inc.,
+ * Copyright 2008-2013, 2016 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -16,23 +16,23 @@ import javax.swing.JComponent;
  */
 public interface TaskComponent {
 
-    /**
-     * Gets the component that should be added to the task area.
-     */
-    JComponent getComponent();
-    
-    /**
-     * Called just after the component has been added.
-     */
-    void start(Node node, JComponent validationComponent);
+	/**
+	 * Gets the component that should be added to the task area.
+	 */
+	JComponent getComponent();
 
-    /**
-     * Called just before the component is removed.
-     */
-    void stop();
+	/**
+	 * Called just after the component has been added.
+	 */
+	void start(Node node, JComponent validationComponent);
 
-    /**
-     * Called just after the systems alert level is changed.
-     */
-    void systemsAlertLevelChanged(AlertLevel systemsAlertLevel);
+	/**
+	 * Called just before the component is removed.
+	 */
+	void stop();
+
+	/**
+	 * Called just after the systems alert level is changed.
+	 */
+	void systemsAlertLevelChanged(AlertLevel systemsAlertLevel);
 }

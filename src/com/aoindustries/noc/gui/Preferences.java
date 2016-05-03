@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -61,8 +61,8 @@ public class Preferences {
     private byte[] communicationMultiSplitLayoutModel;
     private String communicationMultiSplitLayoutModelLayoutDef;
 
-    private Map<TicketEditor.PreferencesSet,byte[]> ticketEditorMultiSplitLayoutModels;
-    private Map<TicketEditor.PreferencesSet,String> ticketEditorMultiSplitLayoutModelLayoutDefs;
+    private final Map<TicketEditor.PreferencesSet,byte[]> ticketEditorMultiSplitLayoutModels;
+    private final Map<TicketEditor.PreferencesSet,String> ticketEditorMultiSplitLayoutModelLayoutDefs;
 
     private Rectangle ticketEditorFrameBounds;
 
@@ -136,8 +136,8 @@ public class Preferences {
         }
         communicationMultiSplitLayoutModel = prefs.getByteArray("Preferences."+hostname+".cMSLM", null);
         communicationMultiSplitLayoutModelLayoutDef = prefs.get("Preferences."+hostname+".cMSLM.layoutDef", null);
-        ticketEditorMultiSplitLayoutModels = new EnumMap<TicketEditor.PreferencesSet,byte[]>(TicketEditor.PreferencesSet.class);
-        ticketEditorMultiSplitLayoutModelLayoutDefs = new EnumMap<TicketEditor.PreferencesSet,String>(TicketEditor.PreferencesSet.class);
+        ticketEditorMultiSplitLayoutModels = new EnumMap<>(TicketEditor.PreferencesSet.class);
+        ticketEditorMultiSplitLayoutModelLayoutDefs = new EnumMap<>(TicketEditor.PreferencesSet.class);
         for(TicketEditor.PreferencesSet preferencesSet : TicketEditor.PreferencesSet.values()) {
             byte[] bytes = prefs.getByteArray("Preferences."+hostname+".teMSLM."+preferencesSet, null);
             if(bytes!=null) ticketEditorMultiSplitLayoutModels.put(preferencesSet, bytes);
@@ -354,11 +354,8 @@ public class Preferences {
             || !communicationMultiSplitLayoutModelLayoutDef.equals(layoutDef)
         ) return null;
         try {
-            XMLDecoder decoder = new XMLDecoder(new GZIPInputStream(new ByteArrayInputStream(communicationMultiSplitLayoutModel)));
-            try {
+            try (XMLDecoder decoder = new XMLDecoder(new GZIPInputStream(new ByteArrayInputStream(communicationMultiSplitLayoutModel)))) {
                 return (Node)decoder.readObject();
-            } finally {
-                decoder.close();
             }
         } catch(IOException err) {
             logger.log(Level.WARNING, null, err);
@@ -371,11 +368,8 @@ public class Preferences {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
-            XMLEncoder xmlEncoder = new XMLEncoder(new GZIPOutputStream(bout));
-            try {
+            try (XMLEncoder xmlEncoder = new XMLEncoder(new GZIPOutputStream(bout))) {
                 xmlEncoder.writeObject(modelRoot);
-            } finally {
-                xmlEncoder.close();
             }
             byte[] bytes = bout.toByteArray();
             this.communicationMultiSplitLayoutModel = bytes;
@@ -399,11 +393,8 @@ public class Preferences {
             || !ticketEditorMultiSplitLayoutModelLayoutDef.equals(layoutDef)
         ) return null;
         try {
-            XMLDecoder decoder = new XMLDecoder(new GZIPInputStream(new ByteArrayInputStream(ticketEditorMultiSplitLayoutModel)));
-            try {
+            try (XMLDecoder decoder = new XMLDecoder(new GZIPInputStream(new ByteArrayInputStream(ticketEditorMultiSplitLayoutModel)))) {
                 return (Node)decoder.readObject();
-            } finally {
-                decoder.close();
             }
         } catch(IOException err) {
             logger.log(Level.WARNING, null, err);
@@ -416,11 +407,8 @@ public class Preferences {
         assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         try {
-            XMLEncoder xmlEncoder = new XMLEncoder(new GZIPOutputStream(bout));
-            try {
+            try (XMLEncoder xmlEncoder = new XMLEncoder(new GZIPOutputStream(bout))) {
                 xmlEncoder.writeObject(modelRoot);
-            } finally {
-                xmlEncoder.close();
             }
             byte[] bytes = bout.toByteArray();
             this.ticketEditorMultiSplitLayoutModels.put(preferencesSet, bytes);
