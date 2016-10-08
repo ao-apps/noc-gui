@@ -48,7 +48,11 @@ public class NOCApplet extends JApplet {
 		if(!SwingUtilities.isEventDispatchThread()) {
 			try {
 				SwingUtilities.invokeAndWait(this::start);
-			} catch(InterruptedException | InvocationTargetException err) {
+			} catch(InterruptedException err) {
+				logger.log(Level.SEVERE, null, err);
+				// Restore the interrupted status
+				Thread.currentThread().interrupt();
+			} catch(InvocationTargetException err) {
 				logger.log(Level.SEVERE, null, err);
 			}
 		} else {
@@ -68,7 +72,11 @@ public class NOCApplet extends JApplet {
 		if(!SwingUtilities.isEventDispatchThread()) {
 			try {
 				SwingUtilities.invokeAndWait(this::stop);
-			} catch(InterruptedException | InvocationTargetException err) {
+			} catch(InterruptedException err) {
+				logger.log(Level.SEVERE, null, err);
+				// Restore the interrupted status
+				Thread.currentThread().interrupt();
+			} catch(InvocationTargetException err) {
 				logger.log(Level.SEVERE, null, err);
 			}
 		} else {

@@ -362,6 +362,8 @@ public class SystemsPane extends JPanel {
 									Thread.sleep(250);
 								} catch(InterruptedException err) {
 									logger.log(Level.WARNING, null, err);
+									// Restore the interrupted status
+									Thread.currentThread().interrupt();
 								}
 							} else break;
 						}

@@ -105,6 +105,10 @@ public class NOC {
 			}
 		} catch(RuntimeException | IOException | InterruptedException | InvocationTargetException err) {
 			ErrorPrinter.printStackTraces(err);
+			if(err instanceof InterruptedException) {
+				// Restore the interrupted status
+				Thread.currentThread().interrupt();
+			}
 		}
 	}
 
@@ -811,6 +815,8 @@ public class NOC {
 					Thread.sleep(100);
 				} catch(InterruptedException err) {
 					logger.log(Level.WARNING, null, err);
+					// Restore the interrupted status
+					Thread.currentThread().interrupt();
 				}
 			}
 			if(!unexported) {

@@ -250,6 +250,8 @@ public class AlertsPane extends JPanel {
 							try {
 								Thread.sleep(BUZZER_INTERVAL);
 							} catch(InterruptedException err) {
+								// Restore the interrupted status
+								Thread.currentThread().interrupt();
 								// Normal during thread shutdown
 							}
 						}
