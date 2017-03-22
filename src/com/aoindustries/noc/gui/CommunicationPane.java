@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2017 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -889,9 +889,15 @@ public class CommunicationPane extends JPanel implements TableListener {
 										ticket.getStatus(),
 										ticket.getOpenDate().getTime(),
 										openedBy==null
-											? (fromAddress==null ? "" : ('('+fromAddress+')'))
-											: (fromAddress==null ? openedBy.getKey() : (openedBy.getKey()+" ("+fromAddress+')'))
-										,
+											? (
+												fromAddress==null
+													? ""
+													: ('('+fromAddress+')')
+											) : (
+												fromAddress==null
+													? openedBy.getKey().toString()
+													: (openedBy.getKey()+" ("+fromAddress+')')
+											),
 										bu==null ? "" : bu.getKey().toString(),
 										ticket.getSummary()
 									)

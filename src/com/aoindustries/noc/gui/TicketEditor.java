@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2009-2013, 2016, 2017 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -482,7 +482,7 @@ public class TicketEditor extends JPanel implements TableListener {
 						ticket = null;
 						ticketId=null;
 					} else {
-						ticket = requestConn.getTickets().get(requestedTicketId);
+						ticket = requestConn.getTickets().get(requestedTicketId.intValue());
 						ticketId = ticket==null ? null : ticket.getKey();
 					}
 					// Ignore request when ticket ID hasn't changed

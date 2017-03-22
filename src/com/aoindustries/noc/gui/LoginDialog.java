@@ -1,11 +1,13 @@
 /*
- * Copyright 2007-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2017 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
 import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.aoserv.client.validator.UserId;
+import com.aoindustries.lang.ObjectUtils;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.MonitorImpl;
 import com.aoindustries.noc.monitor.client.MonitorClient;
@@ -16,6 +18,7 @@ import com.aoindustries.rmi.RMIClientSocketFactoryTCP;
 import com.aoindustries.rmi.RMIServerSocketFactorySSL;
 import com.aoindustries.rmi.RMIServerSocketFactoryTCP;
 import com.aoindustries.swing.ErrorDialog;
+import com.aoindustries.validation.ValidationException;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -102,7 +105,7 @@ final public class LoginDialog extends JDialog {
 		P.add(localPortField=new JTextField(6));
 		localPortField.setText(noc.preferences.getLocalPort());
 		P.add(usernameField=new JTextField(16));
-		usernameField.setText(noc.preferences.getUsername());
+		usernameField.setText(ObjectUtils.toString(noc.preferences.getUsername()));
 		P.add(passwordField=new JPasswordField(16));
 		localContentPane.add(P, BorderLayout.CENTER);
 
@@ -208,7 +211,15 @@ final public class LoginDialog extends JDialog {
 				final String serverPort = serverPortField.getText();
 				final String external = externalField.getText();
 				final String localPort = localPortField.getText();
-				final String username = usernameField.getText();
+				final UserId username;
+				try {
+					username = UserId.valueOf(usernameField.getText());
+				} catch(ValidationException e) {
+					usernameField.selectAll();
+					usernameField.requestFocus();
+					new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.invalidUsername"), e, null).setVisible(true);
+					return;
+				}
 				final String password = new String(passwordField.getPassword());
 				loginThread = new Thread(() -> {
 					try {

@@ -1,11 +1,12 @@
 /*
- * Copyright 2007-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2017 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
 import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.aoserv.client.validator.UserId;
 import com.aoindustries.awt.image.Images;
 import com.aoindustries.io.IoUtils;
 import com.aoindustries.lang.NullArgumentException;
@@ -642,7 +643,7 @@ public class NOC {
 		String serverPort,
 		String external,
 		String localPort,
-		String username,
+		UserId username,
 		int port,
 		RMIClientSocketFactory csf,
 		RMIServerSocketFactory ssf
