@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -362,8 +362,6 @@ public class SystemsPane extends JPanel {
 									Thread.sleep(250);
 								} catch(InterruptedException err) {
 									logger.log(Level.WARNING, null, err);
-									// Restore the interrupted status
-									Thread.currentThread().interrupt();
 								}
 							} else break;
 						}

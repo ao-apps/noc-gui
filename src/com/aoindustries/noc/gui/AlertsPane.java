@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -250,8 +250,6 @@ public class AlertsPane extends JPanel {
 							try {
 								Thread.sleep(BUZZER_INTERVAL);
 							} catch(InterruptedException err) {
-								// Restore the interrupted status
-								Thread.currentThread().interrupt();
 								// Normal during thread shutdown
 							}
 						}
