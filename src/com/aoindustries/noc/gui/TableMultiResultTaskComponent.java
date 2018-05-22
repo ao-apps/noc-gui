@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2008-2013, 2016, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -163,8 +163,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 		// If any events come in after this is stopped, this may be null
 		if(localTableMultiResultNode!=null) {
 			// Do as much as possible before switching over to the event dispatch thread
-			final Locale locale = Locale.getDefault();
-			final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
+			final DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, Locale.getDefault());
 
 			final List<?> columnHeaders = localTableMultiResultNode.getColumnHeaders();
 			final List<? extends TableMultiResult> results = localTableMultiResultNode.getResults();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2008-2013, 2016, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -157,9 +157,10 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 			}
 		} else {
 			// Find the table for the current column labels
+			Locale locale = Locale.getDefault();
 
 			// Swap-out the table if needed
-			List<String> columnHeaders = tableResult.getColumnHeaders();
+			List<String> columnHeaders = tableResult.getColumnHeaders(locale);
 			JTable newTable = tables.get(columnHeaders);
 			if(newTable==null) {
 				//System.out.println("DEBUG: TableResultTaskComponent: creating new JTable: "+columnHeaders);
@@ -193,7 +194,6 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 			}
 
 			// Update the data in the table
-			Locale locale = Locale.getDefault();
 			DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
 			String formattedDate = df.format(new Date(tableResult.getTime()));
 			long latency = tableResult.getLatency();
@@ -223,7 +223,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 			int columns = tableResult.getColumns();
 			if(columns!=tableModel.getColumnCount()) tableModel.setColumnCount(columns);
 
-			List<?> allTableData = tableResult.getTableData();
+			List<?> allTableData = tableResult.getTableData(locale);
 			List<AlertLevel> allAlertLevels = tableResult.getAlertLevels();
 			int allRows = tableResult.getRows();
 			List<Object> tableData = new ArrayList<>(allRows*columns);

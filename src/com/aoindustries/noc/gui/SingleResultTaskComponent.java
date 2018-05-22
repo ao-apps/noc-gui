@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013, 2016 by AO Industries, Inc.,
+ * Copyright 2008-2013, 2016, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -21,6 +21,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -164,8 +165,9 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 						SQLUtility.getMilliDecimal(latency/1000000)
 					)
 				);
-				if(singleResult.getError()!=null) {
-					text.append("\n----------------------------------------------------------\n").append(singleResult.getError());
+				Function<Locale,String> error = singleResult.getError();
+				if(error != null) {
+					text.append("\n----------------------------------------------------------\n").append(error.apply(Locale.getDefault()));
 				}
 				if(singleResult.getReport()!=null) {
 					text.append("\n----------------------------------------------------------\n").append(singleResult.getReport());
