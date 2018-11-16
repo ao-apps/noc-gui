@@ -765,6 +765,10 @@ public class NOC {
 		}
 	}
 
+	/**
+	 * @see  #clearAlerts(java.lang.Object)
+	 * @see  AlertsPane#alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
+	 */
 	void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -798,6 +802,16 @@ public class NOC {
 		}
 
 		alerts.alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage);
+	}
+
+	/**
+	 * @see  #alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
+	 * @see  AlertsPane#clearAlerts(java.lang.Object)
+	 */
+	void clearAlerts(Object source) {
+		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+		alerts.clearAlerts(source);
 	}
 
 	/**

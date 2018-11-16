@@ -402,7 +402,6 @@ public class SystemsPane extends JPanel {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
 		List<NodeSnapshot> children = nodeSnapshot.getChildren();
-		Locale locale = Locale.getDefault();
 		int childCount = 0;
 		for(NodeSnapshot child : children) {
 			AlertLevel childAlertLevel = child.getAlertLevel();
@@ -465,6 +464,8 @@ public class SystemsPane extends JPanel {
 			selectNode(null);
 		}
 		treeModel.removeNodeFromParent(deletingNode);
+		// Clear any alerts associated with the node that is being removed
+		noc.clearAlerts(deletingNode.node);
 	}
 
 	private class SystemsTreeNode extends DefaultMutableTreeNode {

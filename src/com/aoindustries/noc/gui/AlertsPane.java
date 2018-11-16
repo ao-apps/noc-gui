@@ -148,10 +148,7 @@ public class AlertsPane extends JPanel {
 		controlBuzzer();
 	}
 
-	void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage) {
-		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-
-		// First delete any alerts from the same source
+	private boolean clearAlertsHistory(Object source) {
 		Iterator<Alert> historyIter = history.iterator();
 		int row = 0;
 		boolean found = false;
@@ -165,6 +162,17 @@ public class AlertsPane extends JPanel {
 			}
 			row++;
 		}
+		return found;
+	}
+
+	/**
+	 * @see  #clearAlerts(java.lang.Object)
+	 */
+	void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage) {
+		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+		// First delete any alerts from the same source
+		boolean found = clearAlertsHistory(source);
 		if(
 			(found || oldAlertLevel==AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel)>0)
 			&& newAlertLevel.compareTo(AlertLevel.HIGH)>=0
@@ -188,6 +196,22 @@ public class AlertsPane extends JPanel {
 				}
 			);
 		}
+
+		setTrayIcon();
+		controlBuzzer();
+		//validateTable();
+	}
+
+	/**
+	 * Called when alert sources (such as nodes) are removed, to clean-up any alerts created by them.
+	 *
+	 * @see  #alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
+	 */
+	void clearAlerts(Object source) {
+		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+		// Delete all alerts from the same source
+		clearAlertsHistory(source);
 
 		setTrayIcon();
 		controlBuzzer();
