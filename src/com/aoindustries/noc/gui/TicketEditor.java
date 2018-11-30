@@ -1,17 +1,17 @@
 /*
- * Copyright 2009-2013, 2016, 2017 by AO Industries, Inc.,
+ * Copyright 2009-2013, 2016, 2017, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
 import com.aoindustries.aoserv.client.AOServConnector;
-import com.aoindustries.aoserv.client.Brand;
-import com.aoindustries.aoserv.client.Business;
-import com.aoindustries.aoserv.client.BusinessAdministrator;
-import com.aoindustries.aoserv.client.Ticket;
-import com.aoindustries.aoserv.client.TicketStatus;
-import com.aoindustries.aoserv.client.TicketType;
+import com.aoindustries.aoserv.client.account.Account;
+import com.aoindustries.aoserv.client.account.Administrator;
+import com.aoindustries.aoserv.client.reseller.Brand;
+import com.aoindustries.aoserv.client.ticket.Status;
+import com.aoindustries.aoserv.client.ticket.Ticket;
+import com.aoindustries.aoserv.client.ticket.TicketType;
 import com.aoindustries.aoserv.client.validator.AccountingCode;
 import com.aoindustries.awt.LabelledGridLayout;
 import com.aoindustries.lang.ObjectUtils;
@@ -52,7 +52,7 @@ import org.jdesktop.swingx.MultiSplitPane;
  * +--------------------------------------------+-----------------------------------------+-------------------+
  * | 1) Small fields | 6) Category              | 3) List of actions (single click/double | 9) Internal Notes |
  * |                 +--------------------------+ click popup like tickets list view)     |                   |
- * |                 | 7) Business              +-----------------------------------------+                   |
+ * |                 | 7) Account              +-----------------------------------------+                   |
  * |                 +--------------------------+ 4) If single action display, action     |                   |
  * |                 | 8) Escalation            | subject and details.                    |                   |
  * +-----------------+--------------------------+-----------------------------------------+                   |
@@ -64,7 +64,7 @@ import org.jdesktop.swingx.MultiSplitPane;
  * +--------------------------------------------+-----------------------------------------+-------------------+
  *
  * Category (using ticket_brand_categories) (6 - JTree)
- * D Business (7 - JTree)
+ * D Account (7 - JTree)
  * D Brand (changeable?) (1)
  * Escalation (8 - JTree)
  * Escalate/de-escalate buttons (8 - below JTree)
@@ -175,24 +175,24 @@ public class TicketEditor extends JPanel implements TableListener {
 		}
 	};
 	// status
-	private final SynchronizingComboBoxModel<TicketStatus> statusComboBoxModel = new SynchronizingComboBoxModel<>();
-	private final JComboBox<TicketStatus> statusComboBox = new JComboBox<>(statusComboBoxModel);
+	private final SynchronizingComboBoxModel<Status> statusComboBoxModel = new SynchronizingComboBoxModel<>();
+	private final JComboBox<Status> statusComboBox = new JComboBox<>(statusComboBoxModel);
 	private final FocusListener statusComboBoxFocusListener = new FocusAdapter() {
 		@Override
 		public void focusLost(FocusEvent e) {
-			final TicketStatus newStatus = (TicketStatus)statusComboBox.getSelectedItem();
+			final Status newStatus = (Status)statusComboBox.getSelectedItem();
 			if(newStatus!=null) {
 				currentTicketExecutorService.submit(() -> {
 					synchronized(currentTicketLock) {
 						if(currentTicket!=null) {
 							try {
-								TicketStatus oldStatus = currentTicket.getStatus();
+								Status oldStatus = currentTicket.getStatus();
 								if(!newStatus.equals(oldStatus)) {
 									// TODO: Time-out from GUI
 									long statusTimeout;
 									if(
-										newStatus.getStatus().equals(TicketStatus.BOUNCED)
-										|| newStatus.getStatus().equals(TicketStatus.HOLD)
+										newStatus.getStatus().equals(Status.BOUNCED)
+										|| newStatus.getStatus().equals(Status.HOLD)
 									) {
 										// Default to one month (31 days)
 										statusTimeout = System.currentTimeMillis() + 31L * 24 * 60 * 60 * 1000;
@@ -226,12 +226,12 @@ public class TicketEditor extends JPanel implements TableListener {
 	private final FocusListener businessComboBoxFocusListener = new FocusAdapter() {
 		@Override
 		public void focusLost(FocusEvent e) {
-			final Business newBusiness = businessComboBox.getSelectedIndex()==0 ? null : (Business)businessComboBox.getSelectedItem();
+			final Account newBusiness = businessComboBox.getSelectedIndex()==0 ? null : (Account)businessComboBox.getSelectedItem();
 			currentTicketExecutorService.submit(() -> {
 				synchronized(currentTicketLock) {
 					if(currentTicket!=null) {
 						try {
-							Business oldBusiness = currentTicket.getBusiness();
+							Account oldBusiness = currentTicket.getBusiness();
 							if(!ObjectUtils.equals(newBusiness, oldBusiness)) {
 								System.out.println("DEBUG: currentTicket.setBusiness("+newBusiness+");");
 								currentTicket.setBusiness(oldBusiness, newBusiness);
@@ -377,7 +377,7 @@ public class TicketEditor extends JPanel implements TableListener {
 		// Category
 		// TODO
 
-		// Business
+		// Account
 		// TODO
 
 		// Escalation
@@ -557,12 +557,12 @@ public class TicketEditor extends JPanel implements TableListener {
 		final Integer ticketNumber;
 		final List<TicketType> ticketTypes;
 		final TicketType ticketType;
-		final List<TicketStatus> ticketStatuses;
-		final TicketStatus ticketStatus;
+		final List<Status> ticketStatuses;
+		final Status ticketStatus;
 		final Timestamp openDate;
 		final String openedBy;
-		final List<Business> businesses;
-		final Business business;
+		final List<Account> businesses;
+		final Account business;
 		final String summary;
 		final String details;
 		final String internalNotes;
@@ -590,7 +590,7 @@ public class TicketEditor extends JPanel implements TableListener {
 			ticketStatuses = conn.getTicketStatuses().getRows();
 			ticketStatus = ticket.getStatus();
 			openDate = ticket.getOpenDate();
-			BusinessAdministrator openedByBA = ticket.getCreatedBy();
+			Administrator openedByBA = ticket.getCreatedBy();
 			openedBy = openedByBA==null ? "" : openedByBA.getName();
 			// TODO: Only show businesses that are a child of the current brandObj (or the current business if not in this set)
 			businesses = conn.getBusinesses().getRows();

@@ -1,24 +1,24 @@
 /*
- * Copyright 2007-2013, 2016, 2017 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2017, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
 import com.aoindustries.aoserv.client.AOServConnector;
-import com.aoindustries.aoserv.client.AOServPermission;
-import com.aoindustries.aoserv.client.Brand;
-import com.aoindustries.aoserv.client.Business;
-import com.aoindustries.aoserv.client.BusinessAdministrator;
 import com.aoindustries.aoserv.client.Disablable;
-import com.aoindustries.aoserv.client.Language;
-import com.aoindustries.aoserv.client.Reseller;
-import com.aoindustries.aoserv.client.Ticket;
-import com.aoindustries.aoserv.client.TicketAssignment;
-import com.aoindustries.aoserv.client.TicketCategory;
-import com.aoindustries.aoserv.client.TicketPriority;
-import com.aoindustries.aoserv.client.TicketStatus;
-import com.aoindustries.aoserv.client.TicketType;
+import com.aoindustries.aoserv.client.account.Account;
+import com.aoindustries.aoserv.client.account.Administrator;
+import com.aoindustries.aoserv.client.master.Permission;
+import com.aoindustries.aoserv.client.reseller.Brand;
+import com.aoindustries.aoserv.client.reseller.Category;
+import com.aoindustries.aoserv.client.reseller.Reseller;
+import com.aoindustries.aoserv.client.ticket.Assignment;
+import com.aoindustries.aoserv.client.ticket.Language;
+import com.aoindustries.aoserv.client.ticket.Priority;
+import com.aoindustries.aoserv.client.ticket.Status;
+import com.aoindustries.aoserv.client.ticket.Ticket;
+import com.aoindustries.aoserv.client.ticket.TicketType;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.sql.SQLUtility;
 import com.aoindustries.swing.SynchronizingListModel;
@@ -121,11 +121,11 @@ public class CommunicationPane extends JPanel implements TableListener {
 	private AOServConnector conn; // This is the connector that has all the listeners added
 	private final MultiSplitPane splitPane;
 	// Categories
-	private final SynchronizingMutableTreeNode<TicketCategory> categoriesRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.categories.uncategorized"), true);
+	private final SynchronizingMutableTreeNode<Category> categoriesRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.categories.uncategorized"), true);
 	private final DefaultTreeModel categoriesTreeModel = new DefaultTreeModel(categoriesRootNode, true);
 	private final JTree categoriesJTree = new JTree(categoriesTreeModel);
 	// Businesses
-	private final SynchronizingMutableTreeNode<Business> businessesRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.businesses.noBusiness"), true);
+	private final SynchronizingMutableTreeNode<Account> businessesRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.businesses.noBusiness"), true);
 	private final DefaultTreeModel businessesTreeModel = new DefaultTreeModel(businessesRootNode, true);
 	private final JTree businessesJTree = new JTree(businessesTreeModel);
 	// Brands
@@ -143,11 +143,11 @@ public class CommunicationPane extends JPanel implements TableListener {
 	private final SynchronizingListModel<TicketType> typesListModel = new SynchronizingListModel<>();
 	private final JList<TicketType> typesList = new JList<>(typesListModel);
 	// Statuses
-	private final SynchronizingListModel<TicketStatus> statusesListModel = new SynchronizingListModel<>();
-	private final JList<TicketStatus> statusesList = new JList<>(statusesListModel);
+	private final SynchronizingListModel<Status> statusesListModel = new SynchronizingListModel<>();
+	private final JList<Status> statusesList = new JList<>(statusesListModel);
 	// Priorities
-	private final SynchronizingListModel<TicketPriority> prioritiesListModel = new SynchronizingListModel<>();
-	private final JList<TicketPriority> prioritiesList = new JList<>(prioritiesListModel);
+	private final SynchronizingListModel<Priority> prioritiesListModel = new SynchronizingListModel<>();
+	private final JList<Priority> prioritiesList = new JList<>(prioritiesListModel);
 	// Languages
 	private final SynchronizingListModel<Language> languagesListModel = new SynchronizingListModel<>();
 	private final JList<Language> languagesList = new JList<>(languagesListModel);
@@ -540,7 +540,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 
 			// Query the GUI filter components
 			final boolean includeUncategorized;
-			final Set<TicketCategory> selectedCategories;
+			final Set<Category> selectedCategories;
 			{
 				TreePath[] selectedCategoryPaths = categoriesJTree.getSelectionPaths();
 				if(selectedCategoryPaths==null) {
@@ -554,7 +554,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 						if(treeNode==categoriesRootNode) {
 							myIncludeUncategorized = true;
 						} else {
-							TicketCategory ticketCategory = (TicketCategory)((DefaultMutableTreeNode)treeNode).getUserObject();
+							Category ticketCategory = (Category)((DefaultMutableTreeNode)treeNode).getUserObject();
 							selectedCategories.add(ticketCategory);
 						}
 					}
@@ -562,7 +562,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				}
 			}
 			final boolean includeNoBusiness;
-			final Set<Business> selectedBusinesses;
+			final Set<Account> selectedBusinesses;
 			{
 				TreePath[] selectedBusinessPaths = businessesJTree.getSelectionPaths();
 				if(selectedBusinessPaths==null) {
@@ -576,7 +576,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 						if(treeNode==businessesRootNode) {
 							myIncludeNoBusiness = true;
 						} else {
-							Business business = (Business)((DefaultMutableTreeNode)treeNode).getUserObject();
+							Account business = (Account)((DefaultMutableTreeNode)treeNode).getUserObject();
 							selectedBusinesses.add(business);
 						}
 					}
@@ -616,7 +616,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				}
 			}
 			final boolean includeUnassigned;
-			final Set<BusinessAdministrator> selectedAssignments;
+			final Set<Administrator> selectedAssignments;
 			{
 				List<Object> selectedValues = assignmentsList.getSelectedValuesList();
 				boolean myIncludeUnassigned = false;
@@ -625,15 +625,15 @@ public class CommunicationPane extends JPanel implements TableListener {
 					if(selectedValue==assignmentsListModel.getElementAt(0)) {
 						myIncludeUnassigned = true;
 					} else {
-						BusinessAdministrator businessAdministrator = (BusinessAdministrator)selectedValue;
+						Administrator businessAdministrator = (Administrator)selectedValue;
 						selectedAssignments.add(businessAdministrator);
 					}
 				}
 				includeUnassigned = myIncludeUnassigned;
 			}
 			final Set<TicketType> selectedTypes = new HashSet<>(typesList.getSelectedValuesList());
-			final Set<TicketStatus> selectedStatuses = new HashSet<>(statusesList.getSelectedValuesList());
-			final Set<TicketPriority> selectedPriorities = new HashSet<>(prioritiesList.getSelectedValuesList());
+			final Set<Status> selectedStatuses = new HashSet<>(statusesList.getSelectedValuesList());
+			final Set<Priority> selectedPriorities = new HashSet<>(prioritiesList.getSelectedValuesList());
 			final Set<Language> selectedLanguages = new HashSet<>(languagesList.getSelectedValuesList());
 
 			// Run in a background thread for data access
@@ -669,17 +669,17 @@ public class CommunicationPane extends JPanel implements TableListener {
 						try {
 							// Perform all data lookups
 							AOServConnector conn1 = CommunicationPane.this.conn;
-							final Tree<TicketCategory> categoryTree;
-							final Tree<Business> businessTree;
+							final Tree<Category> categoryTree;
+							final Tree<Account> businessTree;
 							final Tree<Brand> brandTree;
 							final Tree<Reseller> resellerTree;
 							final List<Ticket> allTickets;
-							final Map<Ticket,BusinessAdministrator> ticketAssignments;
+							final Map<Ticket,Administrator> ticketAssignments;
 							final List<TicketType> ticketTypes;
-							final List<TicketStatus> ticketStatuses;
-							final List<TicketPriority> ticketPriorities;
+							final List<Status> ticketStatuses;
+							final List<Priority> ticketPriorities;
 							final List<Language> languages;
-							final List<BusinessAdministrator> assignableUsers;
+							final List<Administrator> assignableUsers;
 							if (conn1 == null) {
 								// Logged-out, use empty lists for all
 								categoryTree = Trees.emptyTree();
@@ -699,9 +699,9 @@ public class CommunicationPane extends JPanel implements TableListener {
 								businessTree = new TreeCopy<>(conn1.getBusinesses().getTree());
 								brandTree = new TreeCopy<>(conn1.getBrands().getTree());
 								resellerTree = new TreeCopy<>(conn1.getResellers().getTree());
-								final List<BusinessAdministrator> businessAdministrators = conn1.getBusinessAdministrators().getRows();
+								final List<Administrator> businessAdministrators = conn1.getBusinessAdministrators().getRows();
 								allTickets = conn1.getTickets().getRows();
-								List<TicketAssignment> allTicketAssignments = conn1.getTicketAssignments().getRows();
+								List<Assignment> allTicketAssignments = conn1.getTicketAssignments().getRows();
 								ticketTypes = conn1.getTicketTypes().getRows();
 								ticketStatuses = conn1.getTicketStatuses().getRows();
 								ticketPriorities = conn1.getTicketPriorities().getRows();
@@ -709,7 +709,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 								// Determine the reseller for assignment lookups
 								Reseller thisReseller = null;
 								{
-									Business thisBusiness = conn1.getThisBusinessAdministrator().getUsername().getPackage().getBusiness();
+									Account thisBusiness = conn1.getThisBusinessAdministrator().getUsername().getPackage().getBusiness();
 									if(thisBusiness!=null) {
 										Brand thisBrand = thisBusiness.getBrand();
 										if(thisBrand!=null) thisReseller = thisBrand.getReseller();
@@ -724,9 +724,9 @@ public class CommunicationPane extends JPanel implements TableListener {
 								// in this reseller with any tickets assigned
 								// to them or any enabled user with the
 								// edit_ticket permission.
-								Set<BusinessAdministrator> assignableUsersSet = new HashSet<>();
-								for(TicketAssignment ticketAssignment : allTicketAssignments) {
-									BusinessAdministrator businessAdministrator = ticketAssignment.getBusinessAdministrator();
+								Set<Administrator> assignableUsersSet = new HashSet<>();
+								for(Assignment ticketAssignment : allTicketAssignments) {
+									Administrator businessAdministrator = ticketAssignment.getBusinessAdministrator();
 									// Build set of assignments for matching below
 									if(ticketAssignments!=null) {
 										assert thisReseller != null;
@@ -737,12 +737,12 @@ public class CommunicationPane extends JPanel implements TableListener {
 									// Add to assignable
 									assignableUsersSet.add(businessAdministrator);
 								}
-								final BusinessAdministrator thisBusinessAdministrator = conn1.getThisBusinessAdministrator();
-								final Business thisBusiness = thisBusinessAdministrator.getUsername().getPackage().getBusiness();
-								for(BusinessAdministrator businessAdministrator : businessAdministrators) {
+								final Administrator thisBusinessAdministrator = conn1.getThisBusinessAdministrator();
+								final Account thisBusiness = thisBusinessAdministrator.getUsername().getPackage().getBusiness();
+								for(Administrator businessAdministrator : businessAdministrators) {
 									if(
 										!businessAdministrator.isDisabled()
-										&& businessAdministrator.hasPermission(AOServPermission.Permission.edit_ticket)
+										&& businessAdministrator.hasPermission(Permission.Name.edit_ticket)
 										&& businessAdministrator.getUsername().getPackage().getBusiness().equals(thisBusiness)
 									) {
 										assignableUsersSet.add(businessAdministrator);
@@ -753,8 +753,8 @@ public class CommunicationPane extends JPanel implements TableListener {
 							}
 							// TODO: Remove any filter values that are no longer relevant
 							// Query the tickets with the current filters
-							final Set<TicketCategory> categoriesWithTickets;
-							final Set<Business> businessesWithTickets;
+							final Set<Category> categoriesWithTickets;
+							final Set<Account> businessesWithTickets;
 							final List<Ticket> tickets;
 							if (conn1 == null) {
 								tickets = Collections.emptyList();
@@ -778,7 +778,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 									}
 									// Assignments
 									if(ticketAssignments!=null && (includeUnassigned || !selectedAssignments.isEmpty())) {
-										BusinessAdministrator assignment = ticketAssignments.get(ticket);
+										Administrator assignment = ticketAssignments.get(ticket);
 										if(assignment==null) {
 											if(!includeUnassigned) continue;
 										} else {
@@ -795,7 +795,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 									}
 									// Priorities
 									if(!selectedPriorities.isEmpty()) {
-										TicketPriority priority = ticket.getAdminPriority();
+										Priority priority = ticket.getAdminPriority();
 										if(priority==null) priority = ticket.getClientPriority();
 										if(!selectedPriorities.contains(priority)) continue;
 									}
@@ -806,9 +806,9 @@ public class CommunicationPane extends JPanel implements TableListener {
 									// These are updated after the above filters because we want only
 									// the categories and businesses that have tickets given the
 									// above filters
-									TicketCategory ticketCategory = ticket.getCategory();
+									Category ticketCategory = ticket.getCategory();
 									categoriesWithTickets.add(ticketCategory);
-									Business business = ticket.getBusiness();
+									Account business = ticket.getBusiness();
 									businessesWithTickets.add(business);
 									// Categories
 									if(includeUncategorized || !selectedCategories.isEmpty()) {
@@ -835,18 +835,18 @@ public class CommunicationPane extends JPanel implements TableListener {
 							}
 							// Prune the categories and businesses trees to only include nodes that
 							// either have tickets or have children with tickets.
-							final Tree<TicketCategory> filteredCategoryTree = new TreeCopy<>(
+							final Tree<Category> filteredCategoryTree = new TreeCopy<>(
 								categoryTree,
-								new NodeFilter<TicketCategory>() {
+								new NodeFilter<Category>() {
 									@Override
-									public boolean isNodeFiltered(Node<TicketCategory> node) throws IOException, SQLException {
+									public boolean isNodeFiltered(Node<Category> node) throws IOException, SQLException {
 										return !hasTicket(node, categoriesWithTickets);
 									}
-									private boolean hasTicket(Node<TicketCategory> node, Set<TicketCategory> categoriesWithTickets) throws IOException, SQLException {
+									private boolean hasTicket(Node<Category> node, Set<Category> categoriesWithTickets) throws IOException, SQLException {
 										if(categoriesWithTickets.contains(node.getValue())) return true;
-										List<Node<TicketCategory>> children = node.getChildren();
+										List<Node<Category>> children = node.getChildren();
 										if(children!=null) {
-											for(Node<TicketCategory> child : children) {
+											for(Node<Category> child : children) {
 												if(hasTicket(child, categoriesWithTickets)) return true;
 											}
 										}
@@ -854,18 +854,18 @@ public class CommunicationPane extends JPanel implements TableListener {
 									}
 								}
 							);
-							final Tree<Business> filteredBusinessTree = new TreeCopy<>(
+							final Tree<Account> filteredBusinessTree = new TreeCopy<>(
 								businessTree,
-								new NodeFilter<Business>() {
+								new NodeFilter<Account>() {
 									@Override
-									public boolean isNodeFiltered(Node<Business> node) throws IOException, SQLException {
+									public boolean isNodeFiltered(Node<Account> node) throws IOException, SQLException {
 										return !hasTicket(node, businessesWithTickets);
 									}
-									private boolean hasTicket(Node<Business> node, Set<Business> businessesWithTickets) throws IOException, SQLException {
+									private boolean hasTicket(Node<Account> node, Set<Account> businessesWithTickets) throws IOException, SQLException {
 										if(businessesWithTickets.contains(node.getValue())) return true;
-										List<Node<Business>> children = node.getChildren();
+										List<Node<Account>> children = node.getChildren();
 										if(children!=null) {
-											for(Node<Business> child : children) {
+											for(Node<Account> child : children) {
 												if(hasTicket(child, businessesWithTickets)) return true;
 											}
 										}
@@ -876,10 +876,10 @@ public class CommunicationPane extends JPanel implements TableListener {
 							// Perform ticket data lookups before going to the Swing thread
 							final List<TicketRow> ticketRows = new ArrayList<>(tickets.size());
 							for(Ticket ticket : tickets) {
-								TicketPriority priority = ticket.getAdminPriority();
+								Priority priority = ticket.getAdminPriority();
 								if(priority==null) priority = ticket.getClientPriority();
-								Business bu = ticket.getBusiness();
-								BusinessAdministrator openedBy = ticket.getCreatedBy();
+								Account bu = ticket.getBusiness();
+								Administrator openedBy = ticket.getCreatedBy();
 								String fromAddress = ticket.getFromAddress();
 								ticketRows.add(
 									new TicketRow(
@@ -1038,8 +1038,8 @@ public class CommunicationPane extends JPanel implements TableListener {
 	class TicketRow {
 		final boolean isStrikethrough;
 		final Integer ticketNumber;
-		final TicketPriority priority;
-		final TicketStatus status;
+		final Priority priority;
+		final Status status;
 		final long openDate;
 		final String openedBy;
 		final String business;
@@ -1048,8 +1048,8 @@ public class CommunicationPane extends JPanel implements TableListener {
 		TicketRow(
 			boolean isStrikethrough,
 			Integer ticketNumber,
-			TicketPriority priority,
-			TicketStatus status,
+			Priority priority,
+			Status status,
 			long openDate,
 			String openedBy,
 			String business,
@@ -1084,17 +1084,17 @@ public class CommunicationPane extends JPanel implements TableListener {
 		Color getForegroundColor() {
 			String statusString = status.getStatus();
 			if(
-				statusString.equals(TicketStatus.JUNK)
-				|| statusString.equals(TicketStatus.DELETED)
-				|| statusString.equals(TicketStatus.CLOSED)
+				statusString.equals(Status.JUNK)
+				|| statusString.equals(Status.DELETED)
+				|| statusString.equals(Status.CLOSED)
 			) {
 				return AlertLevelTableCellRenderer.defaultColor;
 			}
 			String priorityString = priority.getPriority();
-			if(priorityString.equals(TicketPriority.LOW)) return AlertLevelTableCellRenderer.lowColor;
-			if(priorityString.equals(TicketPriority.NORMAL)) return AlertLevelTableCellRenderer.mediumColor;
-			if(priorityString.equals(TicketPriority.HIGH)) return AlertLevelTableCellRenderer.highColor;
-			if(priorityString.equals(TicketPriority.URGENT)) return AlertLevelTableCellRenderer.criticalColor;
+			if(priorityString.equals(Priority.LOW)) return AlertLevelTableCellRenderer.lowColor;
+			if(priorityString.equals(Priority.NORMAL)) return AlertLevelTableCellRenderer.mediumColor;
+			if(priorityString.equals(Priority.HIGH)) return AlertLevelTableCellRenderer.highColor;
+			if(priorityString.equals(Priority.URGENT)) return AlertLevelTableCellRenderer.criticalColor;
 			else throw new AssertionError("Unexpected value for priority: "+priority);
 		}
 	}
