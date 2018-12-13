@@ -30,6 +30,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  * Encapsulates and stores the previous user preferences.
@@ -60,12 +61,19 @@ public class AlertsPane extends JPanel {
 	 * Column widths
 	 */
 	private static final int
-		COLUMN_TIME_WIDTH = 100,
-		COLUMN_ALERT_LEVEL_WIDTH = 50,
-		COLUMN_ALERT_CATEGORY_WIDTH = 70,
-		COLUMN_SOURCE_DISPLAY_WIDTH = 150,
-		COLUMN_ALERT_MESSAGE_WIDTH = 300;
+		COLUMN_TIME_WIDTH = 120,
+		COLUMN_ALERT_LEVEL_WIDTH = 30,
+		COLUMN_ALERT_CATEGORY_WIDTH = 30,
+		COLUMN_SOURCE_DISPLAY_WIDTH = 410,
+		COLUMN_ALERT_MESSAGE_WIDTH = 410;
 
+	static {
+		final int expectedTotal = 1000;
+		int total = COLUMN_TIME_WIDTH + COLUMN_ALERT_LEVEL_WIDTH + COLUMN_ALERT_CATEGORY_WIDTH + COLUMN_SOURCE_DISPLAY_WIDTH + COLUMN_ALERT_MESSAGE_WIDTH;
+		if(total != expectedTotal) {
+			throw new ExceptionInInitializerError("Column widths do not add up to " + expectedTotal + ": " + total);
+		}
+	}
 	final NOC noc;
 
 	final private Buzzer buzzer = new Buzzer(this);
@@ -152,7 +160,7 @@ public class AlertsPane extends JPanel {
 
 			@Override
 			public TableCellRenderer getCellRenderer(int row, int column) {
-				final int modelRow = /* TODO: Sorter: getRowSorter().convertRowIndexToModel(row) */ row;
+				final int modelRow = getRowSorter().convertRowIndexToModel(row);
 				TableCellRenderer renderer = super.getCellRenderer(row, column);
 				Color foreground;
 				{
@@ -185,7 +193,10 @@ public class AlertsPane extends JPanel {
 				};
 			}
 		};
-		// TODO: sorter?
+
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
+		table.setRowSorter(sorter);
+		sorter.setSortsOnUpdates(true);
 		
 		//table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
@@ -204,9 +215,9 @@ public class AlertsPane extends JPanel {
 					int[] selectedRows = table.getSelectedRows();
 					if(selectedRows.length>0) {
 						for(int c=selectedRows.length-1;c>=0;c--) {
-							int row = selectedRows[c];
-							history.remove(row);
-							tableModel.removeRow(row);
+							final int modelRow = table.getRowSorter().convertRowIndexToModel(selectedRows[c]);
+							history.remove(modelRow);
+							tableModel.removeRow(modelRow);
 							setTrayIcon();
 							buzzer.controlBuzzer(history);
 						}
