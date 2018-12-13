@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -38,6 +39,7 @@ import javax.swing.table.TableRowSorter;
  * @author  AO Industries, Inc.
  */
 // TODO: Tab alert levels, like GatheringTab.java
+// TODO: Update rows in-place, instead of removing and adding, and re-sort - to not lose selections
 public class AlertsPane extends JPanel {
 
 	/**
@@ -214,13 +216,22 @@ public class AlertsPane extends JPanel {
 				public void actionPerformed(ActionEvent e) {
 					int[] selectedRows = table.getSelectedRows();
 					if(selectedRows.length>0) {
+						int firstSelectedRow = selectedRows[0];
 						for(int c=selectedRows.length-1;c>=0;c--) {
 							final int modelRow = table.getRowSorter().convertRowIndexToModel(selectedRows[c]);
 							history.remove(modelRow);
 							tableModel.removeRow(modelRow);
-							setTrayIcon();
-							buzzer.controlBuzzer(history);
 						}
+						// Re-select the first selected row, or the row before if at end of list
+						int rowCount = tableModel.getRowCount();
+						if(firstSelectedRow >= rowCount) firstSelectedRow = rowCount - 1;
+						if(firstSelectedRow >= 0) {
+							ListSelectionModel selectionModel = table.getSelectionModel();
+							selectionModel.clearSelection(); // Required?
+							selectionModel.setSelectionInterval(firstSelectedRow, firstSelectedRow);
+						}
+						setTrayIcon();
+						buzzer.controlBuzzer(history);
 					}
 				}
 			}
