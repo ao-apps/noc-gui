@@ -20,6 +20,9 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Line;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -68,20 +71,38 @@ class Buzzer {
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
 		SourceDataLine auline = (SourceDataLine) AudioSystem.getLine(info);
 		auline.open(format);
-		auline.start();
-		try {
-			byte[] buff = BufferManager.getBytes();
-			try {
-				int nBytesRead;
-				while ((nBytesRead = audioInputStream.read(buff)) != -1) {
-					/*if(nBytesRead>0)*/ auline.write(buff, 0, nBytesRead);
+		// Use a listener to close, since the audio seems to get cut short around half the time
+		boolean[] closed = {false};
+		auline.addLineListener((LineEvent event) -> {
+			if(event.getType().equals(LineEvent.Type.STOP)) {
+				event.getLine().close();
+				synchronized(closed) {
+					closed[0] = true;
 				}
-			} finally {
-				BufferManager.release(buff, false);
+			}
+		});
+		auline.start();
+		byte[] buff = BufferManager.getBytes();
+		try {
+			int nBytesRead;
+			while ((nBytesRead = audioInputStream.read(buff)) != -1) {
+				/*if(nBytesRead>0)*/ auline.write(buff, 0, nBytesRead);
 			}
 		} finally {
-			auline.drain();
-			auline.close();
+			BufferManager.release(buff, false);
+		}
+		auline.drain();
+		// Wait until closed
+		while(true) {
+			synchronized(closed) {
+				if(closed[0]) break;
+			}
+			try {
+				// Wait 1/10 of a second, since not too much of the clip should play after drain completes
+				Thread.sleep(100);
+			} catch(InterruptedException e) {
+				logger.log(Level.WARNING, "Interrupt unexpected", e);
+			}
 		}
 	}
 
