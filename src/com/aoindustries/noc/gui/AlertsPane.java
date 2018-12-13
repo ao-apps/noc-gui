@@ -79,14 +79,14 @@ public class AlertsPane extends JPanel {
 
 		this.noc = noc;
 
-		String[] columnNames = {
-			accessor.getMessage("AlertsPane.time.header"),
-			accessor.getMessage("AlertsPane.alertLevel.header"),
-			accessor.getMessage("AlertsPane.sourceDisplay.header"),
-			accessor.getMessage("AlertsPane.alertMessage.header")
-		};
 		tableModel = new UneditableDefaultTableModel(
-			columnNames,
+			new String[] {
+				accessor.getMessage("AlertsPane.time.header"),
+				accessor.getMessage("AlertsPane.alertLevel.header"),
+				accessor.getMessage("AlertsPane.alertCategory.header"),
+				accessor.getMessage("AlertsPane.sourceDisplay.header"),
+				accessor.getMessage("AlertsPane.alertMessage.header")
+			},
 			0
 		);
 		table = new JTable(tableModel);
@@ -197,6 +197,7 @@ public class AlertsPane extends JPanel {
 				new Object[] {
 					df.format(new Date(alert.time)),
 					accessor.getMessage("AlertsPane.alertLevel." + alert.newAlertLevel),
+					accessor.getMessage("AlertsPane.alertCategory." + alert.newAlertCategory),
 					alert.sourceDisplay,
 					alert.alertMessage
 				}
@@ -263,7 +264,8 @@ public class AlertsPane extends JPanel {
 			tableModel.setValueAt(df.format(new Date(alert.time)), row, 0);
 			tableModel.setValueAt(alert.sourceDisplay, row, 1);
 			tableModel.setValueAt(alert.newAlertLevel, row, 2); // Should internationalize
-			tableModel.setValueAt(alert.alertMessage, row, 3);
+			// alertCategory now, too
+			tableModel.setValueAt(alert.alertMessage, row, 4);
 			row++;
 		}
 		for(;row<tableModel.getRowCount();row++) {
