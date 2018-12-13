@@ -15,9 +15,10 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -27,10 +28,12 @@ import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
+import javax.swing.RowSorter;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 /**
@@ -39,7 +42,6 @@ import javax.swing.table.TableRowSorter;
  * @author  AO Industries, Inc.
  */
 // TODO: Tab alert levels, like GatheringTab.java
-// TODO: Update rows in-place, instead of removing and adding, and re-sort - to not lose selections
 public class AlertsPane extends JPanel {
 
 	/**
@@ -106,7 +108,7 @@ public class AlertsPane extends JPanel {
 	}
 
 	// Only accessed by Swing event dispatch thread, no additional synchronization necessary
-	final private LinkedList<Alert> history = new LinkedList<>();
+	final private List<Alert> history = new ArrayList<>();
 
 	public AlertsPane(NOC noc) {
 		super(new GridLayout(1,0));
@@ -279,21 +281,37 @@ public class AlertsPane extends JPanel {
 		buzzer.controlBuzzer(history);
 	}
 
-	private boolean clearAlertsHistory(Object source) {
+	/**
+	 * Removes any alert history for a given source.
+	 */
+	private void clearAlertsHistory(Object source) {
 		Iterator<Alert> historyIter = history.iterator();
 		int row = 0;
-		boolean found = false;
 		while(historyIter.hasNext()) {
 			Alert prev = historyIter.next();
 			if(prev.source.equals(source)) {
 				historyIter.remove();
 				tableModel.removeRow(row);
-				found = true;
 				break;
 			}
 			row++;
 		}
-		return found;
+	}
+
+	/**
+	 * Gets the row for a given source.
+	 *
+	 * @return  The index where found or {@code -1} if not found.
+	 */
+	private int findExistingRow(Object source) {
+		Iterator<Alert> historyIter = history.iterator();
+		int row = 0;
+		while(historyIter.hasNext()) {
+			Alert prev = historyIter.next();
+			if(prev.source.equals(source)) return row;
+			row++;
+		}
+		return -1;
 	}
 
 	/**
@@ -303,19 +321,33 @@ public class AlertsPane extends JPanel {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
 		// First delete any alerts from the same source
-		boolean found = clearAlertsHistory(source);
+		boolean modified;
+		int existingRow = findExistingRow(source);
 		if(
-			(found || oldAlertLevel == AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel) > 0)
+			(existingRow != -1 || oldAlertLevel == AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel) > 0)
 			// TODO: We may have lower level alerts going here, too, based on user-selectable per-category thresholds
 			&& newAlertLevel.compareTo(AlertLevel.HIGH) >= 0
 		) {
-			if(MAX_HISTORY_SIZE != Integer.MAX_VALUE && history.size() >= MAX_HISTORY_SIZE) {
-				history.removeLast();
-				tableModel.removeRow(history.size()-1);
-			}
 			Alert alert = new Alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage, oldAlertCategory, newAlertCategory);
-			history.addFirst(alert);
-
+			ListSelectionModel selectionModel = table.getSelectionModel();
+			RowSorter<? extends TableModel> sorter = table.getRowSorter();
+			boolean isSelected;
+			if(existingRow == -1) {
+				// Inserting new row
+				if(MAX_HISTORY_SIZE != Integer.MAX_VALUE && history.size() >= MAX_HISTORY_SIZE) {
+					int removeIndex = history.size() - 1;
+					history.remove(removeIndex);
+					tableModel.removeRow(removeIndex);
+				}
+				isSelected = false;
+			} else {
+				// Moving existing row
+				int viewRow = sorter.convertRowIndexToView(existingRow);
+				isSelected = selectionModel.isSelectedIndex(viewRow);
+				history.remove(existingRow);
+				tableModel.removeRow(existingRow);
+			}
+			history.add(0, alert);
 			tableModel.insertRow(
 				0,
 				new Object[] {
@@ -326,7 +358,22 @@ public class AlertsPane extends JPanel {
 					alert.alertMessage
 				}
 			);
+			modified = true;
+			if(isSelected) {
+				int viewRow = sorter.convertRowIndexToView(0);
+				selectionModel.addSelectionInterval(viewRow, viewRow);
+			}
+		} else {
+			// Delete any alerts from the same source
+			if(existingRow != -1) {
+				history.remove(existingRow);
+				tableModel.removeRow(existingRow);
+				modified = true;
+			} else {
+				modified = false;
+			}
 		}
+		if(modified) table.repaint();
 
 		setTrayIcon();
 		buzzer.controlBuzzer(history);
