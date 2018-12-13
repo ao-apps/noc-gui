@@ -569,7 +569,8 @@ public class NOC {
 		ignoreChangeEvent = false;
 		parent.add(tabbedPane, BorderLayout.CENTER);
 		// Make sure ALERTS_TAB_INDEX is still valid if we ever reorder the tabs
-		if(tabbedPane.getTabComponentAt(ALERTS_TAB_INDEX) != alerts) throw new AssertionError("ALERTS_TAB_INDEX is incorrect");
+		Component componentAtAlertsTabIndex = tabbedPane.getComponentAt(ALERTS_TAB_INDEX);
+		if(componentAtAlertsTabIndex != alerts) throw new AssertionError("ALERTS_TAB_INDEX is incorrect: " + componentAtAlertsTabIndex);
 	}
 
 	/**
