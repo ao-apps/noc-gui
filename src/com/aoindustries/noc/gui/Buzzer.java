@@ -230,13 +230,11 @@ class Buzzer {
 									lastBuzzedTime = currentTime;
 									playBuzzer(getBuzzerAudioResource(lastBuzzedLevel, lastBuzzedCategory));
 									sleepTime = buzzInterval;
-								}
-								// Check for time set to past
-								else if(currentTime < lastBuzzedTime) {
-									// Do not play sound, but reset timer
-									lastBuzzedTime = currentTime;
-									sleepTime = buzzInterval;
 								} else {
+									// Check for time set to past
+									if(currentTime < lastBuzzedTime) {
+										lastBuzzedTime = currentTime;
+									}
 									// Plays sound immediately if the new timeout, based on new level and category, would now indicate time to play the sound.
 									long timeSince = currentTime - lastBuzzedTime; // Handle time set to past
 									if(timeSince >= buzzInterval) {
@@ -246,6 +244,8 @@ class Buzzer {
 										playBuzzer(getBuzzerAudioResource(lastBuzzedLevel, lastBuzzedCategory));
 										sleepTime = buzzInterval;
 									} else {
+										// Drop lastBuzzedCategory, so an increase in category, while at sale level, will cause a quick alert again
+										if(currentLevel == lastBuzzedLevel) lastBuzzedCategory = currentCategory;
 										// Sleep the remaining time
 										sleepTime = buzzInterval - timeSince;
 									}
