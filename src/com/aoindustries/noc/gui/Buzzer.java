@@ -5,26 +5,18 @@
  */
 package com.aoindustries.noc.gui;
 
-import com.aoindustries.io.IoUtils;
 import com.aoindustries.lang.NullArgumentException;
 import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
-import com.aoindustries.util.BufferManager;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.Line;
-import javax.sound.sampled.LineEvent;
-import javax.sound.sampled.LineListener;
+import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.SwingUtilities;
 
@@ -62,47 +54,41 @@ class Buzzer {
 	 *
 	 * Source: http://www.anyexample.com/programming/java/java_play_wav_sound_file.xml
 	 */
-	private static void playSound(byte[] audioFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+	private static void playSound(String audioResource) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
-		NullArgumentException.checkNotNull(audioFile, "audioFile");
+		NullArgumentException.checkNotNull(audioResource, "audioResource");
 
-		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new ByteArrayInputStream(audioFile));
-		AudioFormat format = audioInputStream.getFormat();
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-		SourceDataLine auline = (SourceDataLine) AudioSystem.getLine(info);
-		auline.open(format);
-		// Use a listener to close, since the audio seems to get cut short around half the time
-		boolean[] closed = {false};
-		auline.addLineListener((LineEvent event) -> {
-			if(event.getType().equals(LineEvent.Type.STOP)) {
-				event.getLine().close();
-				synchronized(closed) {
-					closed[0] = true;
-				}
-			}
-		});
-		auline.start();
-		byte[] buff = BufferManager.getBytes();
+		URL audioUrl = SystemsPane.class.getResource(audioResource);
+		if(audioUrl == null) throw new IOException("Audio Resource not found: " + audioResource);
+
+		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioUrl);
 		try {
-			int nBytesRead;
-			while ((nBytesRead = audioInputStream.read(buff)) != -1) {
-				/*if(nBytesRead>0)*/ auline.write(buff, 0, nBytesRead);
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			try {
+				clip.start();
+				clip.drain();
+				// Wait until stopped playing, but at most 10 seconds to avoid buggy stuff
+				int sleepCount = 0;
+				while(clip.isRunning()) {
+					if(sleepCount < 100) {
+						try {
+							// Wait 1/10 of a second, since not too much of the clip should play after drain completes
+							Thread.sleep(100);
+						} catch(InterruptedException e) {
+							logger.log(Level.WARNING, "Interrupt unexpected", e);
+						}
+						sleepCount++;
+					} else {
+						logger.log(Level.WARNING, "Clip still running after 10 seconds, closing now: " + audioResource);
+						break;
+					}
+				}
+			} finally {
+				clip.close();
 			}
 		} finally {
-			BufferManager.release(buff, false);
-		}
-		auline.drain();
-		// Wait until closed
-		while(true) {
-			synchronized(closed) {
-				if(closed[0]) break;
-			}
-			try {
-				// Wait 1/10 of a second, since not too much of the clip should play after drain completes
-				Thread.sleep(100);
-			} catch(InterruptedException e) {
-				logger.log(Level.WARNING, "Interrupt unexpected", e);
-			}
+			audioInputStream.close();
 		}
 	}
 
@@ -153,11 +139,7 @@ class Buzzer {
 				isBuzzing = true;
 				alertsPane.noc.executorService.submit(() -> {
 					try {
-						byte[] buffered;
-						try (InputStream in = SystemsPane.class.getResourceAsStream(audioResource)) {
-							buffered = IoUtils.readFully(in);
-						}
-						playSound(buffered);
+						playSound(audioResource);
 					} catch(RuntimeException | IOException | UnsupportedAudioFileException | LineUnavailableException err) {
 						logger.log(Level.SEVERE, null, err);
 					} finally {
