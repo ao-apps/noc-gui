@@ -8,12 +8,10 @@ package com.aoindustries.noc.gui;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.aoserv.client.validator.UserId;
 import com.aoindustries.awt.image.Images;
-import com.aoindustries.io.IoUtils;
-import com.aoindustries.lang.NullArgumentException;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.RootNode;
-import com.aoindustries.util.BufferManager;
 import com.aoindustries.util.ErrorPrinter;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
@@ -33,9 +31,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
@@ -48,13 +44,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -131,6 +120,7 @@ public class NOC {
 	private JButton communicationLoginButton;
 	private JButton systemsLoginButton;
 
+	private static final int ALERTS_TAB_INDEX = 0;
 	private final AlertsPane alerts;
 	final CommunicationPane communication;
 	private final SystemsPane systems;
@@ -572,12 +562,14 @@ public class NOC {
 		}
 		ignoreChangeEvent = true;
 		tabbedPane.removeAll();
-		tabbedPane.add(accessor.getMessage("NOC.alerts.tab"), alerts);
-		tabbedPane.add(accessor.getMessage("NOC.communication.tab"), communication);
-		tabbedPane.add(accessor.getMessage("NOC.systems.tab"), systems);
+		tabbedPane.addTab(accessor.getMessage("NOC.alerts.tab"), alerts);
+		tabbedPane.addTab(accessor.getMessage("NOC.communication.tab"), communication);
+		tabbedPane.addTab(accessor.getMessage("NOC.systems.tab"), systems);
 		tabbedPane.setSelectedIndex(preferences.getTabbedPaneSelectedIndex());
 		ignoreChangeEvent = false;
 		parent.add(tabbedPane, BorderLayout.CENTER);
+		// Make sure ALERTS_TAB_INDEX is still valid if we ever reorder the tabs
+		if(tabbedPane.getTabComponentAt(ALERTS_TAB_INDEX) != alerts) throw new AssertionError("ALERTS_TAB_INDEX is incorrect");
 	}
 
 	/**
@@ -680,7 +672,7 @@ public class NOC {
 		if(image!=trayIcon.getImage()) trayIcon.setImage(image);
 	}
 
-	void logout() {
+	final void logout() {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
 		if(this.rootNode!=null) {
@@ -704,90 +696,31 @@ public class NOC {
 		}
 	}
 
-	private final Object buzzerLock = new Object();
-	private boolean isBuzzing = false;
-
-	/**
-	 * Returns immediately (works in a background thread).  Only one buzzer
-	 * at a time will play.
-	 */
-	void playBuzzer() {
-		synchronized(buzzerLock) {
-			if(!isBuzzing) {
-				isBuzzing = true;
-				executorService.submit(() -> {
-					try {
-						byte[] buffered;
-						try (InputStream in = SystemsPane.class.getResourceAsStream("buzzer.wav")) {
-							buffered = IoUtils.readFully(in);
-						}
-						playSound(buffered);
-					} catch(RuntimeException | IOException | UnsupportedAudioFileException | LineUnavailableException err) {
-						logger.log(Level.SEVERE, null, err);
-					} finally {
-						synchronized(buzzerLock) {
-							isBuzzing = false;
-						}
-					}
-				});
-			}
-		}
-	}
-
-	/**
-	 * Does not return quickly.  Plays the sound on the current thread.
-	 *
-	 * Source: http://www.anyexample.com/programming/java/java_play_wav_sound_file.xml
-	 */
-	void playSound(final byte[] audioFile) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
-		NullArgumentException.checkNotNull(audioFile, "audioFile");
-
-		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new ByteArrayInputStream(audioFile));
-		AudioFormat format = audioInputStream.getFormat();
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-		SourceDataLine auline = (SourceDataLine) AudioSystem.getLine(info);
-		auline.open(format);
-		auline.start();
-		try {
-			byte[] buff = BufferManager.getBytes();
-			try {
-				int nBytesRead;
-				while ((nBytesRead = audioInputStream.read(buff)) != -1) {
-					/*if(nBytesRead>0)*/ auline.write(buff, 0, nBytesRead);
-				}
-			} finally {
-				BufferManager.release(buff, false);
-			}
-		} finally {
-			auline.drain();
-			auline.close();
-		}
-	}
-
 	/**
 	 * @see  #clearAlerts(java.lang.Object)
-	 * @see  AlertsPane#alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
+	 * @see  AlertsPane#alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String, com.aoindustries.noc.monitor.common.AlertCategory, com.aoindustries.noc.monitor.common.AlertCategory)
 	 */
-	void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage) {
+	void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage, AlertCategory oldAlertCategory, AlertCategory newAlertCategory) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
 		// Call system tray
 		if(
-			(oldAlertLevel==AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel)>0)
-			&& newAlertLevel.compareTo(AlertLevel.HIGH)>=0
+			(oldAlertLevel == AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel) > 0)
+			// TODO: Support per category, configurable alert level settings, might affect what blinks on task tray, too
+			&& newAlertLevel.compareTo(AlertLevel.HIGH) >= 0
 		) {
 			// Only use displayMessage when alerts not active in window
 			if(
 				currentDisplayMode==Preferences.DisplayMode.TABS
 				? (
 					!singleFrame.isActive()
-					|| tabbedPane.getSelectedIndex()!=0
+					|| tabbedPane.getSelectedIndex() != ALERTS_TAB_INDEX
 				) : (
 					!alertsFrame.isActive()
 				)
 			) {
-				if(trayIcon!=null) {
+				if(trayIcon != null) {
+					// TODO: Enable tray icon alerts by category and alert level, such as showing new tickets, contacts, or emails
 					if(ENABLE_TRAY_ICON_ALERTS) {
 						trayIcon.displayMessage(
 							accessor.getMessage("NOC.trayIcon.alertMessage.caption"),
@@ -796,12 +729,12 @@ public class NOC {
 						);
 					}
 				} else {
-					// TODO: Bring the alerts to the foreground, much like the open action of the trayIcon
+					// TODO: Bring the alerts to the foreground, much like the open action of the trayIcon?
 				}
 			}
 		}
 
-		alerts.alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage);
+		alerts.alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage, oldAlertCategory, newAlertCategory);
 	}
 
 	/**
@@ -810,6 +743,8 @@ public class NOC {
 	 */
 	void clearAlerts(Object source) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+
+		// if(ENABLE_TRAY_ICON_ALERTS), is there any way to cancal a message that is displayed?
 
 		alerts.clearAlerts(source);
 	}

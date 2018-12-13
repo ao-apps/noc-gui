@@ -6,8 +6,8 @@
 package com.aoindustries.noc.gui;
 
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.noc.monitor.common.AlertChange;
 import com.aoindustries.noc.monitor.common.AlertLevel;
-import com.aoindustries.noc.monitor.common.AlertLevelChange;
 import com.aoindustries.noc.monitor.common.Node;
 import com.aoindustries.noc.monitor.common.NodeSnapshot;
 import com.aoindustries.noc.monitor.common.RootNode;
@@ -55,9 +55,9 @@ import javax.swing.tree.TreeSelectionModel;
  */
 public class SystemsPane extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-
 	private static final Logger logger = Logger.getLogger(SystemsPane.class.getName());
+
+	private static final long serialVersionUID = 1L;
 
 	private final NOC noc;
 	private final JSplitPane splitPane;
@@ -251,7 +251,7 @@ public class SystemsPane extends JPanel {
 				// assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 
 				// TODO: Call system tray?
-				if(treeListener==this) batchValidateTreeNodes();
+				if(treeListener == this) batchValidateTreeNodes();
 			}
 
 			@Override
@@ -260,26 +260,28 @@ public class SystemsPane extends JPanel {
 				// assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 
 				// TODO: Call system tray?
-				if(treeListener==this) batchValidateTreeNodes();
+				if(treeListener == this) batchValidateTreeNodes();
 			}
 
 			@Override
-			public void nodeAlertLevelChanged(final List<AlertLevelChange> changes) {
+			public void nodeAlertChanged(final List<AlertChange> changes) {
 				assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 
-				if(treeListener==this) {
+				if(treeListener == this) {
 					batchValidateTreeNodes();
 
 					final TreeListener thisTreeListener = this;
 					SwingUtilities.invokeLater(() -> {
-						if(treeListener==thisTreeListener) {
-							for(AlertLevelChange change : changes) {
+						if(treeListener == thisTreeListener) {
+							for(AlertChange change : changes) {
 								noc.alert(
 									change.getNode(),
 									change.getNodeFullPath(),
 									change.getOldAlertLevel(),
 									change.getNewAlertLevel(),
-									change.getAlertMessage()
+									change.getAlertMessage(),
+									change.getOldAlertCategory(),
+									change.getNewAlertCategory()
 								);
 							}
 						}

@@ -6,6 +6,7 @@
 package com.aoindustries.noc.gui;
 
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.swing.table.UneditableDefaultTableModel;
 import java.awt.GridLayout;
@@ -33,35 +34,39 @@ import javax.swing.SwingUtilities;
  */
 public class AlertsPane extends JPanel {
 
+	/**
+	 * The maximum history size or {@link Integer#MAX_VALUE} for unlimited.
+	 */
 	private static final int MAX_HISTORY_SIZE = Integer.MAX_VALUE; // 1000;
 
-	/**
-	 * The number of milliseconds between buzzers.
-	 */
-	private static final int BUZZER_INTERVAL = 120000;
+	private static final long serialVersionUID = 2L;
 
-	private static final long serialVersionUID = 1L;
+	final NOC noc;
 
-	private final NOC noc;
+	final private Buzzer buzzer = new Buzzer(this);
 
 	final private UneditableDefaultTableModel tableModel;
 	final private JScrollPane scrollPane;
 	final private JTable table;
 
-	private static class Alert {
-		final private long time = System.currentTimeMillis();
-		final private Object source;
-		final private String sourceDisplay;
-		final private AlertLevel oldAlertLevel;
-		final private AlertLevel newAlertLevel;
-		final private String alertMessage;
+	static class Alert {
+		final long time = System.currentTimeMillis();
+		final Object source;
+		final String sourceDisplay;
+		final AlertLevel oldAlertLevel;
+		final AlertLevel newAlertLevel;
+		final String alertMessage;
+		final AlertCategory oldAlertCategory;
+		final AlertCategory newAlertCategory;
 
-		private Alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage) {
+		private Alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage, AlertCategory oldAlertCategory, AlertCategory newAlertCategory) {
 			this.source = source;
 			this.sourceDisplay = sourceDisplay;
 			this.oldAlertLevel = oldAlertLevel;
 			this.newAlertLevel = newAlertLevel;
 			this.alertMessage = alertMessage;
+			this.oldAlertCategory = oldAlertCategory;
+			this.newAlertCategory = newAlertCategory;
 		}
 	}
 
@@ -106,7 +111,7 @@ public class AlertsPane extends JPanel {
 							history.remove(row);
 							tableModel.removeRow(row);
 							setTrayIcon();
-							controlBuzzer();
+							buzzer.controlBuzzer(history);
 						}
 					}
 				}
@@ -122,7 +127,7 @@ public class AlertsPane extends JPanel {
 		JButton buzzerTest = new JButton(accessor.getMessage("AlertsPane.buzzerTest.label"));
 		toolBar.add(buzzerTest);
 		buzzerTest.addActionListener((ActionEvent e) -> {
-			noc.playBuzzer();
+			buzzer.playBuzzer("buzzer.wav");
 		});
 		buzzerTest.setMaximumSize(buzzerTest.getPreferredSize());
 	}
@@ -145,7 +150,7 @@ public class AlertsPane extends JPanel {
 		for(int row = tableModel.getRowCount()-1; row>=0; row--) {
 			tableModel.removeRow(row);
 		}
-		controlBuzzer();
+		buzzer.controlBuzzer(history);
 	}
 
 	private boolean clearAlertsHistory(Object source) {
@@ -168,20 +173,21 @@ public class AlertsPane extends JPanel {
 	/**
 	 * @see  #clearAlerts(java.lang.Object)
 	 */
-	void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage) {
+	void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage, AlertCategory oldAlertCategory, AlertCategory newAlertCategory) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
 		// First delete any alerts from the same source
 		boolean found = clearAlertsHistory(source);
 		if(
-			(found || oldAlertLevel==AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel)>0)
-			&& newAlertLevel.compareTo(AlertLevel.HIGH)>=0
+			(found || oldAlertLevel == AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel) > 0)
+			// TODO: We may have lower level alerts going here, too, based on user-selectable per-category thresholds
+			&& newAlertLevel.compareTo(AlertLevel.HIGH) >= 0
 		) {
-			if(history.size()>=MAX_HISTORY_SIZE) {
+			if(MAX_HISTORY_SIZE != Integer.MAX_VALUE && history.size() >= MAX_HISTORY_SIZE) {
 				history.removeLast();
 				tableModel.removeRow(history.size()-1);
 			}
-			Alert alert = new Alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage);
+			Alert alert = new Alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage, oldAlertCategory, newAlertCategory);
 			history.addFirst(alert);
 
 			Locale locale = Locale.getDefault();
@@ -190,7 +196,7 @@ public class AlertsPane extends JPanel {
 				0,
 				new Object[] {
 					df.format(new Date(alert.time)),
-					accessor.getMessage("AlertsPane.alertLevel."+alert.newAlertLevel),
+					accessor.getMessage("AlertsPane.alertLevel." + alert.newAlertLevel),
 					alert.sourceDisplay,
 					alert.alertMessage
 				}
@@ -198,7 +204,7 @@ public class AlertsPane extends JPanel {
 		}
 
 		setTrayIcon();
-		controlBuzzer();
+		buzzer.controlBuzzer(history);
 		//validateTable();
 	}
 
@@ -214,7 +220,7 @@ public class AlertsPane extends JPanel {
 		clearAlertsHistory(source);
 
 		setTrayIcon();
-		controlBuzzer();
+		buzzer.controlBuzzer(history);
 		//validateTable();
 	}
 
@@ -241,51 +247,6 @@ public class AlertsPane extends JPanel {
 				newImage = noc.trayIconEnabledImage;
 			}
 			noc.setTrayIconImage(newImage);
-		}
-	}
-
-	private final Object buzzerThreadLock = new Object();
-	private Thread buzzerThread;
-
-	private void controlBuzzer() {
-		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-
-		// Find the highest alertLevel in the list
-		AlertLevel highest = AlertLevel.NONE;
-		for(Alert alert : history) {
-			if(alert.newAlertLevel.compareTo(highest)>0) {
-				highest = alert.newAlertLevel;
-				if(highest==AlertLevel.CRITICAL || highest==AlertLevel.UNKNOWN) {
-					break;
-				}
-			}
-		}
-		boolean runBuzzer = highest==AlertLevel.CRITICAL || highest==AlertLevel.UNKNOWN;
-		synchronized(buzzerThreadLock) {
-			if(runBuzzer) {
-				if(buzzerThread==null) {
-					buzzerThread = new Thread(() -> {
-						final Thread thisThread = Thread.currentThread();
-						while(true) {
-							synchronized(buzzerThreadLock) {
-								if(thisThread!=buzzerThread) break;
-							}
-							noc.playBuzzer();
-							try {
-								Thread.sleep(BUZZER_INTERVAL);
-							} catch(InterruptedException err) {
-								// Normal during thread shutdown
-							}
-						}
-					});
-					buzzerThread.start();
-				}
-			} else {
-				if(buzzerThread!=null) {
-					buzzerThread.interrupt();
-					buzzerThread=null;
-				}
-			}
 		}
 	}
 
@@ -322,6 +283,7 @@ public class AlertsPane extends JPanel {
 	 *          to cancel the event.
 	 */
 	public boolean exitApplication() {
+		buzzer.exitApplication();
 		return true;
 	}
 }
