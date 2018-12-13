@@ -8,7 +8,8 @@ package com.aoindustries.noc.gui;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
-import com.aoindustries.swing.table.UneditableDefaultTableModel;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -26,12 +27,16 @@ import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 /**
  * Encapsulates and stores the previous user preferences.
  *
  * @author  AO Industries, Inc.
  */
+// TODO: Tab alert levels, like GatheringTab.java
 public class AlertsPane extends JPanel {
 
 	/**
@@ -41,11 +46,31 @@ public class AlertsPane extends JPanel {
 
 	private static final long serialVersionUID = 2L;
 
+	/**
+	 * Column indexes
+	 */
+	private static final int
+		COLUMN_TIME = 0,
+		COLUMN_ALERT_LEVEL = COLUMN_TIME + 1,
+		COLUMN_ALERT_CATEGORY = COLUMN_ALERT_LEVEL + 1,
+		COLUMN_SOURCE_DISPLAY = COLUMN_ALERT_CATEGORY + 1,
+		COLUMN_ALERT_MESSAGE = COLUMN_SOURCE_DISPLAY + 1;
+
+	/**
+	 * Column widths
+	 */
+	private static final int
+		COLUMN_TIME_WIDTH = 100,
+		COLUMN_ALERT_LEVEL_WIDTH = 50,
+		COLUMN_ALERT_CATEGORY_WIDTH = 70,
+		COLUMN_SOURCE_DISPLAY_WIDTH = 150,
+		COLUMN_ALERT_MESSAGE_WIDTH = 300;
+
 	final NOC noc;
 
 	final private Buzzer buzzer = new Buzzer(this);
 
-	final private UneditableDefaultTableModel tableModel;
+	final private DefaultTableModel tableModel;
 	final private JScrollPane scrollPane;
 	final private JTable table;
 
@@ -79,7 +104,7 @@ public class AlertsPane extends JPanel {
 
 		this.noc = noc;
 
-		tableModel = new UneditableDefaultTableModel(
+		tableModel = new DefaultTableModel(
 			new String[] {
 				accessor.getMessage("AlertsPane.time.header"),
 				accessor.getMessage("AlertsPane.alertLevel.header"),
@@ -88,8 +113,80 @@ public class AlertsPane extends JPanel {
 				accessor.getMessage("AlertsPane.alertMessage.header")
 			},
 			0
-		);
-		table = new JTable(tableModel);
+		) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				switch(columnIndex) {
+					case COLUMN_TIME : return Date.class;
+					case COLUMN_ALERT_LEVEL : return AlertLevel.class;
+					case COLUMN_ALERT_CATEGORY : return AlertCategory.class;
+					case COLUMN_SOURCE_DISPLAY : return String.class;
+					case COLUMN_ALERT_MESSAGE : return String.class;
+					default :
+						throw new AssertionError("Unexpected columnIndex: " + columnIndex);
+				}
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		table = new JTable(tableModel) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public TableCellRenderer getDefaultRenderer(Class<?> columnClass) {
+				if(
+					columnClass == Date.class
+					|| columnClass == AlertLevel.class
+					|| columnClass == AlertCategory.class
+				) {
+					return super.getDefaultRenderer(String.class);
+				} else {
+					return super.getDefaultRenderer(columnClass);
+				}
+			}
+
+			@Override
+			public TableCellRenderer getCellRenderer(int row, int column) {
+				final int modelRow = /* TODO: Sorter: getRowSorter().convertRowIndexToModel(row) */ row;
+				TableCellRenderer renderer = super.getCellRenderer(row, column);
+				Color foreground;
+				{
+					Color _foreground = null;
+					// Only put color on selected columns
+					switch(column) {
+						case COLUMN_ALERT_LEVEL :
+							_foreground = AlertLevelTableCellRenderer.getColor((AlertLevel)tableModel.getValueAt(modelRow, column));
+							break;
+						// TODO: Associate a color with each category?
+					}
+					if(_foreground == null) _foreground = getForeground();
+					foreground = _foreground;
+				}
+				return (JTable table1, Object value, boolean isSelected, boolean hasFocus, int row1, int column1) -> {
+					if(column1 == COLUMN_TIME) {
+						Locale locale = Locale.getDefault();
+						DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
+						value = df.format((Date)value);
+					} else if(column1 == COLUMN_ALERT_LEVEL) {
+						value = accessor.getMessage("AlertsPane.alertLevel." + ((AlertLevel)value).name());
+					} else if(column1 == COLUMN_ALERT_CATEGORY) {
+						value = accessor.getMessage("AlertsPane.alertCategory." + ((AlertCategory)value).name());
+					}
+					Component component = renderer.getTableCellRendererComponent(table1, value, isSelected, hasFocus, row1, column1);
+					if(!isSelected) {
+						component.setForeground(foreground);
+					}
+					return component;
+				};
+			}
+		};
+		// TODO: sorter?
+		
 		//table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
@@ -117,6 +214,13 @@ public class AlertsPane extends JPanel {
 				}
 			}
 		);
+		TableColumnModel columnModel = table.getColumnModel();
+		columnModel.getColumn(COLUMN_TIME).setPreferredWidth(COLUMN_TIME_WIDTH);
+		columnModel.getColumn(COLUMN_ALERT_LEVEL).setPreferredWidth(COLUMN_ALERT_LEVEL_WIDTH);
+		columnModel.getColumn(COLUMN_ALERT_CATEGORY).setPreferredWidth(COLUMN_ALERT_CATEGORY_WIDTH);
+		columnModel.getColumn(COLUMN_SOURCE_DISPLAY).setPreferredWidth(COLUMN_SOURCE_DISPLAY_WIDTH);
+		columnModel.getColumn(COLUMN_ALERT_MESSAGE).setPreferredWidth(COLUMN_ALERT_MESSAGE_WIDTH);
+
 		scrollPane = new JScrollPane(table);
 		add(scrollPane);
 	}
@@ -190,14 +294,12 @@ public class AlertsPane extends JPanel {
 			Alert alert = new Alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage, oldAlertCategory, newAlertCategory);
 			history.addFirst(alert);
 
-			Locale locale = Locale.getDefault();
-			DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
 			tableModel.insertRow(
 				0,
 				new Object[] {
-					df.format(new Date(alert.time)),
-					accessor.getMessage("AlertsPane.alertLevel." + alert.newAlertLevel),
-					accessor.getMessage("AlertsPane.alertCategory." + alert.newAlertCategory),
+					new Date(alert.time),
+					alert.newAlertLevel,
+					alert.newAlertCategory,
 					alert.sourceDisplay,
 					alert.alertMessage
 				}

@@ -18,6 +18,7 @@ import javax.swing.table.TableCellRenderer;
  */
 class AlertLevelTableCellRenderer implements TableCellRenderer {
 
+	// TODO: Should these colors go on the enum directly?
 	final static Color
 		unknownColor = Color.LIGHT_GRAY,
 		criticalColor = Color.RED,
@@ -26,6 +27,18 @@ class AlertLevelTableCellRenderer implements TableCellRenderer {
 		lowColor = Color.GREEN.darker().darker(),
 		defaultColor = Color.BLACK
 	;
+
+	// TODO: Should these colors go on the enum directly?
+	static Color getColor(AlertLevel alertLevel) {
+		switch(alertLevel) {
+			case UNKNOWN: return unknownColor;
+			case CRITICAL: return  criticalColor;
+			case HIGH: return highColor;
+			case MEDIUM: return mediumColor;
+			case LOW: return lowColor;
+			default: return defaultColor;
+		}
+	}
 
 	private final TableCellRenderer wrappedRenderer;
 
@@ -42,25 +55,7 @@ class AlertLevelTableCellRenderer implements TableCellRenderer {
 			AlertLevel alertLevel = alertLevelAndData.alertLevel;
 			Object data = alertLevelAndData.data;
 			Component component = wrappedRenderer.getTableCellRendererComponent(table, data, isSelected, hasFocus, row, column);
-			switch(alertLevel) {
-				case UNKNOWN:
-					component.setForeground(unknownColor);
-					break;
-				case CRITICAL:
-					component.setForeground(criticalColor);
-					break;
-				case HIGH:
-					component.setForeground(highColor);
-					break;
-				case MEDIUM:
-					component.setForeground(mediumColor);
-					break;
-				case LOW:
-					component.setForeground(lowColor);
-					break;
-				default:
-					component.setForeground(defaultColor);
-			}
+			component.setForeground(getColor(alertLevel));
 			return component;
 		} else {
 			throw new IllegalArgumentException("value must be a AlertLevelAndData: value is "+value.getClass().getName());
