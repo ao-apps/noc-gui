@@ -457,19 +457,19 @@ public class CommunicationPane extends JPanel implements TableListener {
 	void start(AOServConnector conn) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		this.conn = conn;
-		conn.getBusinesses().addTableListener(this, 0);
-		conn.getBusinessAdministrators().addTableListener(this, 0);
-		conn.getBusinessAdministratorPermissions().addTableListener(this, 0);
-		conn.getBrands().addTableListener(this, 0);
-		conn.getLanguages().addTableListener(this, 0);
-		conn.getResellers().addTableListener(this, 0);
+		conn.getAccount().getAccount().addTableListener(this, 0);
+		conn.getAccount().getAdministrator().addTableListener(this, 0);
+		conn.getMaster().getAdministratorPermission().addTableListener(this, 0);
+		conn.getReseller().getBrand().addTableListener(this, 0);
+		conn.getTicket().getLanguage().addTableListener(this, 0);
+		conn.getReseller().getReseller().addTableListener(this, 0);
 		// conn.getTicketActions().addTableListener(this, 0);
-		conn.getTicketAssignments().addTableListener(this, 0);
-		conn.getTicketCategories().addTableListener(this, 0);
-		conn.getTicketPriorities().addTableListener(this, 0);
-		conn.getTicketStatuses().addTableListener(this, 0);
-		conn.getTicketTypes().addTableListener(this, 0);
-		conn.getTickets().addTableListener(this, 0);
+		conn.getTicket().getAssignment().addTableListener(this, 0);
+		conn.getReseller().getCategory().addTableListener(this, 0);
+		conn.getTicket().getPriority().addTableListener(this, 0);
+		conn.getTicket().getStatus().addTableListener(this, 0);
+		conn.getTicket().getTicketType().addTableListener(this, 0);
+		conn.getTicket().getTicket().addTableListener(this, 0);
 
 		refresh();
 	}
@@ -480,19 +480,19 @@ public class CommunicationPane extends JPanel implements TableListener {
 	void stop() {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		closeAllTicketFrames();
-		conn.getBusinesses().removeTableListener(this);
-		conn.getBusinessAdministrators().removeTableListener(this);
-		conn.getBusinessAdministratorPermissions().removeTableListener(this);
-		conn.getBrands().removeTableListener(this);
-		conn.getLanguages().removeTableListener(this);
-		conn.getResellers().removeTableListener(this);
+		conn.getAccount().getAccount().removeTableListener(this);
+		conn.getAccount().getAdministrator().removeTableListener(this);
+		conn.getMaster().getAdministratorPermission().removeTableListener(this);
+		conn.getReseller().getBrand().removeTableListener(this);
+		conn.getTicket().getLanguage().removeTableListener(this);
+		conn.getReseller().getReseller().removeTableListener(this);
 		// conn.getTicketActions().removeTableListener(this);
-		conn.getTicketAssignments().removeTableListener(this);
-		conn.getTicketCategories().removeTableListener(this);
-		conn.getTicketPriorities().removeTableListener(this);
-		conn.getTicketStatuses().removeTableListener(this);
-		conn.getTicketTypes().removeTableListener(this);
-		conn.getTickets().removeTableListener(this);
+		conn.getTicket().getAssignment().removeTableListener(this);
+		conn.getReseller().getCategory().removeTableListener(this);
+		conn.getTicket().getPriority().removeTableListener(this);
+		conn.getTicket().getStatus().removeTableListener(this);
+		conn.getTicket().getTicketType().removeTableListener(this);
+		conn.getTicket().getTicket().removeTableListener(this);
 		conn = null;
 		refresh();
 	}
@@ -695,17 +695,17 @@ public class CommunicationPane extends JPanel implements TableListener {
 								assignableUsers = Collections.emptyList();
 							} else {
 								// Logged-in, actually perform the data lookup
-								categoryTree = new TreeCopy<>(conn1.getTicketCategories().getTree());
-								businessTree = new TreeCopy<>(conn1.getBusinesses().getTree());
-								brandTree = new TreeCopy<>(conn1.getBrands().getTree());
-								resellerTree = new TreeCopy<>(conn1.getResellers().getTree());
-								final List<Administrator> businessAdministrators = conn1.getBusinessAdministrators().getRows();
-								allTickets = conn1.getTickets().getRows();
-								List<Assignment> allTicketAssignments = conn1.getTicketAssignments().getRows();
-								ticketTypes = conn1.getTicketTypes().getRows();
-								ticketStatuses = conn1.getTicketStatuses().getRows();
-								ticketPriorities = conn1.getTicketPriorities().getRows();
-								languages = conn1.getLanguages().getRows();
+								categoryTree = new TreeCopy<>(conn1.getReseller().getCategory().getTree());
+								businessTree = new TreeCopy<>(conn1.getAccount().getAccount().getTree());
+								brandTree = new TreeCopy<>(conn1.getReseller().getBrand().getTree());
+								resellerTree = new TreeCopy<>(conn1.getReseller().getReseller().getTree());
+								final List<Administrator> businessAdministrators = conn1.getAccount().getAdministrator().getRows();
+								allTickets = conn1.getTicket().getTicket().getRows();
+								List<Assignment> allTicketAssignments = conn1.getTicket().getAssignment().getRows();
+								ticketTypes = conn1.getTicket().getTicketType().getRows();
+								ticketStatuses = conn1.getTicket().getStatus().getRows();
+								ticketPriorities = conn1.getTicket().getPriority().getRows();
+								languages = conn1.getTicket().getLanguage().getRows();
 								// Determine the reseller for assignment lookups
 								Reseller thisReseller = null;
 								{

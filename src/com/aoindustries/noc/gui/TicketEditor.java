@@ -482,7 +482,7 @@ public class TicketEditor extends JPanel implements TableListener {
 						ticket = null;
 						ticketId=null;
 					} else {
-						ticket = requestConn.getTickets().get(requestedTicketId.intValue());
+						ticket = requestConn.getTicket().getTicket().get(requestedTicketId.intValue());
 						ticketId = ticket==null ? null : ticket.getKey();
 					}
 					// Ignore request when ticket ID hasn't changed
@@ -498,18 +498,18 @@ public class TicketEditor extends JPanel implements TableListener {
 						// Remove listeners from old ticket connector (if set)
 						if(currentTicket!=null) {
 							AOServConnector conn = currentTicket.getTable().getConnector();
-							conn.getTicketActions().removeTableListener(this);
-							conn.getTicketStatuses().removeTableListener(this);
-							conn.getTicketTypes().removeTableListener(this);
-							conn.getTickets().removeTableListener(this);
+							conn.getTicket().getAction().removeTableListener(this);
+							conn.getTicket().getStatus().removeTableListener(this);
+							conn.getTicket().getTicketType().removeTableListener(this);
+							conn.getTicket().getTicket().removeTableListener(this);
 						}
 						// Add table listeners to new ticket connector (if set)
 						if(ticket!=null) {
 							AOServConnector conn = ticket.getTable().getConnector();
-							conn.getTicketActions().addTableListener(this, 100);
-							conn.getTicketStatuses().addTableListener(this, 100);
-							conn.getTicketTypes().addTableListener(this, 100);
-							conn.getTickets().addTableListener(this, 100);
+							conn.getTicket().getAction().addTableListener(this, 100);
+							conn.getTicket().getStatus().addTableListener(this, 100);
+							conn.getTicket().getTicketType().addTableListener(this, 100);
+							conn.getTicket().getTicket().addTableListener(this, 100);
 						}
 
 						// Refresh GUI components
@@ -585,15 +585,15 @@ public class TicketEditor extends JPanel implements TableListener {
 			brand = brandObj==null ? null : brandObj.getKey();
 			AOServConnector conn = ticket.getTable().getConnector();
 			ticketNumber = ticket.getKey();
-			ticketTypes = conn.getTicketTypes().getRows();
+			ticketTypes = conn.getTicket().getTicketType().getRows();
 			ticketType = ticket.getTicketType();
-			ticketStatuses = conn.getTicketStatuses().getRows();
+			ticketStatuses = conn.getTicket().getStatus().getRows();
 			ticketStatus = ticket.getStatus();
 			openDate = ticket.getOpenDate();
 			Administrator openedByBA = ticket.getCreatedBy();
 			openedBy = openedByBA==null ? "" : openedByBA.getName();
 			// TODO: Only show businesses that are a child of the current brandObj (or the current business if not in this set)
-			businesses = conn.getBusinesses().getRows();
+			businesses = conn.getAccount().getAccount().getRows();
 			business = ticket.getBusiness();
 			summary = ticket.getSummary();
 			details = ticket.getDetails();
