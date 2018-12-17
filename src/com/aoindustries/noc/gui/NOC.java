@@ -6,7 +6,7 @@
 package com.aoindustries.noc.gui;
 
 import com.aoindustries.aoserv.client.AOServConnector;
-import com.aoindustries.aoserv.client.validator.UserId;
+import com.aoindustries.aoserv.client.account.User;
 import com.aoindustries.awt.image.Images;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.common.AlertCategory;
@@ -636,7 +636,7 @@ public class NOC {
 		String serverPort,
 		String external,
 		String localPort,
-		UserId username,
+		User.Name username,
 		int port,
 		RMIClientSocketFactory csf,
 		RMIServerSocketFactory ssf

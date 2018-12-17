@@ -19,6 +19,7 @@ import com.aoindustries.aoserv.client.ticket.Priority;
 import com.aoindustries.aoserv.client.ticket.Status;
 import com.aoindustries.aoserv.client.ticket.Ticket;
 import com.aoindustries.aoserv.client.ticket.TicketType;
+import com.aoindustries.net.Email;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.sql.SQLUtility;
 import com.aoindustries.swing.SynchronizingListModel;
@@ -880,7 +881,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 								if(priority==null) priority = ticket.getClientPriority();
 								Account bu = ticket.getBusiness();
 								Administrator openedBy = ticket.getCreatedBy();
-								String fromAddress = ticket.getFromAddress();
+								Email fromAddress = ticket.getFromAddress();
 								ticketRows.add(
 									new TicketRow(
 										bu!=null && bu.isDisabled(), // isStrikethrough
@@ -892,11 +893,11 @@ public class CommunicationPane extends JPanel implements TableListener {
 											? (
 												fromAddress==null
 													? ""
-													: ('('+fromAddress+')')
+													: ('('+fromAddress.toString()+')')
 											) : (
 												fromAddress==null
 													? openedBy.getKey().toString()
-													: (openedBy.getKey()+" ("+fromAddress+')')
+													: (openedBy.getKey()+" ("+fromAddress.toString()+')')
 											),
 										bu==null ? "" : bu.getKey().toString(),
 										ticket.getSummary()

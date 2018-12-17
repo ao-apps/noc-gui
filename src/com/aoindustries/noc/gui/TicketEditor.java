@@ -12,7 +12,6 @@ import com.aoindustries.aoserv.client.reseller.Brand;
 import com.aoindustries.aoserv.client.ticket.Status;
 import com.aoindustries.aoserv.client.ticket.Ticket;
 import com.aoindustries.aoserv.client.ticket.TicketType;
-import com.aoindustries.aoserv.client.validator.AccountingCode;
 import com.aoindustries.awt.LabelledGridLayout;
 import com.aoindustries.lang.ObjectUtils;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
@@ -553,7 +552,7 @@ public class TicketEditor extends JPanel implements TableListener {
 		final boolean saveLayout = ticket==null && !isUpdate;
 
 		// Lookup all data
-		final AccountingCode brand;
+		final Account.Name brand;
 		final Integer ticketNumber;
 		final List<TicketType> ticketTypes;
 		final TicketType ticketType;

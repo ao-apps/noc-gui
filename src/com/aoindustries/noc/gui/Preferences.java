@@ -1,11 +1,11 @@
 /*
- * Copyright 2007-2013, 2016, 2017 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2017, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
-import com.aoindustries.aoserv.client.validator.UserId;
+import com.aoindustries.aoserv.client.account.User;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.Monitor;
 import com.aoindustries.validation.ValidationException;
@@ -55,7 +55,7 @@ public class Preferences {
 	private String serverPort;
 	private String external;
 	private String localPort;
-	private UserId username;
+	private User.Name username;
 
 	private AlertLevel systemsAlertLevel;
 	private int systemsSplitPaneDividerLocation;
@@ -117,7 +117,7 @@ public class Preferences {
 		external = prefs.get("Preferences."+hostname+".external", "");
 		localPort = prefs.get("Preferences."+hostname+".localPort", Integer.toString(Monitor.DEFAULT_RMI_CLIENT_PORT));
 		try {
-			username = UserId.valueOf(prefs.get("Preferences.username", System.getProperty("user.name", null)));
+			username = User.Name.valueOf(prefs.get("Preferences.username", System.getProperty("user.name", null)));
 		} catch(SecurityException | ValidationException err) {
 			logger.log(Level.WARNING, null, err);
 			username = null;
@@ -309,13 +309,13 @@ public class Preferences {
 		prefs.put("Preferences."+getLocalHostname()+".localPort", localPort);
 	}
 
-	public UserId getUsername() {
+	public User.Name getUsername() {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
 		return username;
 	}
 
-	public void setUsername(UserId username) {
+	public void setUsername(User.Name username) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
 		this.username = username;

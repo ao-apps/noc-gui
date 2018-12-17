@@ -1,13 +1,12 @@
 /*
- * Copyright 2007-2013, 2016, 2017 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2017, 2018 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
 import com.aoindustries.aoserv.client.AOServConnector;
-import com.aoindustries.aoserv.client.validator.UserId;
-import com.aoindustries.lang.ObjectUtils;
+import com.aoindustries.aoserv.client.account.User;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.MonitorImpl;
 import com.aoindustries.noc.monitor.client.MonitorClient;
@@ -37,6 +36,7 @@ import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.sql.SQLException;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.InputMap;
@@ -105,7 +105,7 @@ final public class LoginDialog extends JDialog {
 		P.add(localPortField=new JTextField(6));
 		localPortField.setText(noc.preferences.getLocalPort());
 		P.add(usernameField=new JTextField(16));
-		usernameField.setText(ObjectUtils.toString(noc.preferences.getUsername()));
+		usernameField.setText(Objects.toString(noc.preferences.getUsername(), ""));
 		P.add(passwordField=new JPasswordField(16));
 		localContentPane.add(P, BorderLayout.CENTER);
 
@@ -211,9 +211,9 @@ final public class LoginDialog extends JDialog {
 				final String serverPort = serverPortField.getText();
 				final String external = externalField.getText();
 				final String localPort = localPortField.getText();
-				final UserId username;
+				final User.Name username;
 				try {
-					username = UserId.valueOf(usernameField.getText());
+					username = User.Name.valueOf(usernameField.getText());
 				} catch(ValidationException e) {
 					usernameField.selectAll();
 					usernameField.requestFocus();
