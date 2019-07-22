@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2016, 2017, 2018 by AO Industries, Inc.,
+ * Copyright 2009-2013, 2016, 2017, 2018, 2019 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -13,7 +13,6 @@ import com.aoindustries.aoserv.client.ticket.Status;
 import com.aoindustries.aoserv.client.ticket.Ticket;
 import com.aoindustries.aoserv.client.ticket.TicketType;
 import com.aoindustries.awt.LabelledGridLayout;
-import com.aoindustries.lang.ObjectUtils;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.sql.SQLUtility;
 import com.aoindustries.swing.SynchronizingComboBoxModel;
@@ -29,6 +28,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -106,7 +106,7 @@ public class TicketEditor extends JPanel implements TableListener {
 		+ "      (LEAF name=smallFields weight=0.5) "
 		+ "      (COLUMN weight=0.5 "
 		+ "        (LEAF name=category weight=0.33) "
-		+ "        (LEAF name=business weight=0.34) "
+		+ "        (LEAF name=account weight=0.34) "
 		+ "        (LEAF name=escalation weight=0.33) "
 		+ "      ) "
 		+ "    ) "
@@ -219,21 +219,21 @@ public class TicketEditor extends JPanel implements TableListener {
 	private final JLabel openDateLabel = new JLabel("", SwingConstants.LEFT);
 	// openedBy
 	private final JLabel openedByLabel = new JLabel("", SwingConstants.LEFT);
-	// business
-	private final SynchronizingComboBoxModel<Object> businessComboBoxModel = new SynchronizingComboBoxModel<>("");
-	private final JComboBox<Object> businessComboBox = new JComboBox<>(businessComboBoxModel);
-	private final FocusListener businessComboBoxFocusListener = new FocusAdapter() {
+	// account
+	private final SynchronizingComboBoxModel<Object> accountComboBoxModel = new SynchronizingComboBoxModel<>("");
+	private final JComboBox<Object> accountComboBox = new JComboBox<>(accountComboBoxModel);
+	private final FocusListener accountComboBoxFocusListener = new FocusAdapter() {
 		@Override
 		public void focusLost(FocusEvent e) {
-			final Account newBusiness = businessComboBox.getSelectedIndex()==0 ? null : (Account)businessComboBox.getSelectedItem();
+			final Account newAccount = accountComboBox.getSelectedIndex()==0 ? null : (Account)accountComboBox.getSelectedItem();
 			currentTicketExecutorService.submit(() -> {
 				synchronized(currentTicketLock) {
 					if(currentTicket!=null) {
 						try {
-							Account oldBusiness = currentTicket.getBusiness();
-							if(!ObjectUtils.equals(newBusiness, oldBusiness)) {
-								System.out.println("DEBUG: currentTicket.setBusiness("+newBusiness+");");
-								currentTicket.setBusiness(oldBusiness, newBusiness);
+							Account oldAccount = currentTicket.getAccount();
+							if(!Objects.equals(newAccount, oldAccount)) {
+								System.out.println("DEBUG: currentTicket.setAccount("+newAccount+");");
+								currentTicket.setAccount(oldAccount, newAccount);
 								Ticket newTicket = currentTicket.getTable().get(currentTicket.getKey());
 								if(newTicket==null) showTicket(null, null);
 								else {
@@ -365,11 +365,11 @@ public class TicketEditor extends JPanel implements TableListener {
 		// openedBy
 		smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.openedBy")));
 		smallFieldsPanel.add(openedByLabel);
-		// business
-		smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.business")));
-		businessComboBox.setEditable(false);
-		businessComboBox.addFocusListener(businessComboBoxFocusListener);
-		smallFieldsPanel.add(businessComboBox);
+		// account
+		smallFieldsPanel.add(new JLabel(accessor.getMessage("TicketEditor.header.account")));
+		accountComboBox.setEditable(false);
+		accountComboBox.addFocusListener(accountComboBoxFocusListener);
+		smallFieldsPanel.add(accountComboBox);
 		// TODO
 		splitPane.add(new JScrollPane(smallFieldsPanel), "smallFields");
 
@@ -486,7 +486,7 @@ public class TicketEditor extends JPanel implements TableListener {
 					}
 					// Ignore request when ticket ID hasn't changed
 					Integer currentTicketId = currentTicket==null ? null : currentTicket.getKey();
-					if(!ObjectUtils.equals(ticketId, currentTicketId)) {
+					if(!Objects.equals(ticketId, currentTicketId)) {
 						// System.out.println("DEBUG: TicketEditor: showTicket("+ticket+")");
 
 						// Hide if necessary
@@ -560,8 +560,8 @@ public class TicketEditor extends JPanel implements TableListener {
 		final Status ticketStatus;
 		final Timestamp openDate;
 		final String openedBy;
-		final List<Account> businesses;
-		final Account business;
+		final List<Account> accounts;
+		final Account account;
 		final String summary;
 		final String details;
 		final String internalNotes;
@@ -574,8 +574,8 @@ public class TicketEditor extends JPanel implements TableListener {
 			ticketStatus = null;
 			openDate = null;
 			openedBy = "";
-			businesses = Collections.emptyList();
-			business = null;
+			accounts = Collections.emptyList();
+			account = null;
 			summary = "";
 			details = null;
 			internalNotes = "";
@@ -591,9 +591,9 @@ public class TicketEditor extends JPanel implements TableListener {
 			openDate = ticket.getOpenDate();
 			Administrator openedByBA = ticket.getCreatedBy();
 			openedBy = openedByBA==null ? "" : openedByBA.getName();
-			// TODO: Only show businesses that are a child of the current brandObj (or the current business if not in this set)
-			businesses = conn.getAccount().getAccount().getRows();
-			business = ticket.getBusiness();
+			// TODO: Only show accounts that are a child of the current brandObj (or the current account if not in this set)
+			accounts = conn.getAccount().getAccount().getRows();
+			account = ticket.getAccount();
 			summary = ticket.getSummary();
 			details = ticket.getDetails();
 			internalNotes = ticket.getInternalNotes();
@@ -626,12 +626,12 @@ public class TicketEditor extends JPanel implements TableListener {
 			openDateLabel.setText(openDate==null ? "" : SQLUtility.getDateTime(openDate.getTime()));
 			// openedBy
 			openedByLabel.setText(openedBy);
-			// business
-			businessComboBox.removeFocusListener(businessComboBoxFocusListener);
-			businessComboBoxModel.synchronize(businesses);
-			if(business==null) businessComboBox.setSelectedIndex(0);
-			else businessComboBox.setSelectedItem(business);
-			businessComboBox.addFocusListener(businessComboBoxFocusListener);
+			// account
+			accountComboBox.removeFocusListener(accountComboBoxFocusListener);
+			accountComboBoxModel.synchronize(accounts);
+			if(account==null) accountComboBox.setSelectedIndex(0);
+			else accountComboBox.setSelectedItem(account);
+			accountComboBox.addFocusListener(accountComboBoxFocusListener);
 			// TODO
 			// summary
 			summaryTextField.removeFocusListener(summaryTextFieldFocusListener);
@@ -646,7 +646,7 @@ public class TicketEditor extends JPanel implements TableListener {
 			// TODO
 			// internalNotes
 			internalNotesTextArea.removeFocusListener(internalNotesTextAreaFocusListener);
-			businessComboBoxModel.synchronize(businesses);
+			accountComboBoxModel.synchronize(accounts);
 			if(!internalNotesTextArea.getText().equals(internalNotes)) internalNotesTextArea.setText(internalNotes);
 			internalNotesTextArea.addFocusListener(internalNotesTextAreaFocusListener);
 			
