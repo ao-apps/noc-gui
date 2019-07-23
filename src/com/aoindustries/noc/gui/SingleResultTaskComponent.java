@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013, 2016, 2018 by AO Industries, Inc.,
+ * Copyright 2008-2013, 2016, 2018, 2019 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -151,18 +151,18 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 						//locale,
 						"SingleResultTaskComponent.retrieved.micro",
 						formattedDate,
-						SQLUtility.getMilliDecimal(latency)
+						SQLUtility.formatDecimal3(latency)
 					) : latency < 1000000000
 					? accessor.getMessage(
 						//locale,
 						"SingleResultTaskComponent.retrieved.milli",
 						formattedDate,
-						SQLUtility.getMilliDecimal(latency/1000)
+						SQLUtility.formatDecimal3(latency/1000)
 					) : accessor.getMessage(
 						//locale,
 						"SingleResultTaskComponent.retrieved.second",
 						formattedDate,
-						SQLUtility.getMilliDecimal(latency/1000000)
+						SQLUtility.formatDecimal3(latency/1000000)
 					)
 				);
 				Function<Locale,String> error = singleResult.getError();

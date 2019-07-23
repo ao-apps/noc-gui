@@ -623,7 +623,7 @@ public class TicketEditor extends JPanel implements TableListener {
 			else statusComboBox.setSelectedItem(ticketStatus);
 			statusComboBox.addFocusListener(statusComboBoxFocusListener);
 			// openDate
-			openDateLabel.setText(openDate==null ? "" : SQLUtility.getDateTime(openDate.getTime()));
+			openDateLabel.setText(openDate==null ? "" : SQLUtility.formatDateTime(openDate));
 			// openedBy
 			openedByLabel.setText(openedBy);
 			// account

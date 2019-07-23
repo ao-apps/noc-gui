@@ -1027,7 +1027,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 
 		@Override
 		Object getRendererValue() {
-			return SQLUtility.getDateTime(value);
+			return SQLUtility.formatDateTime(value);
 		}
 	}
 
