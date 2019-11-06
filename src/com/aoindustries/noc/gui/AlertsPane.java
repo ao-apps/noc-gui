@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013, 2016, 2018 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2018, 2019 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -255,6 +255,7 @@ public class AlertsPane extends JPanel {
 		JButton buzzerTest = new JButton(accessor.getMessage("AlertsPane.buzzerTest.label"));
 		toolBar.add(buzzerTest);
 		buzzerTest.addActionListener((ActionEvent e) -> {
+			// TODO: Call a method on the server, which will callback a method here, so buzzer only plays on successful bidirectional communication
 			buzzer.playBuzzer("buzzer.wav");
 		});
 		buzzerTest.setMaximumSize(buzzerTest.getPreferredSize());
