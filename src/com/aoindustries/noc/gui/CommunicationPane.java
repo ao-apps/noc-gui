@@ -88,6 +88,9 @@ import org.jdesktop.swingx.MultiSplitPane;
  * TODO: Remember tree open/close states between different filter views - store as preferences.
  * TODO: If account or category selected don't hide it
  *
+ * TODO: This pane fails to initialize when a Brand's parent is not also a Brand
+ *       Nothing logged.  I'm guessing a NPE somewhere.
+ *
  * @author  AO Industries, Inc.
  */
 public class CommunicationPane extends JPanel implements TableListener {
