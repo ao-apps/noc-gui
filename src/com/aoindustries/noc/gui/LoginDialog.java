@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013, 2016, 2017, 2018 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2017, 2018, 2020 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -37,7 +37,6 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -60,8 +59,6 @@ import javax.swing.SwingUtilities;
 final public class LoginDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final Logger logger = Logger.getLogger(LoginDialog.class.getName());
 
 	private final NOC noc;
 	private final Component owner;
@@ -226,8 +223,7 @@ final public class LoginDialog extends JDialog {
 						// First try to login to local AOServConnector
 						final AOServConnector conn = AOServConnector.getConnector(
 							username,
-							password,
-							logger
+							password
 						);
 						Monitor monitor;
 						final RMIClientSocketFactory csf;
