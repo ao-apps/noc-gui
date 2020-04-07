@@ -1,5 +1,6 @@
-// /home/orion/projects/ao/noc-gui/dist
-// java -Djava.security.debug=access,failure -ea:com.aoindustries... -Djava.security.policy=/home/orion/common/ao/cvswork/noc-gui/security.policy -jar noc-gui.jar 2>&1 | grep -v allowed | less -S
+// cd "$HOME/projects/aoprod/noc-gui/dist"
+// export CLASSPATH=
+// java -Djava.security.debug=access,failure -ea:com.aoindustries... -Djava.security.policy="$HOME/maven2/ao/noc/gui/security.policy" -jar noc-gui.jar 2>&1 | grep -v allowed | less -S
 
 grant codeBase "file:${user.dir}/noc-gui.jar" {
   permission java.awt.AWTPermission           "accessClipboard";
