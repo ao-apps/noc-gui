@@ -1,10 +1,11 @@
 /*
- * Copyright 2007-2013, 2016, 2018 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2018, 2020 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
 package com.aoindustries.noc.gui;
 
+import com.aoindustries.exception.WrappedException;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.common.AlertChange;
 import com.aoindustries.noc.monitor.common.AlertLevel;
@@ -15,7 +16,6 @@ import com.aoindustries.noc.monitor.common.SingleResultNode;
 import com.aoindustries.noc.monitor.common.TableMultiResultNode;
 import com.aoindustries.noc.monitor.common.TableResultNode;
 import com.aoindustries.noc.monitor.common.TreeListener;
-import com.aoindustries.util.WrappedException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
