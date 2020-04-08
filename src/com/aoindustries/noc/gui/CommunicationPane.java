@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013, 2016, 2017, 2018, 2019 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2017, 2018, 2019, 2020 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -77,8 +77,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
-import org.jdesktop.swingx.MultiSplitPane;
 
 /**
  * Central point of all client communication.
@@ -123,7 +123,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 	private static final long serialVersionUID = 1L;
 	private final NOC noc;
 	private AOServConnector conn; // This is the connector that has all the listeners added
-	private final MultiSplitPane splitPane;
+	private final JXMultiSplitPane splitPane;
 	// Categories
 	private final SynchronizingMutableTreeNode<Category> categoriesRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.categories.uncategorized"), true);
 	private final DefaultTreeModel categoriesTreeModel = new DefaultTreeModel(categoriesRootNode, true);
@@ -190,7 +190,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		this.noc = noc;
 
 		// MultiSplitPane
-		splitPane = new MultiSplitPane();
+		splitPane = new JXMultiSplitPane();
 		splitPane.getMultiSplitLayout().setDividerSize(4);
 		MultiSplitLayout.Node modelRoot;
 		boolean floatingDividers;

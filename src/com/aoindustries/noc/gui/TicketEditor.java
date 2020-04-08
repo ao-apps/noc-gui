@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2013, 2016, 2017, 2018, 2019 by AO Industries, Inc.,
+ * Copyright 2009-2013, 2016, 2017, 2018, 2019, 2020 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -41,8 +41,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import org.jdesktop.swingx.JXMultiSplitPane;
 import org.jdesktop.swingx.MultiSplitLayout;
-import org.jdesktop.swingx.MultiSplitPane;
 
 /**
  * Ticket editor component.
@@ -137,7 +137,7 @@ public class TicketEditor extends JPanel implements TableListener {
 	 */
 	private final PreferencesSet preferencesSet;
 
-	private final MultiSplitPane splitPane;
+	private final JXMultiSplitPane splitPane;
 	// brand
 	private final JLabel brandLabel = new JLabel("", SwingConstants.LEFT);
 	// ticketNumber
@@ -320,7 +320,7 @@ public class TicketEditor extends JPanel implements TableListener {
 		this.preferencesSet = preferencesSet;
 
 		// MultiSplitPane
-		splitPane = new MultiSplitPane();
+		splitPane = new JXMultiSplitPane();
 		splitPane.getMultiSplitLayout().setDividerSize(4);
 		MultiSplitLayout.Node modelRoot;
 		boolean floatingDividers;
