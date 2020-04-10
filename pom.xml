@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-noc-monitor-gui - Graphical User Interface for Network Operations Center.
+noc-gui - Graphical User Interface for Network Operations Center.
 Copyright (C) 2020  AO Industries, Inc.
 	support@aoindustries.com
 	7262 Bull Pen Cir
 	Mobile, AL 36695
 
-This file is part of noc-monitor-gui.
+This file is part of noc-gui.
 
-noc-monitor-gui is free software: you can redistribute it and/or modify
+noc-gui is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-noc-monitor-gui is distributed in the hope that it will be useful,
+noc-gui is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with noc-monitor-gui.  If not, see <http://www.gnu.org/licenses />.
+along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -29,7 +29,7 @@ along with noc-monitor-gui.  If not, see <http://www.gnu.org/licenses />.
 		<relativePath>../../ao-oss-parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.aoindustries</groupId><artifactId>noc-monitor-gui</artifactId><version>1.0.0-SNAPSHOT</version>
+	<groupId>com.aoindustries</groupId><artifactId>noc-gui</artifactId><version>1.0.0-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<properties>
@@ -50,15 +50,15 @@ along with noc-monitor-gui.  If not, see <http://www.gnu.org/licenses />.
 	<inceptionYear>2007</inceptionYear>
 
 	<scm>
-		<connection>scm:git:git://github.com/aoindustries/noc-monitor-gui.git</connection>
-		<developerConnection>scm:git:git@github.com:aoindustries/noc-monitor-gui.git</developerConnection>
-		<url>https://github.com/aoindustries/noc-monitor-gui</url>
+		<connection>scm:git:git://github.com/aoindustries/noc-gui.git</connection>
+		<developerConnection>scm:git:git@github.com:aoindustries/noc-gui.git</developerConnection>
+		<url>https://github.com/aoindustries/noc-gui</url>
 		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub Issues</system>
-		<url>https://github.com/aoindustries/noc-monitor-gui/issues</url>
+		<url>https://github.com/aoindustries/noc-gui/issues</url>
 	</issueManagement>
 
 	<profiles>
