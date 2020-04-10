@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+noc-monitor-gui - Graphical User Interface for Network Operations Center.
+Copyright (C) 2020  AO Industries, Inc.
+	support@aoindustries.com
+	7262 Bull Pen Cir
+	Mobile, AL 36695
+
+This file is part of noc-monitor-gui.
+
+noc-monitor-gui is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+noc-monitor-gui is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with noc-monitor-gui.  If not, see <http://www.gnu.org/licenses />.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.aoindustries</groupId><artifactId>ao-oss-parent</artifactId><version>1.7.2-POST-SNAPSHOT</version>
+		<relativePath>../../ao-oss-parent/pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.aoindustries</groupId><artifactId>noc-monitor-gui</artifactId><version>1.0.0-SNAPSHOT</version>
+	<packaging>bundle</packaging>
+
+	<properties>
+		<javadoc.breadcrumbs><![CDATA[<a target="_top" href="https://aoindustries.com/noc/">NOC</a>
+/ <a target="_top" href="${project.url}">${shortTitle}</a>]]></javadoc.breadcrumbs>
+		<description.html><![CDATA[Graphical User Interface for <a target="_top" href="https://aoindustries.com/noc/">Network Operations Center</a>.]]></description.html>
+		<shortTitle>GUI</shortTitle>
+		<!-- Dependencies -->
+		<org.apache.commons.commons-lang3.version>3.10</org.apache.commons.commons-lang3.version>
+		<dnsjava.dnsjava.version>3.0.2</dnsjava.dnsjava.version>
+		<org.slf4j.slf4j-api.version>1.7.30</org.slf4j.slf4j-api.version>
+		<org.swinglabs.swingx.swingx-core.version>1.6.5-1</org.swinglabs.swingx.swingx-core.version>
+	</properties>
+
+	<name>NOC GUI</name>
+	<url>https://aoindustries.com/noc/gui/</url>
+	<description>Graphical User Interface for Network Operations Center.</description>
+	<inceptionYear>2007</inceptionYear>
+
+	<scm>
+		<connection>scm:git:git://github.com/aoindustries/noc-monitor-gui.git</connection>
+		<developerConnection>scm:git:git@github.com:aoindustries/noc-monitor-gui.git</developerConnection>
+		<url>https://github.com/aoindustries/noc-monitor-gui</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/aoindustries/noc-monitor-gui/issues</url>
+	</issueManagement>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId><artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<links>
+								<link>${javadoc.link.javase}</link>
+								<!-- Direct -->
+								<link>https://aoindustries.com/ao-lang/apidocs/</link>
+								<link>https://aoindustries.com/ao-net-types/apidocs/</link>
+								<link>https://aoindustries.com/aocode-public/apidocs/</link>
+								<link>https://aoindustries.com/aoserv/client/apidocs/</link>
+								<link>https://aoindustries.com/noc/monitor/api/apidocs/</link>
+								<link>https://aoindustries.com/noc/monitor/impl/apidocs/</link>
+								<link>https://aoindustries.com/noc/monitor/rmi-client/apidocs/</link>
+								<link>https://javadoc.io/doc/org.swinglabs.swingx/swingx-core/${org.swinglabs.swingx.swingx-core.version}/</link>
+							</links>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Direct -->
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId><version>4.1.0${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-net-types</artifactId><version>1.2.1${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId><version>4.0.0${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>aoserv-client</artifactId><version>1.84.1${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId><version>1.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId><version>1.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+			</dependency>
+			<dependency>
+				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId><version>${org.swinglabs.swingx.swingx-core.version}</version>
+			</dependency>
+			<!-- Transitive -->
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-collections</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-concurrent</artifactId><version>2.0.1${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-dbc</artifactId><version>1.4.0${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-persistence</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-tempfiles</artifactId><version>1.0.2${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>ao-tlds</artifactId><version>1.1.3${POST-SNAPSHOT}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>aoserv-cluster</artifactId><version>1.84.1-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId><version>${org.apache.commons.commons-lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>${dnsjava.dnsjava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${org.slf4j.slf4j-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.ostermiller</groupId><artifactId>utils</artifactId><version>1.07.00</version>
+			</dependency>
+			<!-- Runtime -->
+			<dependency>
+				<!-- Stay on 5.1.* for <= MySQL 5.1 support -->
+				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>5.1.48</version>
+			</dependency>
+			<dependency>
+				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.2.12</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!-- Direct -->
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>ao-net-types</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>aoserv-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId>
+		</dependency>
+	</dependencies>
+</project>
