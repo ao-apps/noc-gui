@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013, 2016, 2018, 2019 by AO Industries, Inc.,
+ * Copyright 2008-2013, 2016, 2018, 2019, 2020 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -114,7 +114,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 						updateValue(result);
 					}
 				});
-				
+
 				if(!tableResultListenerExported) {
 					UnicastRemoteObject.exportObject(tableResultListener, port, csf, ssf);
 					tableResultListenerExported = true;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2008-2013, 2016, 2018 by AO Industries, Inc.,
+ * Copyright 2008-2013, 2016, 2018, 2020 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -120,7 +120,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 		noc.executorService.submit(() -> {
 			try {
 				updateValues();
-				
+
 				if(!tableMultiResultListenerExported) {
 					UnicastRemoteObject.exportObject(tableMultiResultListener, port, csf, ssf);
 					tableMultiResultListenerExported = true;

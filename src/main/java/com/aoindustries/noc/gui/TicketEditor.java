@@ -649,7 +649,7 @@ public class TicketEditor extends JPanel implements TableListener {
 			accountComboBoxModel.synchronize(accounts);
 			if(!internalNotesTextArea.getText().equals(internalNotes)) internalNotesTextArea.setText(internalNotes);
 			internalNotesTextArea.addFocusListener(internalNotesTextAreaFocusListener);
-			
+
 			// Show if necessary (invalidate, too, if scrollPane requires it)
 			if(ticket!=null && !isVisible()) setVisible(true);
 		});

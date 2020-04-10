@@ -538,8 +538,7 @@ public class SystemsPane extends JPanel {
 		) {
 			assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-			String         stringValue = tree.convertValueToText(value, sel,
-											  expanded, leaf, row, hasFocus);
+			String stringValue = tree.convertValueToText(value, sel, expanded, leaf, row, hasFocus);
 
 			this.tree = tree;
 			this.hasFocus = hasFocus;

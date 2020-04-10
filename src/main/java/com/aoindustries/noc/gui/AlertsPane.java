@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013, 2016, 2018, 2019 by AO Industries, Inc.,
+ * Copyright 2007-2013, 2016, 2018, 2019, 2020 by AO Industries, Inc.,
  * 7262 Bull Pen Cir, Mobile, Alabama, 36695, U.S.A.
  * All rights reserved.
  */
@@ -201,7 +201,7 @@ public class AlertsPane extends JPanel {
 		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
 		table.setRowSorter(sorter);
 		sorter.setSortsOnUpdates(true);
-		
+
 		//table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.setFillsViewportHeight(true);
 
