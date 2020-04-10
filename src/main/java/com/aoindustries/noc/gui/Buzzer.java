@@ -78,11 +78,9 @@ class Buzzer {
 		URL audioUrl = SystemsPane.class.getResource(audioResource);
 		if(audioUrl == null) throw new IOException("Audio Resource not found: " + audioResource);
 
-		AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioUrl);
-		try {
-			Clip clip = AudioSystem.getClip();
-			clip.open(audioInputStream);
-			try {
+		try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(audioUrl)) {
+			try (Clip clip = AudioSystem.getClip()) {
+				clip.open(audioInputStream);
 				clip.start();
 				clip.drain();
 				// Wait until stopped playing, but at most 10 seconds to avoid buggy stuff
@@ -101,11 +99,7 @@ class Buzzer {
 						break;
 					}
 				}
-			} finally {
-				clip.close();
 			}
-		} finally {
-			audioInputStream.close();
 		}
 	}
 

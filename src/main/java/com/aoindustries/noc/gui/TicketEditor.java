@@ -174,7 +174,7 @@ public class TicketEditor extends JPanel implements TableListener {
 								TicketType oldType = currentTicket.getTicketType();
 								if(!newType.equals(oldType)) {
 									currentTicket.setTicketType(oldType, newType);
-									Ticket newTicket = currentTicket.getTable().get(currentTicket.getKey());
+									Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
 									if(newTicket==null) showTicket(null, null);
 									else {
 										reloadTicket(newTicket, true);
@@ -216,7 +216,7 @@ public class TicketEditor extends JPanel implements TableListener {
 										statusTimeout = -1;
 									}
 									currentTicket.setStatus(oldStatus, newStatus, statusTimeout);
-									Ticket newTicket = currentTicket.getTable().get(currentTicket.getKey());
+									Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
 									if(newTicket==null) showTicket(null, null);
 									else {
 										reloadTicket(newTicket, true);
@@ -251,7 +251,7 @@ public class TicketEditor extends JPanel implements TableListener {
 							if(!Objects.equals(newAccount, oldAccount)) {
 								System.out.println("DEBUG: currentTicket.setAccount("+newAccount+");");
 								currentTicket.setAccount(oldAccount, newAccount);
-								Ticket newTicket = currentTicket.getTable().get(currentTicket.getKey());
+								Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
 								if(newTicket==null) showTicket(null, null);
 								else {
 									reloadTicket(newTicket, true);
@@ -281,7 +281,7 @@ public class TicketEditor extends JPanel implements TableListener {
 							if(!newSummary.equals(oldSummary)) {
 								// TODO: Add oldSummary to call for atomic behavior
 								if(newSummary.length()>0) currentTicket.setSummary(newSummary);
-								Ticket newTicket = currentTicket.getTable().get(currentTicket.getKey());
+								Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
 								if(newTicket==null) showTicket(null, null);
 								else {
 									reloadTicket(newTicket, true);
@@ -313,7 +313,7 @@ public class TicketEditor extends JPanel implements TableListener {
 							if(!newInternalNotes.equals(oldInternalNotes)) {
 								System.out.println("DEBUG: currentTicket.setInternalNotes(\""+oldInternalNotes+"\", \""+newInternalNotes+"\");");
 								currentTicket.setInternalNotes(oldInternalNotes, newInternalNotes);
-								Ticket newTicket = currentTicket.getTable().get(currentTicket.getKey());
+								Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
 								if(newTicket==null) showTicket(null, null);
 								else {
 									reloadTicket(newTicket, true);
@@ -546,7 +546,7 @@ public class TicketEditor extends JPanel implements TableListener {
 			synchronized(currentTicketLock) {
 				if(currentTicket!=null) {
 					try {
-						Ticket newTicket = currentTicket.getTable().get(currentTicket.getKey());
+						Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
 						if(newTicket==null) showTicket(null, null);
 						else {
 							reloadTicket(newTicket, true);

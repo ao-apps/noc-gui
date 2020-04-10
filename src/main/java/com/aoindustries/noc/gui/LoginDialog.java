@@ -231,7 +231,7 @@ final public class LoginDialog extends JDialog {
 				} catch(ValidationException e) {
 					usernameField.selectAll();
 					usernameField.requestFocus();
-					new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.invalidUsername"), e, null).setVisible(true);
+					new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.invalidUsername"), e).setVisible(true);
 					return;
 				}
 				final String password = new String(passwordField.getPassword());
@@ -326,7 +326,7 @@ final public class LoginDialog extends JDialog {
 							loginThread = null;
 						}
 						SwingUtilities.invokeLater(() -> {
-							new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.ioError"), err, null).setVisible(true);
+							new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.ioError"), err).setVisible(true);
 							serverField.setEditable(true);
 							serverPortField.setEditable(true);
 							externalField.setEditable(true);
@@ -344,7 +344,7 @@ final public class LoginDialog extends JDialog {
 							loginThread = null;
 						}
 						SwingUtilities.invokeLater(() -> {
-							new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiNotBoundError"), err, null).setVisible(true);
+							new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.rmiNotBoundError"), err).setVisible(true);
 							serverField.setEditable(true);
 							serverPortField.setEditable(true);
 							externalField.setEditable(true);
@@ -362,7 +362,7 @@ final public class LoginDialog extends JDialog {
 							loginThread = null;
 						}
 						SwingUtilities.invokeLater(() -> {
-							new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.runtimeError"), err, null).setVisible(true);
+							new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.runtimeError"), err).setVisible(true);
 							serverField.setEditable(true);
 							serverPortField.setEditable(true);
 							externalField.setEditable(true);
