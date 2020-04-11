@@ -24,9 +24,9 @@
 Graphical User Interface for [Network Operations Center](https://github.com/aoindustries/noc).
 
 ## Project Links
-* [Project Home](https://aoindustries.com/noc-gui/)
-* [Changelog](https://aoindustries.com/noc-gui/changelog)
-* [API Docs](https://aoindustries.com/noc-gui/apidocs/)
+* [Project Home](https://aoindustries.com/noc/gui/)
+* [Changelog](https://aoindustries.com/noc/gui/changelog)
+* [API Docs](https://aoindustries.com/noc/gui/apidocs/)
 * [Maven Central Repository](https://search.maven.org/artifact/com.aoindustries/noc-gui)
 * [GitHub](https://github.com/aoindustries/noc-gui)
 
