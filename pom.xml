@@ -149,6 +149,24 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			<dependency>
 				<groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${org.slf4j.slf4j-api.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-action</artifactId><version>1.6.5-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-autocomplete</artifactId><version>1.6.5-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-common</artifactId><version>1.6.5-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-graphics</artifactId><version>1.6.5-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-painters</artifactId><version>1.6.5-1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-plaf</artifactId><version>1.6.5-1</version>
+			</dependency>
 			<!-- Runtime -->
 			<dependency>
 				<!-- Stay on 5.1.* for <= MySQL 5.1 support -->
