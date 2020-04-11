@@ -149,9 +149,6 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			<dependency>
 				<groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${org.slf4j.slf4j-api.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.ostermiller</groupId><artifactId>utils</artifactId><version>1.07.00</version>
-			</dependency>
 			<!-- Runtime -->
 			<dependency>
 				<!-- Stay on 5.1.* for <= MySQL 5.1 support -->
