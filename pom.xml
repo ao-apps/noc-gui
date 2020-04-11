@@ -144,7 +144,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>${dnsjava.dnsjava.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.0-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${org.slf4j.slf4j-api.version}</version>
