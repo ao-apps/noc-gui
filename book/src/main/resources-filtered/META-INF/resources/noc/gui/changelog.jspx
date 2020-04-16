@@ -37,7 +37,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 		shortTitle="Changelog"
 		tocLevels="1"
 		datePublished="2020-04-11T01:35:38-05:00"
-		dateModified="2020-04-11T06:02:31-05:00"
+		dateModified="2020-04-16T01:43:49-05:00"
 	>
 		<!-- The current snapshot, unreleased version -->
 		<c:set var="version" value="@{com.aoindustries:noc-gui:pom.version}" />
@@ -52,7 +52,25 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				groupId="@{project.groupId}"
 				artifactId="@{documented.artifactId}"
 				scmUrl="@{project.scm.url}"
-			/>
+			>
+				<ul>
+					<li>
+						<p>
+							Exporting and unexporting TableResultListener while synchronized.
+						</p>
+						<p>
+							We're getting an exception on stop(), because the TableResultListener
+							itself is not serializable.  We expect it to be exported, and thus used
+							via its Proxy.  However, it is trying to serialize it, which seems to
+							indicate the TableResultListener is not exported.
+						</p>
+						<p>
+							This implementation only tries to remove the table listener when it is
+							flagged as exported.
+						</p>
+					</li>
+				</ul>
+			</changelog:release>
 		</c:if>
 
 		<changelog:release
