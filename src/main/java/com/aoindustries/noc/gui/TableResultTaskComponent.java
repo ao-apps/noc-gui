@@ -94,13 +94,14 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 		return this;
 	}
 
-	final private TableResultListener tableResultListener = (final TableResult tableResult) -> {
+	final private Object tableResultListenerLock = new Object();
+	final private TableResultListener tableResultListener = (TableResult tableResult) -> {
 		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 		SwingUtilities.invokeLater(() -> {
 			updateValue(tableResult);
 		});
 	};
-	volatile private boolean tableResultListenerExported = false;
+	private boolean tableResultListenerExported = false;
 
 	@Override
 	public void start(Node node, JComponent validationComponent) {
@@ -131,13 +132,13 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 						updateValue(result);
 					}
 				});
-
-				if(!tableResultListenerExported) {
-					UnicastRemoteObject.exportObject(tableResultListener, port, csf, ssf);
-					tableResultListenerExported = true;
+				synchronized(tableResultListenerLock) {
+					if(!tableResultListenerExported) {
+						UnicastRemoteObject.exportObject(tableResultListener, port, csf, ssf);
+						tableResultListenerExported = true;
+						localTableResultNode.addTableResultListener(tableResultListener);
+					}
 				}
-				//noc.unexportObject(tableResultListener);
-				localTableResultNode.addTableResultListener(tableResultListener);
 			} catch(RemoteException err) {
 				logger.log(Level.SEVERE, null, err);
 			}
@@ -152,10 +153,16 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 		if(localTableResultNode!=null) {
 			this.tableResultNode = null;
 			noc.executorService.submit(() -> {
-				try {
-					localTableResultNode.removeTableResultListener(tableResultListener);
-				} catch(RemoteException err) {
-					logger.log(Level.SEVERE, null, err);
+				synchronized(tableResultListenerLock) {
+					if(tableResultListenerExported) {
+						try {
+							localTableResultNode.removeTableResultListener(tableResultListener);
+						} catch(RemoteException err) {
+							logger.log(Level.WARNING, null, err);
+						}
+						tableResultListenerExported = false;
+						noc.unexportObject(tableResultListener);
+					}
 				}
 			});
 		}
