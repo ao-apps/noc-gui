@@ -167,7 +167,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			<dependency>
 				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-plaf</artifactId><version>1.6.5-1</version>
 			</dependency>
-			<!-- Runtime -->
+			<!-- Runtime Transitive -->
 			<dependency>
 				<!-- Stay on 5.1.* for <= MySQL 5.1 support -->
 				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>5.1.48</version>
