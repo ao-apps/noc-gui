@@ -25,7 +25,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.aoindustries</groupId><artifactId>ao-oss-parent</artifactId><version>1.7.2-POST-SNAPSHOT</version>
+		<groupId>com.aoindustries</groupId><artifactId>ao-oss-parent</artifactId><version>1.8.0-SNAPSHOT</version>
 		<relativePath>../../ao-oss-parent/pom.xml</relativePath>
 	</parent>
 
@@ -33,9 +33,9 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 	<packaging>bundle</packaging>
 
 	<properties>
-		<javadoc.breadcrumbs><![CDATA[<a target="_top" href="https://aoindustries.com/noc/">NOC</a>
-/ <a target="_top" href="${project.url}">${shortTitle}</a>]]></javadoc.breadcrumbs>
-		<description.html><![CDATA[Graphical User Interface for <a target="_top" href="https://aoindustries.com/noc/">Network Operations Center</a>.]]></description.html>
+		<javadoc.breadcrumbs><![CDATA[<a target="${javadoc.target}" href="https://aoindustries.com/noc/">NOC</a>
+/ <a target="${javadoc.target}" href="${project.url}">${shortTitle}</a>]]></javadoc.breadcrumbs>
+		<description.html><![CDATA[Graphical User Interface for <a target="${javadoc.target}" href="https://aoindustries.com/noc/">Network Operations Center</a>.]]></description.html>
 		<shortTitle>GUI</shortTitle>
 		<!-- Dependencies -->
 		<org.apache.commons.commons-lang3.version>3.10</org.apache.commons.commons-lang3.version>
