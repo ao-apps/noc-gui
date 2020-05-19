@@ -39,7 +39,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 		<shortTitle>GUI</shortTitle>
 		<!-- Dependencies -->
 		<org.apache.commons.commons-lang3.version>3.10</org.apache.commons.commons-lang3.version>
-		<dnsjava.dnsjava.version>3.0.2</dnsjava.dnsjava.version>
+		<dnsjava.dnsjava.version>3.1.0</dnsjava.dnsjava.version>
 		<org.slf4j.slf4j-api.version>1.7.30</org.slf4j.slf4j-api.version>
 		<org.swinglabs.swingx.swingx-core.version>1.6.5-1</org.swinglabs.swingx.swingx-core.version>
 	</properties>
