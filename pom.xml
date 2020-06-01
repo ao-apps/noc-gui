@@ -38,10 +38,10 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 		<description.html><![CDATA[Graphical User Interface for <a target="${javadoc.target}" href="https://aoindustries.com/noc/">Network Operations Center</a>.]]></description.html>
 		<shortTitle>GUI</shortTitle>
 		<!-- Dependencies -->
-		<org.apache.commons.commons-lang3.version>3.10</org.apache.commons.commons-lang3.version>
-		<dnsjava.dnsjava.version>3.1.0</dnsjava.dnsjava.version>
-		<org.slf4j.slf4j-api.version>1.7.30</org.slf4j.slf4j-api.version>
-		<org.swinglabs.swingx.swingx-core.version>1.6.5-1</org.swinglabs.swingx.swingx-core.version>
+		<commons-lang3.version>3.10</commons-lang3.version>
+		<dnsjava.version>3.1.0</dnsjava.version>
+		<slf4j-api.version>1.7.30</slf4j-api.version>
+		<swingx-core.version>1.6.5-1</swingx-core.version>
 	</properties>
 
 	<name>NOC GUI</name>
@@ -79,20 +79,110 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			<build>
 				<plugins>
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId><artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>unpack.offlinkLinks</id>
+								<phase>generate-sources</phase>
+								<goals><goal>unpack</goal></goals>
+								<configuration>
+									<artifactItems>
+										<!-- Direct -->
+										<artifactItem>
+											<groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId>
+											<classifier>javadoc</classifier><includes>element-list, package-list</includes>
+											<outputDirectory>${project.build.directory}/offlineLinks/com.aoindustries/ao-lang</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>com.aoindustries</groupId><artifactId>ao-net-types</artifactId>
+											<classifier>javadoc</classifier><includes>element-list, package-list</includes>
+											<outputDirectory>${project.build.directory}/offlineLinks/com.aoindustries/ao-net-types</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId>
+											<classifier>javadoc</classifier><includes>element-list, package-list</includes>
+											<outputDirectory>${project.build.directory}/offlineLinks/com.aoindustries/aocode-public</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>com.aoindustries</groupId><artifactId>aoserv-client</artifactId>
+											<classifier>javadoc</classifier><includes>element-list, package-list</includes>
+											<outputDirectory>${project.build.directory}/offlineLinks/com.aoindustries/aoserv-client</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId>
+											<classifier>javadoc</classifier><includes>element-list, package-list</includes>
+											<outputDirectory>${project.build.directory}/offlineLinks/com.aoindustries/noc-monitor-api</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId>
+											<classifier>javadoc</classifier><includes>element-list, package-list</includes>
+											<outputDirectory>${project.build.directory}/offlineLinks/com.aoindustries/noc-monitor-impl</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId>
+											<classifier>javadoc</classifier><includes>element-list, package-list</includes>
+											<outputDirectory>${project.build.directory}/offlineLinks/com.aoindustries/noc-monitor-rmi-client</outputDirectory>
+										</artifactItem>
+										<artifactItem>
+											<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId>
+											<classifier>javadoc</classifier><includes>element-list, package-list</includes>
+											<outputDirectory>${project.build.directory}/offlineLinks/org.swinglabs.swingx/swingx-core</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
 						<groupId>org.apache.maven.plugins</groupId><artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
 							<links>
 								<link>${javadoc.link.javase}</link>
 								<!-- Direct -->
-								<link>https://aoindustries.com/ao-lang/apidocs/</link>
-								<link>https://aoindustries.com/ao-net-types/apidocs/</link>
-								<link>https://aoindustries.com/aocode-public/apidocs/</link>
-								<link>https://aoindustries.com/aoserv/client/apidocs/</link>
-								<link>https://aoindustries.com/noc/monitor/api/apidocs/</link>
-								<link>https://aoindustries.com/noc/monitor/impl/apidocs/</link>
-								<link>https://aoindustries.com/noc/monitor/rmi-client/apidocs/</link>
-								<link>https://javadoc.io/doc/org.swinglabs.swingx/swingx-core/${org.swinglabs.swingx.swingx-core.version}/</link>
+								<!-- offlineLink: <groupId>com.aoindustries</groupId><artifactId>ao-lang</artifactId> -->
+								<!-- offlineLink: <groupId>com.aoindustries</groupId><artifactId>ao-net-types</artifactId> -->
+								<!-- offlineLink: <groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId> -->
+								<!-- offlineLink: <groupId>com.aoindustries</groupId><artifactId>aoserv-client</artifactId> -->
+								<!-- offlineLink: <groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId> -->
+								<!-- offlineLink: <groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId> -->
+								<!-- offlineLink: <groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId> -->
+								<!-- offlineLink: <groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId> -->
 							</links>
+							<offlineLinks>
+								<!-- Direct -->
+								<offlineLink>
+									<url>https://aoindustries.com/ao-lang/apidocs/</url>
+									<location>${project.build.directory}/offlineLinks/com.aoindustries/ao-lang</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://aoindustries.com/ao-net-types/apidocs/</url>
+									<location>${project.build.directory}/offlineLinks/com.aoindustries/ao-net-types</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://aoindustries.com/aocode-public/apidocs/</url>
+									<location>${project.build.directory}/offlineLinks/com.aoindustries/aocode-public</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://aoindustries.com/aoserv/client/apidocs/</url>
+									<location>${project.build.directory}/offlineLinks/com.aoindustries/aoserv-client</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://aoindustries.com/noc/monitor/api/apidocs/</url>
+									<location>${project.build.directory}/offlineLinks/com.aoindustries/noc-monitor-api</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://aoindustries.com/noc/monitor/impl/apidocs/</url>
+									<location>${project.build.directory}/offlineLinks/com.aoindustries/noc-monitor-impl</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://aoindustries.com/noc/monitor/rmi-client/apidocs/</url>
+									<location>${project.build.directory}/offlineLinks/com.aoindustries/noc-monitor-rmi-client</location>
+								</offlineLink>
+								<offlineLink>
+									<url>https://javadoc.io/doc/org.swinglabs.swingx/swingx-core/${swingx-core.version}/</url>
+									<location>${project.build.directory}/offlineLinks/org.swinglabs.swingx/swingx-core</location>
+								</offlineLink>
+							</offlineLinks>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -125,7 +215,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId><version>${org.swinglabs.swingx.swingx-core.version}</version>
+				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId><version>${swingx-core.version}</version>
 			</dependency>
 			<!-- Transitive -->
 			<dependency>
@@ -150,16 +240,16 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>com.aoindustries</groupId><artifactId>aoserv-cluster</artifactId><version>1.84.1${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId><version>${org.apache.commons.commons-lang3.version}</version>
+				<groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId><version>${commons-lang3.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>${dnsjava.dnsjava.version}</version>
+				<groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>${dnsjava.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${org.slf4j.slf4j-api.version}</version>
+				<groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${slf4j-api.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-action</artifactId><version>1.6.5-1</version>
