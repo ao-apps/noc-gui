@@ -29,7 +29,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 		<relativePath>../../ao-oss-parent/pom.xml</relativePath>
 	</parent>
 
-	<groupId>com.aoindustries</groupId><artifactId>noc-gui</artifactId><version>1.0.2-POST-SNAPSHOT</version>
+	<groupId>com.aoindustries</groupId><artifactId>noc-gui</artifactId><version>1.0.3-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<properties>
@@ -194,7 +194,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>com.aoindustries</groupId><artifactId>aocode-public</artifactId><version>4.1.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>aoserv-client</artifactId><version>1.84.5-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+				<groupId>com.aoindustries</groupId><artifactId>aoserv-client</artifactId><version>1.84.6-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
 			</dependency>
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
@@ -237,7 +237,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>${dnsjava.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.3-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>${slf4j-api.version}</version>
@@ -266,7 +266,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>5.1.49</version>
 			</dependency>
 			<dependency>
-				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.2.12</version>
+				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.2.13</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
