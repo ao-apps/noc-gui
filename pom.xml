@@ -198,7 +198,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.0.4-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.0.4${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
