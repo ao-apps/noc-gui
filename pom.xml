@@ -261,7 +261,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			<!-- Runtime Transitive -->
 			<dependency>
 				<!-- Stay on 5.1.* for <= MySQL 5.1 support -->
-				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>5.1.49</version>
+				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>8.0.16</version>
 			</dependency>
 			<dependency>
 				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.2.14</version>
