@@ -232,7 +232,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>org.apache.commons</groupId><artifactId>commons-lang3</artifactId><version>3.10</version>
 			</dependency>
 			<dependency>
-				<groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>3.2.1</version>
+				<groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>3.2.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.3${POST-SNAPSHOT}</version>
