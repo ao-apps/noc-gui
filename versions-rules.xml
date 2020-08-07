@@ -46,5 +46,11 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<ignoreVersion type="regex">.*-beta[0-9]*</ignoreVersion>
 			</ignoreVersions>
 		</rule>
+		<rule groupId="org.slf4j" artifactId="slf4j-jdk14" comparisonMethod="maven">
+			<ignoreVersions>
+				<ignoreVersion type="regex">.*-alpha[0-9]*</ignoreVersion>
+				<ignoreVersion type="regex">.*-beta[0-9]*</ignoreVersion>
+			</ignoreVersions>
+		</rule>
 	</rules>
 </ruleset>
