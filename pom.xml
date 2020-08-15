@@ -269,7 +269,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>5.1.49</version>
 			</dependency>
 			<dependency>
-				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.2.14</version>
+				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.2.15</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
