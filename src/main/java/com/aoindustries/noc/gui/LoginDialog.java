@@ -91,6 +91,7 @@ final public class LoginDialog extends JDialog {
 	public LoginDialog(NOC noc, Component owner) {
 		super((owner instanceof Frame) ? (Frame)owner : new JFrame(), accessor.getMessage("LoginDialog.title"), true);
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+		assert owner != null;
 
 		this.noc = noc;
 		this.owner = owner;
@@ -210,6 +211,7 @@ final public class LoginDialog extends JDialog {
 	private final Object loginLock = new Object();
 	private Thread loginThread = null;
 
+	@SuppressWarnings("NestedSynchronizedStatement")
 	private void login() {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		synchronized(loginLock) {

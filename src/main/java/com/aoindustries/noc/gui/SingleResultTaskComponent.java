@@ -66,6 +66,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 	final private JScrollPane scrollPane;
 	final private JTextArea textArea;
 
+	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public SingleResultTaskComponent(NOC noc) {
 		super(new GridLayout(1,0));
 		this.noc = noc;
@@ -96,7 +97,9 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 	public void start(Node node, JComponent validationComponent) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		if(!(node instanceof SingleResultNode)) throw new AssertionError("node is not a SingleResultNode: "+node.getClass().getName());
+		if(!(node instanceof SingleResultNode)) {
+			throw new AssertionError("node is not a SingleResultNode: " + (node == null ? "null" : node.getClass().getName()));
+		}
 		if(validationComponent==null) throw new IllegalArgumentException("validationComponent is null");
 
 		final SingleResultNode localSingleResultNode = this.singleResultNode = (SingleResultNode)node;

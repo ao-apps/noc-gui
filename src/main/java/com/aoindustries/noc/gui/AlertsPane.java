@@ -127,6 +127,7 @@ public class AlertsPane extends JPanel {
 	// Only accessed by Swing event dispatch thread, no additional synchronization necessary
 	final private List<Alert> history = new ArrayList<>();
 
+	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public AlertsPane(NOC noc) {
 		super(new GridLayout(1,0));
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

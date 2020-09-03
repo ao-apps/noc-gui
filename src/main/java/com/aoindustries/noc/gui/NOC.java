@@ -151,10 +151,15 @@ public class NOC {
 
 	/* The following variables should always be accessed from the Swing event thread. */
 	// Encapsulate with getter/setter to enforce?
+	@SuppressWarnings("PackageVisibleField")
 	AOServConnector conn;
+	@SuppressWarnings("PackageVisibleField")
 	RootNode rootNode;
+	@SuppressWarnings("PackageVisibleField")
 	int port;
+	@SuppressWarnings("PackageVisibleField")
 	RMIClientSocketFactory csf;
+	@SuppressWarnings("PackageVisibleField")
 	RMIServerSocketFactory ssf;
 
 	final ExecutorService executorService = Executors.newCachedThreadPool();
@@ -280,7 +285,7 @@ public class NOC {
 				localTrayIconCriticalImage = getImageFromResources("tray_critical_24x24.gif");
 				autoSize = false;
 			} else {
-				System.err.println("Warning: Scaling tray image to "+trayIconSize.width+"x"+trayIconSize.height);
+				if(logger.isLoggable(Level.WARNING)) logger.warning("Warning: Scaling tray image to " + trayIconSize.width + "x" + trayIconSize.height);
 				localTrayIconEnabledImage = getImageFromResources("tray_enabled.gif");
 				localTrayIconDisabledImage = getImageFromResources("tray_disabled.gif");
 				localTrayIconHighImage = getImageFromResources("tray_high.gif");
@@ -770,6 +775,7 @@ public class NOC {
 	/**
 	 * Tries for up to ten seconds to gracefully unexport an object.  If still not successful, logs a warning and forcefully unexports.
 	 */
+	@SuppressWarnings("SleepWhileInLoop")
 	void unexportObject(Remote remote) {
 		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 		try {

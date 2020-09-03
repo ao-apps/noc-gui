@@ -73,6 +73,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 	private JTable table;
 	final private JScrollPane scrollPane;
 
+	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TableMultiResultTaskComponent(NOC noc) {
 		super(new GridLayout(1,0));
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -116,7 +117,9 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 	public void start(Node node, JComponent validationComponent) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		if(!(node instanceof TableMultiResultNode)) throw new AssertionError("node is not a TableMultiResultNode: "+node.getClass().getName());
+		if(!(node instanceof TableMultiResultNode)) {
+			throw new AssertionError("node is not a TableMultiResultNode: " + (node == null ? "null" : node.getClass().getName()));
+		}
 		if(validationComponent==null) throw new IllegalArgumentException("validationComponent is null");
 
 		@SuppressWarnings("unchecked")

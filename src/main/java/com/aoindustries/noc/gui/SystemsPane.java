@@ -87,6 +87,7 @@ public class SystemsPane extends JPanel {
 	private SystemsTreeNode selectedTreeNode;
 	private TaskComponent taskComponent;
 
+	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public SystemsPane(final NOC noc) {
 		super(new BorderLayout());
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -342,7 +343,9 @@ public class SystemsPane extends JPanel {
 
 		selectNode(null);
 
-		while(rootTreeNode.getChildCount()>0) recursiveRemoveNodeFromParent((SystemsTreeNode)rootTreeNode.getChildAt(rootTreeNode.getChildCount()-1));
+		while(rootTreeNode.getChildCount() > 0) {
+			recursiveRemoveNodeFromParent((SystemsTreeNode)rootTreeNode.getChildAt(rootTreeNode.getChildCount() - 1));
+		}
 		tree.repaint();
 	}
 
@@ -351,6 +354,7 @@ public class SystemsPane extends JPanel {
 	private long lastCompletedBatchCounter = 0;
 	private boolean doingBatch = false;
 
+	@SuppressWarnings({"SleepWhileInLoop", "SleepWhileHoldingLock"})
 	private void batchValidateTreeNodes() {
 		// Even if running on the event dispatch thread, batching is performed
 		// assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
@@ -359,7 +363,8 @@ public class SystemsPane extends JPanel {
 			batchCounter++;
 			if(!doingBatch) {
 				doingBatch = true;
-				noc.executorService.submit(() -> {
+				noc.executorService.submit(() ->
+				{
 					try {
 						while(true) {
 							boolean doIt;
@@ -486,6 +491,7 @@ public class SystemsPane extends JPanel {
 		noc.clearAlerts(deletingNode.node);
 	}
 
+	@SuppressWarnings("CloneableImplementsClone")
 	private class SystemsTreeNode extends DefaultMutableTreeNode {
 
 		private static final long serialVersionUID = 1L;

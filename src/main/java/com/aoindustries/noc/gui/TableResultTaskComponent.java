@@ -75,6 +75,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 	private JTable table;
 	final private JScrollPane scrollPane;
 
+	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TableResultTaskComponent(NOC noc) {
 		super(new BorderLayout());
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -107,7 +108,9 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 	public void start(Node node, JComponent validationComponent) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		if(!(node instanceof TableResultNode)) throw new AssertionError("node is not a TableResultNode: "+node.getClass().getName());
+		if(!(node instanceof TableResultNode)) {
+			throw new AssertionError("node is not a TableResultNode: " + (node == null ? "null" : node.getClass().getName()));
+		}
 		if(validationComponent==null) throw new IllegalArgumentException("validationComponent is null");
 
 		final TableResultNode localTableResultNode = this.tableResultNode = (TableResultNode)node;

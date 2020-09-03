@@ -71,6 +71,7 @@ class Buzzer {
 	 *
 	 * Source: http://www.anyexample.com/programming/java/java_play_wav_sound_file.xml
 	 */
+	@SuppressWarnings("SleepWhileInLoop")
 	private static void playSound(String audioResource) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 		NullArgumentException.checkNotNull(audioResource, "audioResource");
@@ -144,6 +145,7 @@ class Buzzer {
 	 * at a time will play.  If a buzzer is currently being played, the request
 	 * is ignored.
 	 */
+	@SuppressWarnings("NestedSynchronizedStatement")
 	void playBuzzer(String audioResource) {
 		synchronized(buzzerLock) {
 			if(!isBuzzing) {
@@ -198,6 +200,7 @@ class Buzzer {
 		 * The idea is to be notified quickly of new things when have already manually acknowledged all exiting.
 		 * </p>
 		 */
+		@SuppressWarnings({"SleepWhileInLoop", "SleepWhileHoldingLock"})
 		private void setAlertLevel(AlertLevel newLevel, AlertCategory newCategory) {
 			// TODO: Have user selectable alert thresholds by AlertCategory
 			boolean runBuzzer = newLevel == AlertLevel.CRITICAL || newLevel == AlertLevel.UNKNOWN;

@@ -52,6 +52,7 @@ public class TicketEditorFrame extends JFrame {
 	private final TicketEditor ticketEditor;
 	//private final Integer ticketId;
 
+	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TicketEditorFrame(final NOC noc, final Integer ticketId) {
 		super(accessor.getMessage("TicketEditorFrame.title", ticketId));
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
