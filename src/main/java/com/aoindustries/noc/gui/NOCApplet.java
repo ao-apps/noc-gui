@@ -42,35 +42,18 @@ public class NOCApplet extends JApplet {
 
 	private NOC noc;
 
-	/**
-	 * Running as an applet.
-	 */
-	/*
-	public void init() {
-		if(!SwingUtilities.isEventDispatchThread()) {
-			try {
-				SwingUtilities.invokeAndWait(new Runnable() {public void run() {init();}});
-			} catch(InterruptedException err) {
-				reportError(err, null);
-			} catch(InvocationTargetException err) {
-				reportError(err, null);
-			}
-		} else {
-			// TODO: init
-		}
-	}*/
-
 	@Override
 	public void start() {
 		if(!SwingUtilities.isEventDispatchThread()) {
 			try {
 				SwingUtilities.invokeAndWait(this::start);
-			} catch(InterruptedException err) {
-				logger.log(Level.SEVERE, null, err);
+			} catch(InterruptedException e) {
+				logger.log(Level.SEVERE, null, e);
 				// Restore the interrupted status
 				Thread.currentThread().interrupt();
-			} catch(InvocationTargetException err) {
-				logger.log(Level.SEVERE, null, err);
+			} catch(InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				logger.log(Level.SEVERE, null, cause == null ? e : cause);
 			}
 		} else {
 			try {
@@ -89,12 +72,13 @@ public class NOCApplet extends JApplet {
 		if(!SwingUtilities.isEventDispatchThread()) {
 			try {
 				SwingUtilities.invokeAndWait(this::stop);
-			} catch(InterruptedException err) {
-				logger.log(Level.SEVERE, null, err);
+			} catch(InterruptedException e) {
+				logger.log(Level.SEVERE, null, e);
 				// Restore the interrupted status
 				Thread.currentThread().interrupt();
-			} catch(InvocationTargetException err) {
-				logger.log(Level.SEVERE, null, err);
+			} catch(InvocationTargetException e) {
+				Throwable cause = e.getCause();
+				logger.log(Level.SEVERE, null, cause == null ? e : cause);
 			}
 		} else {
 			if(noc!=null) {

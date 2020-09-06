@@ -25,6 +25,7 @@ package com.aoindustries.noc.gui;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.aoserv.client.account.User;
 import com.aoindustries.awt.image.Images;
+import com.aoindustries.lang.SysExits;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
@@ -92,6 +93,7 @@ public class NOC {
 	 *
 	 * May we include the security policy with the source code?
 	 */
+	@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 	public static void main(String[] args) {
 		try {
 			if(System.getSecurityManager()==null) {
@@ -110,12 +112,15 @@ public class NOC {
 					}
 				});
 			}
-		} catch(RuntimeException | IOException | InterruptedException | InvocationTargetException err) {
-			ErrorPrinter.printStackTraces(err);
-			if(err instanceof InterruptedException) {
-				// Restore the interrupted status
-				Thread.currentThread().interrupt();
-			}
+		} catch(InvocationTargetException e) {
+			Throwable cause = e.getCause();
+			ErrorPrinter.printStackTraces(cause == null ? e : cause);
+			System.exit(SysExits.EX_SOFTWARE);
+		} catch(ThreadDeath td) {
+			throw td;
+		} catch(Throwable t) {
+			ErrorPrinter.printStackTraces(t);
+			System.exit(SysExits.EX_SOFTWARE);
 		}
 	}
 
