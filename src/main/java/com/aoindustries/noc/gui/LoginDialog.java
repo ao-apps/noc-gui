@@ -51,7 +51,6 @@ import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
-import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Objects;
 import javax.swing.AbstractAction;
@@ -211,7 +210,7 @@ final public class LoginDialog extends JDialog {
 	private final Object loginLock = new Object();
 	private Thread loginThread = null;
 
-	@SuppressWarnings("NestedSynchronizedStatement")
+	@SuppressWarnings({"NestedSynchronizedStatement", "UseSpecificCatch", "TooBroadCatch"})
 	private void login() {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		synchronized(loginLock) {
@@ -357,14 +356,16 @@ final public class LoginDialog extends JDialog {
 							serverField.selectAll();
 							serverField.requestFocus();
 						});
-					} catch(RuntimeException | SQLException err) {
+					} catch(ThreadDeath td) {
+						throw td;
+					} catch(Throwable t) {
 						// Check if canceled
 						synchronized(loginLock) {
 							if(Thread.currentThread()!=loginThread) return;
 							loginThread = null;
 						}
 						SwingUtilities.invokeLater(() -> {
-							new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.runtimeError"), err).setVisible(true);
+							new ErrorDialog(owner, accessor.getMessage("LoginDialog.login.runtimeError"), t).setVisible(true);
 							serverField.setEditable(true);
 							serverPortField.setEditable(true);
 							externalField.setEditable(true);

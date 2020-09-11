@@ -164,6 +164,7 @@ public class TicketEditor extends JPanel implements TableListener {
 	private final JComboBox<TicketType> typeComboBox = new JComboBox<>(typeComboBoxModel);
 	private final FocusListener typeComboBoxFocusListener = new FocusAdapter() {
 		@Override
+		@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 		public void focusLost(FocusEvent e) {
 			final TicketType newType = (TicketType)typeComboBox.getSelectedItem();
 			if(newType!=null) {
@@ -181,8 +182,10 @@ public class TicketEditor extends JPanel implements TableListener {
 										currentTicket = newTicket;
 									}
 								}
-							} catch(RuntimeException | IOException | SQLException err) {
-								logger.log(Level.SEVERE, null, err);
+							} catch(ThreadDeath td) {
+								throw td;
+							} catch(Throwable t) {
+								logger.log(Level.SEVERE, null, t);
 							}
 						}
 					}
@@ -195,6 +198,7 @@ public class TicketEditor extends JPanel implements TableListener {
 	private final JComboBox<Status> statusComboBox = new JComboBox<>(statusComboBoxModel);
 	private final FocusListener statusComboBoxFocusListener = new FocusAdapter() {
 		@Override
+		@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 		public void focusLost(FocusEvent e) {
 			final Status newStatus = (Status)statusComboBox.getSelectedItem();
 			if(newStatus!=null) {
@@ -223,8 +227,10 @@ public class TicketEditor extends JPanel implements TableListener {
 										currentTicket = newTicket;
 									}
 								}
-							} catch(RuntimeException | IOException | SQLException err) {
-								logger.log(Level.SEVERE, null, err);
+							} catch(ThreadDeath td) {
+								throw td;
+							} catch(Throwable t) {
+								logger.log(Level.SEVERE, null, t);
 							}
 						}
 					}
@@ -241,6 +247,7 @@ public class TicketEditor extends JPanel implements TableListener {
 	private final JComboBox<Object> accountComboBox = new JComboBox<>(accountComboBoxModel);
 	private final FocusListener accountComboBoxFocusListener = new FocusAdapter() {
 		@Override
+		@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 		public void focusLost(FocusEvent e) {
 			final Account newAccount = accountComboBox.getSelectedIndex()==0 ? null : (Account)accountComboBox.getSelectedItem();
 			currentTicketExecutorService.submit(() -> {
@@ -258,8 +265,10 @@ public class TicketEditor extends JPanel implements TableListener {
 									currentTicket = newTicket;
 								}
 							}
-						} catch(RuntimeException | SQLException | IOException err) {
-							logger.log(Level.SEVERE, null, err);
+						} catch(ThreadDeath td) {
+							throw td;
+						} catch(Throwable t) {
+							logger.log(Level.SEVERE, null, t);
 						}
 					}
 				}
@@ -271,6 +280,7 @@ public class TicketEditor extends JPanel implements TableListener {
 	private final JTextField summaryTextField = new JTextField("");
 	private final FocusListener summaryTextFieldFocusListener = new FocusAdapter() {
 		@Override
+		@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 		public void focusLost(FocusEvent e) {
 			final String newSummary = summaryTextField.getText();
 			currentTicketExecutorService.submit(() -> {
@@ -288,8 +298,10 @@ public class TicketEditor extends JPanel implements TableListener {
 									currentTicket = newTicket;
 								}
 							}
-						} catch(RuntimeException | IOException | SQLException err) {
-							logger.log(Level.SEVERE, null, err);
+						} catch(ThreadDeath td) {
+							throw td;
+						} catch(Throwable t) {
+							logger.log(Level.SEVERE, null, t);
 						}
 					}
 				}
@@ -303,6 +315,7 @@ public class TicketEditor extends JPanel implements TableListener {
 	private final JTextArea internalNotesTextArea = new JTextArea();
 	private final FocusListener internalNotesTextAreaFocusListener = new FocusAdapter() {
 		@Override
+		@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 		public void focusLost(FocusEvent e) {
 			final String newInternalNotes = internalNotesTextArea.getText();
 			currentTicketExecutorService.submit(() -> {
@@ -320,8 +333,10 @@ public class TicketEditor extends JPanel implements TableListener {
 									currentTicket = newTicket;
 								}
 							}
-						} catch(RuntimeException | IOException | SQLException err) {
-							logger.log(Level.SEVERE, null, err);
+						} catch(ThreadDeath td) {
+							throw td;
+						} catch(Throwable t) {
+							logger.log(Level.SEVERE, null, t);
 						}
 					}
 				}
@@ -481,6 +496,7 @@ public class TicketEditor extends JPanel implements TableListener {
 	 *
 	 * When <code>null</code>, all table listeners are removed.
 	 */
+	@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 	public void showTicket(final AOServConnector requestConn, final Integer requestedTicketId) {
 		if(SwingUtilities.isEventDispatchThread()) {
 			// Run in background thread for data lookups
@@ -532,14 +548,17 @@ public class TicketEditor extends JPanel implements TableListener {
 						reloadTicket(ticket, false);
 						currentTicket = ticket;
 					}
-				} catch(RuntimeException | IOException | SQLException err) {
-					logger.log(Level.SEVERE, null, err);
+				} catch(ThreadDeath td) {
+					throw td;
+				} catch(Throwable t) {
+					logger.log(Level.SEVERE, null, t);
 				}
 			}
 		}
 	}
 
 	@Override
+	@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 	public void tableUpdated(Table<?> table) {
 		// Run in a background thread to avoid deadlock while waiting for lock
 		currentTicketExecutorService.submit(() -> {
@@ -552,8 +571,10 @@ public class TicketEditor extends JPanel implements TableListener {
 							reloadTicket(newTicket, true);
 							currentTicket = newTicket;
 						}
-					} catch(RuntimeException | IOException | SQLException err) {
-						logger.log(Level.SEVERE, null, err);
+					} catch(ThreadDeath td) {
+						throw td;
+					} catch(Throwable t) {
+						logger.log(Level.SEVERE, null, t);
 					}
 				}
 			}

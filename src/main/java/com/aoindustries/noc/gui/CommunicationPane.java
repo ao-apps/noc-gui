@@ -552,6 +552,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 	 * The data operations are all performed first, then the GUI is updated
 	 * on the Swing event dispatch thread.
 	 */
+	@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
 	private void refresh() {
 		// Launch on the swing event thread if not already running on it
 		if(!SwingUtilities.isEventDispatchThread()) {
@@ -938,12 +939,16 @@ public class CommunicationPane extends JPanel implements TableListener {
 									prioritiesListModel.synchronize(ticketPriorities);
 									languagesListModel.synchronize(languages);
 									synchronizedTickets(ticketRows);
-								} catch(RuntimeException | IOException | SQLException err) {
-									logger.log(Level.SEVERE, null, err);
+								} catch(ThreadDeath td) {
+									throw td;
+								} catch(Throwable t) {
+									logger.log(Level.SEVERE, null, t);
 								}
 							});
-						}catch(RuntimeException | IOException | SQLException err) {
-							logger.log(Level.SEVERE, null, err);
+						} catch(ThreadDeath td) {
+							throw td;
+						} catch(Throwable t) {
+							logger.log(Level.SEVERE, null, t);
 						} finally {
 							SwingUtilities.invokeLater(() -> {
 								assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

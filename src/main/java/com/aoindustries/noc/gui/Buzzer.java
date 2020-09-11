@@ -145,7 +145,7 @@ class Buzzer {
 	 * at a time will play.  If a buzzer is currently being played, the request
 	 * is ignored.
 	 */
-	@SuppressWarnings("NestedSynchronizedStatement")
+	@SuppressWarnings({"NestedSynchronizedStatement", "UseSpecificCatch", "TooBroadCatch"})
 	void playBuzzer(String audioResource) {
 		synchronized(buzzerLock) {
 			if(!isBuzzing) {
@@ -153,8 +153,10 @@ class Buzzer {
 				alertsPane.noc.executorService.submit(() -> {
 					try {
 						playSound(audioResource);
-					} catch(RuntimeException | IOException | UnsupportedAudioFileException | LineUnavailableException err) {
-						logger.log(Level.SEVERE, null, err);
+					} catch(ThreadDeath td) {
+						throw td;
+					} catch(Throwable t) {
+						logger.log(Level.SEVERE, null, t);
 					} finally {
 						synchronized(buzzerLock) {
 							isBuzzing = false;
