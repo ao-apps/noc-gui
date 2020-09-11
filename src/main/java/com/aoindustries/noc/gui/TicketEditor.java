@@ -256,7 +256,7 @@ public class TicketEditor extends JPanel implements TableListener {
 						try {
 							Account oldAccount = currentTicket.getAccount();
 							if(!Objects.equals(newAccount, oldAccount)) {
-								System.out.println("DEBUG: currentTicket.setAccount("+newAccount+");");
+								if(logger.isLoggable(Level.FINE)) logger.fine("currentTicket.setAccount("+newAccount+");");
 								currentTicket.setAccount(oldAccount, newAccount);
 								Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
 								if(newTicket==null) showTicket(null, null);
@@ -324,7 +324,7 @@ public class TicketEditor extends JPanel implements TableListener {
 						try {
 							String oldInternalNotes = currentTicket.getInternalNotes();
 							if(!newInternalNotes.equals(oldInternalNotes)) {
-								System.out.println("DEBUG: currentTicket.setInternalNotes(\""+oldInternalNotes+"\", \""+newInternalNotes+"\");");
+								if(logger.isLoggable(Level.FINE)) logger.fine("currentTicket.setInternalNotes(\""+oldInternalNotes+"\", \""+newInternalNotes+"\");");
 								currentTicket.setInternalNotes(oldInternalNotes, newInternalNotes);
 								Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
 								if(newTicket==null) showTicket(null, null);
@@ -344,6 +344,7 @@ public class TicketEditor extends JPanel implements TableListener {
 		}
 	};
 
+	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TicketEditor(final NOC noc, PreferencesSet preferencesSet) {
 		super(new BorderLayout());
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

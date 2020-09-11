@@ -200,6 +200,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 	// </editor-fold>
 
 	// <editor-fold defaultstate="collapsed" desc="Construction">
+	@SuppressWarnings({"OverridableMethodCallInConstructor", "OverridableMethodCallInConstructor"})
 	public CommunicationPane(final NOC noc) {
 		super(new BorderLayout());
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -1153,7 +1154,9 @@ public class CommunicationPane extends JPanel implements TableListener {
 					}
 					if(foundIndex!=-1) {
 						// Seems to lose selection pretty badly: ticketsTableModel.moveRow(foundIndex, foundIndex, index);
-						for(int removeIndex = foundIndex-1; removeIndex>=index; removeIndex--) ticketsTableModel.removeRow(removeIndex);
+						for(int removeIndex = foundIndex-1; removeIndex>=index; removeIndex--) {
+							ticketsTableModel.removeRow(removeIndex);
+						}
 						needsCheckCells = true;
 					} else {
 						// Otherwise, insert in the current index
@@ -1304,7 +1307,9 @@ public class CommunicationPane extends JPanel implements TableListener {
 			}
 		}
 		// Remove any extra
-		while(ticketsTableModel.getRowCount() > size) ticketsTableModel.removeRow(ticketsTableModel.getRowCount()-1);
+		while(ticketsTableModel.getRowCount() > size) {
+			ticketsTableModel.removeRow(ticketsTableModel.getRowCount()-1);
+		}
 	}
 
 	private Font lastNormalFont;
@@ -1338,7 +1343,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 					} else {
 						if(lastNormalFont!=normalFont) {
 							lastNormalFont = normalFont;
-							System.out.println("DEBUG: getTableCellRendererComponent: lastNormalFont!=normalFont");
+							logger.fine("lastNormalFont!=normalFont");
 							lastStrikethroughFont = strikethroughFont = normalFont.deriveFont(Collections.singletonMap(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON));
 						} else {
 							strikethroughFont = lastStrikethroughFont;
@@ -1615,7 +1620,9 @@ public class CommunicationPane extends JPanel implements TableListener {
 	private void closeAllTicketFrames() {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		List<Integer> ticketIds = new ArrayList<>(ticketEditorFrames.keySet());
-		for(Integer ticketId : ticketIds) closeTicketFrame(ticketId);
+		for(Integer ticketId : ticketIds) {
+			closeTicketFrame(ticketId);
+		}
 	}
 
 	/**
