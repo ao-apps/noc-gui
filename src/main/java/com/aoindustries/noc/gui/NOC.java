@@ -50,7 +50,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.server.RMIClientSocketFactory;
@@ -93,7 +92,7 @@ public class NOC {
 	 *
 	 * May we include the security policy with the source code?
 	 */
-	@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
+	@SuppressWarnings({"UseSpecificCatch", "TooBroadCatch", "UseOfSystemOutOrSystemErr"})
 	public static void main(String[] args) {
 		try {
 			if(System.getSecurityManager()==null) {
@@ -108,18 +107,14 @@ public class NOC {
 					try {
 						NOC noc = new NOC(null);
 					} catch(IOException err) {
-						ErrorPrinter.printStackTraces(err);
+						ErrorPrinter.printStackTraces(err, System.err);
 					}
 				});
 			}
-		} catch(InvocationTargetException e) {
-			Throwable cause = e.getCause();
-			ErrorPrinter.printStackTraces(cause == null ? e : cause);
-			System.exit(SysExits.EX_SOFTWARE);
 		} catch(ThreadDeath td) {
 			throw td;
 		} catch(Throwable t) {
-			ErrorPrinter.printStackTraces(t);
+			ErrorPrinter.printStackTraces(t, System.err);
 			System.exit(SysExits.EX_SOFTWARE);
 		}
 	}

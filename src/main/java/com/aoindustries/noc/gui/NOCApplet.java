@@ -52,8 +52,7 @@ public class NOCApplet extends JApplet {
 				// Restore the interrupted status
 				Thread.currentThread().interrupt();
 			} catch(InvocationTargetException e) {
-				Throwable cause = e.getCause();
-				logger.log(Level.SEVERE, null, cause == null ? e : cause);
+				logger.log(Level.SEVERE, null, e);
 			}
 		} else {
 			try {
@@ -77,8 +76,7 @@ public class NOCApplet extends JApplet {
 				// Restore the interrupted status
 				Thread.currentThread().interrupt();
 			} catch(InvocationTargetException e) {
-				Throwable cause = e.getCause();
-				logger.log(Level.SEVERE, null, cause == null ? e : cause);
+				logger.log(Level.SEVERE, null, e);
 			}
 		} else {
 			if(noc!=null) {
