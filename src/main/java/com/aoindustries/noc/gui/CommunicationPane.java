@@ -36,6 +36,7 @@ import com.aoindustries.aoserv.client.ticket.Priority;
 import com.aoindustries.aoserv.client.ticket.Status;
 import com.aoindustries.aoserv.client.ticket.Ticket;
 import com.aoindustries.aoserv.client.ticket.TicketType;
+import com.aoindustries.collections.AoCollections;
 import com.aoindustries.net.Email;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.sql.SQLUtility;
@@ -571,7 +572,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 					selectedCategories = Collections.emptySet();
 				} else {
 					boolean myIncludeUncategorized = false;
-					selectedCategories = new HashSet<>(selectedCategoryPaths.length*4/3+1);
+					selectedCategories = AoCollections.newHashSet(selectedCategoryPaths.length);
 					for(TreePath treePath : selectedCategoryPaths) {
 						TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
 						if(treeNode==categoriesRootNode) {
@@ -593,7 +594,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 					selectedAccounts = Collections.emptySet();
 				} else {
 					boolean myIncludeNoAccount = false;
-					selectedAccounts = new HashSet<>(selectedAccountPaths.length*4/3+1);
+					selectedAccounts = AoCollections.newHashSet(selectedAccountPaths.length);
 					for(TreePath treePath : selectedAccountPaths) {
 						TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
 						if(treeNode==accountsRootNode) {
@@ -612,7 +613,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				if(selectedBrandPaths==null) {
 					selectedBrands = Collections.emptySet();
 				} else {
-					selectedBrands = new HashSet<>(selectedBrandPaths.length*4/3+1);
+					selectedBrands = AoCollections.newHashSet(selectedBrandPaths.length);
 					for(TreePath treePath : selectedBrandPaths) {
 						TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
 						if(treeNode!=brandsRootNode) {
@@ -628,7 +629,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				if(selectedResellerPaths==null) {
 					selectedResellers = Collections.emptySet();
 				} else {
-					selectedResellers = new HashSet<>(selectedResellerPaths.length*4/3+1);
+					selectedResellers = AoCollections.newHashSet(selectedResellerPaths.length);
 					for(TreePath treePath : selectedResellerPaths) {
 						TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
 						if(treeNode!=resellersRootNode) {
@@ -643,7 +644,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 			{
 				List<Object> selectedValues = assignmentsList.getSelectedValuesList();
 				boolean myIncludeUnassigned = false;
-				selectedAssignments = new HashSet<>(selectedValues.size()*4/3+1);
+				selectedAssignments = AoCollections.newHashSet(selectedValues.size());
 				for(Object selectedValue : selectedValues) {
 					if(selectedValue==assignmentsListModel.getElementAt(0)) {
 						myIncludeUnassigned = true;
@@ -739,7 +740,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 									}
 								}
 								if(currentReseller != null && (includeUnassigned || !selectedAssignments.isEmpty())) {
-									ticketAssignments = new HashMap<>(allTickets.size()*4/3+1); // Worst-case is all tickets assigned
+									ticketAssignments = AoCollections.newHashMap(allTickets.size()); // Worst-case is all tickets assigned
 								} else {
 									ticketAssignments = null;
 								}
