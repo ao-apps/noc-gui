@@ -301,11 +301,14 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			</dependency>
 			<!-- Runtime Transitive -->
 			<dependency>
+				<groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId><version>3.7.1</version>
+			</dependency>
+			<dependency>
 				<!-- Stay on 5.1.* for <= MySQL 5.1 support -->
 				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>5.1.49</version>
 			</dependency>
 			<dependency>
-				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.2.16</version>
+				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.2.18</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
