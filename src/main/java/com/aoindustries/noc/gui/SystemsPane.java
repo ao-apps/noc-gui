@@ -22,7 +22,6 @@
  */
 package com.aoindustries.noc.gui;
 
-import com.aoindustries.exception.WrappedException;
 import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.common.AlertChange;
 import com.aoindustries.noc.monitor.common.AlertLevel;
@@ -41,6 +40,7 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.beans.PropertyChangeEvent;
+import java.io.UncheckedIOException;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
@@ -389,7 +389,7 @@ public class SystemsPane extends JPanel {
 							} else break;
 						}
 					} catch(RemoteException err) {
-						throw new WrappedException(err);
+						throw new UncheckedIOException(err);
 					}
 				});
 			}
