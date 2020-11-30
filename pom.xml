@@ -220,13 +220,13 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>com.aoindustries</groupId><artifactId>aoserv-client</artifactId><version>1.84.12${POST-SNAPSHOT}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId><version>1.0.5-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.0.4${POST-SNAPSHOT}</version>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.0.5-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId><version>1.0.0${POST-SNAPSHOT}</version>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId><version>1.0.5-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
 			</dependency>
 			<dependency>
 				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId><version>${swingx-core.version}</version>
@@ -275,7 +275,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				<groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>3.3.1</version>
 			</dependency>
 			<dependency>
-				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.3${POST-SNAPSHOT}</version>
+				<groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.0.5-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>1.7.30</version>
