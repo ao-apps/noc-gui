@@ -22,7 +22,7 @@
  */
 package com.aoindustries.noc.gui;
 
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.i18n.Resources;
 import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import java.awt.Color;
@@ -60,6 +60,8 @@ import javax.swing.table.TableRowSorter;
  */
 // TODO: Tab alert levels, like GatheringTab.java
 public class AlertsPane extends JPanel {
+
+	private static final Resources RESOURCES = Resources.getResources(AlertsPane.class.getPackage());
 
 	/**
 	 * The maximum history size or {@link Integer#MAX_VALUE} for unlimited.
@@ -136,11 +138,11 @@ public class AlertsPane extends JPanel {
 
 		tableModel = new DefaultTableModel(
 			new String[] {
-				accessor.getMessage("AlertsPane.time.header"),
-				accessor.getMessage("AlertsPane.alertLevel.header"),
-				accessor.getMessage("AlertsPane.alertCategory.header"),
-				accessor.getMessage("AlertsPane.sourceDisplay.header"),
-				accessor.getMessage("AlertsPane.alertMessage.header")
+				RESOURCES.getMessage("AlertsPane.time.header"),
+				RESOURCES.getMessage("AlertsPane.alertLevel.header"),
+				RESOURCES.getMessage("AlertsPane.alertCategory.header"),
+				RESOURCES.getMessage("AlertsPane.sourceDisplay.header"),
+				RESOURCES.getMessage("AlertsPane.alertMessage.header")
 			},
 			0
 		) {
@@ -203,9 +205,9 @@ public class AlertsPane extends JPanel {
 						DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
 						value = df.format((Date)value);
 					} else if(column1 == COLUMN_ALERT_LEVEL) {
-						value = accessor.getMessage("AlertsPane.alertLevel." + ((AlertLevel)value).name());
+						value = RESOURCES.getMessage("AlertsPane.alertLevel." + ((AlertLevel)value).name());
 					} else if(column1 == COLUMN_ALERT_CATEGORY) {
-						value = accessor.getMessage("AlertsPane.alertCategory." + ((AlertCategory)value).name());
+						value = RESOURCES.getMessage("AlertsPane.alertCategory." + ((AlertCategory)value).name());
 					}
 					Component component = renderer.getTableCellRendererComponent(table1, value, isSelected, hasFocus, row1, column1);
 					if(!isSelected) {
@@ -270,7 +272,7 @@ public class AlertsPane extends JPanel {
 	void addToolBars(JToolBar toolBar) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		JButton buzzerTest = new JButton(accessor.getMessage("AlertsPane.buzzerTest.label"));
+		JButton buzzerTest = new JButton(RESOURCES.getMessage("AlertsPane.buzzerTest.label"));
 		toolBar.add(buzzerTest);
 		buzzerTest.addActionListener((ActionEvent e) -> {
 			// TODO: Call a method on the server, which will callback a method here, so buzzer only plays on successful bidirectional communication

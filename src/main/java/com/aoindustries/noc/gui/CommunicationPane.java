@@ -37,8 +37,8 @@ import com.aoindustries.aoserv.client.ticket.Status;
 import com.aoindustries.aoserv.client.ticket.Ticket;
 import com.aoindustries.aoserv.client.ticket.TicketType;
 import com.aoindustries.collections.AoCollections;
+import com.aoindustries.i18n.Resources;
 import com.aoindustries.net.Email;
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.sql.SQLUtility;
 import com.aoindustries.swing.SynchronizingListModel;
 import com.aoindustries.swing.SynchronizingMutableTreeNode;
@@ -115,6 +115,8 @@ public class CommunicationPane extends JPanel implements TableListener {
 
 	private static final Logger logger = Logger.getLogger(CommunicationPane.class.getName());
 
+	private static final Resources RESOURCES = Resources.getResources(CommunicationPane.class.getPackage());
+
 	// <editor-fold defaultstate="collapsed" desc="Constants">
 	private static final String LAYOUT_DEF = "(ROW "
 		+ "  (COLUMN weight=0.3 "
@@ -143,23 +145,23 @@ public class CommunicationPane extends JPanel implements TableListener {
 	private AOServConnector conn; // This is the connector that has all the listeners added
 	private final JXMultiSplitPane splitPane;
 	// Categories
-	private final SynchronizingMutableTreeNode<Category> categoriesRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.categories.uncategorized"), true);
+	private final SynchronizingMutableTreeNode<Category> categoriesRootNode = new SynchronizingMutableTreeNode<>(RESOURCES.getMessage("CommunicationPane.categories.uncategorized"), true);
 	private final DefaultTreeModel categoriesTreeModel = new DefaultTreeModel(categoriesRootNode, true);
 	private final JTree categoriesJTree = new JTree(categoriesTreeModel);
 	// Accounts
-	private final SynchronizingMutableTreeNode<Account> accountsRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.accounts.noAccount"), true);
+	private final SynchronizingMutableTreeNode<Account> accountsRootNode = new SynchronizingMutableTreeNode<>(RESOURCES.getMessage("CommunicationPane.accounts.noAccount"), true);
 	private final DefaultTreeModel accountsTreeModel = new DefaultTreeModel(accountsRootNode, true);
 	private final JTree accountsJTree = new JTree(accountsTreeModel);
 	// Brands
-	private final SynchronizingMutableTreeNode<Brand> brandsRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.brands.rootNode.label"), true);
+	private final SynchronizingMutableTreeNode<Brand> brandsRootNode = new SynchronizingMutableTreeNode<>(RESOURCES.getMessage("CommunicationPane.brands.rootNode.label"), true);
 	private final DefaultTreeModel brandsTreeModel = new DefaultTreeModel(brandsRootNode, true);
 	private final JTree brandsJTree = new JTree(brandsTreeModel);
 	// Resellers
-	private final SynchronizingMutableTreeNode<Reseller> resellersRootNode = new SynchronizingMutableTreeNode<>(accessor.getMessage("CommunicationPane.resellers.rootNode.label"), true);
+	private final SynchronizingMutableTreeNode<Reseller> resellersRootNode = new SynchronizingMutableTreeNode<>(RESOURCES.getMessage("CommunicationPane.resellers.rootNode.label"), true);
 	private final DefaultTreeModel resellersTreeModel = new DefaultTreeModel(resellersRootNode, true);
 	private final JTree resellersJTree = new JTree(resellersTreeModel);
 	// Assignments
-	private final SynchronizingListModel<Object> assignmentsListModel = new SynchronizingListModel<>(accessor.getMessage("CommunicationPane.assignments.unassigned"));
+	private final SynchronizingListModel<Object> assignmentsListModel = new SynchronizingListModel<>(RESOURCES.getMessage("CommunicationPane.assignments.unassigned"));
 	private final JList<Object> assignmentsList = new JList<>(assignmentsListModel);
 	// Types
 	private final SynchronizingListModel<TicketType> typesListModel = new SynchronizingListModel<>();
@@ -176,13 +178,13 @@ public class CommunicationPane extends JPanel implements TableListener {
 	// Tickets
 	private final DefaultTableModel ticketsTableModel = new UneditableDefaultTableModel(
 		new Object[] {
-			accessor.getMessage("CommunicationPane.ticketsTable.header.ticketNumber"),
-			accessor.getMessage("CommunicationPane.ticketsTable.header.priority"),
-			accessor.getMessage("CommunicationPane.ticketsTable.header.status"),
-			accessor.getMessage("CommunicationPane.ticketsTable.header.openDate"),
-			accessor.getMessage("CommunicationPane.ticketsTable.header.openedBy"),
-			accessor.getMessage("CommunicationPane.ticketsTable.header.account"),
-			accessor.getMessage("CommunicationPane.ticketsTable.header.summary")
+			RESOURCES.getMessage("CommunicationPane.ticketsTable.header.ticketNumber"),
+			RESOURCES.getMessage("CommunicationPane.ticketsTable.header.priority"),
+			RESOURCES.getMessage("CommunicationPane.ticketsTable.header.status"),
+			RESOURCES.getMessage("CommunicationPane.ticketsTable.header.openDate"),
+			RESOURCES.getMessage("CommunicationPane.ticketsTable.header.openedBy"),
+			RESOURCES.getMessage("CommunicationPane.ticketsTable.header.account"),
+			RESOURCES.getMessage("CommunicationPane.ticketsTable.header.summary")
 		},
 		0
 	);
@@ -234,7 +236,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel categoriesPanel = new JPanel(new BorderLayout());
 		categoriesPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.categories.label"),
+				RESOURCES.getMessage("CommunicationPane.categories.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
@@ -250,7 +252,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel accountsPanel = new JPanel(new BorderLayout());
 		accountsPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.accounts.label"),
+				RESOURCES.getMessage("CommunicationPane.accounts.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
@@ -267,7 +269,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel brandsPanel = new JPanel(new BorderLayout());
 		brandsPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.brands.label"),
+				RESOURCES.getMessage("CommunicationPane.brands.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
@@ -283,7 +285,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel resellersPanel = new JPanel(new BorderLayout());
 		resellersPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.resellers.label"),
+				RESOURCES.getMessage("CommunicationPane.resellers.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
@@ -299,7 +301,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel assignmentsPanel = new JPanel(new BorderLayout());
 		assignmentsPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.assignments.label"),
+				RESOURCES.getMessage("CommunicationPane.assignments.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
@@ -340,7 +342,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel typesPanel = new JPanel(new BorderLayout());
 		typesPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.types.label"),
+				RESOURCES.getMessage("CommunicationPane.types.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
@@ -354,7 +356,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel statusesPanel = new JPanel(new BorderLayout());
 		statusesPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.statuses.label"),
+				RESOURCES.getMessage("CommunicationPane.statuses.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
@@ -368,7 +370,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel prioritiesPanel = new JPanel(new BorderLayout());
 		prioritiesPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.priorities.label"),
+				RESOURCES.getMessage("CommunicationPane.priorities.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
@@ -382,7 +384,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		JPanel languagesPanel = new JPanel(new BorderLayout());
 		languagesPanel.add(
 			new JLabel(
-				accessor.getMessage("CommunicationPane.languages.label"),
+				RESOURCES.getMessage("CommunicationPane.languages.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);

@@ -22,7 +22,7 @@
  */
 package com.aoindustries.noc.gui;
 
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.i18n.Resources;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.Node;
 import com.aoindustries.noc.monitor.common.TableMultiResult;
@@ -59,9 +59,11 @@ import javax.swing.table.TableCellRenderer;
  */
 public class TableMultiResultTaskComponent extends JPanel implements TaskComponent {
 
-	private static final long serialVersionUID = 1L;
-
 	private static final Logger logger = Logger.getLogger(TableMultiResultTaskComponent.class.getName());
+
+	private static final Resources RESOURCES = Resources.getResources(TableMultiResultTaskComponent.class.getPackage());
+
+	private static final long serialVersionUID = 1L;
 
 	final private NOC noc;
 	private TableMultiResultNode<? extends TableMultiResult> tableMultiResultNode;
@@ -190,8 +192,8 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 			final int rows = results.size();
 
 			final List<Object> allHeaders = new ArrayList<>(columnHeaders.size()+2);
-			allHeaders.add(accessor.getMessage("TableMultiResultTaskComponent.time.header"));
-			allHeaders.add(accessor.getMessage("TableMultiResultTaskComponent.latency.header"));
+			allHeaders.add(RESOURCES.getMessage("TableMultiResultTaskComponent.time.header"));
+			allHeaders.add(RESOURCES.getMessage("TableMultiResultTaskComponent.latency.header"));
 			allHeaders.addAll(columnHeaders);
 			final int columns = allHeaders.size();
 
@@ -244,7 +246,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 						tableModel.setValueAt(
 							new AlertLevelAndData(
 								alertLevel,
-								accessor.getMessage(
+								RESOURCES.getMessage(
 									//locale,
 									"TableMultiResultTaskComponent.time",
 									df.format(new Date(result.getTime()))

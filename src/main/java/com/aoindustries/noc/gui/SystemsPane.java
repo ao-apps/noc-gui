@@ -22,7 +22,7 @@
  */
 package com.aoindustries.noc.gui;
 
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.i18n.Resources;
 import com.aoindustries.noc.monitor.common.AlertChange;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.Node;
@@ -73,6 +73,8 @@ import javax.swing.tree.TreeSelectionModel;
 public class SystemsPane extends JPanel {
 
 	private static final Logger logger = Logger.getLogger(SystemsPane.class.getName());
+
+	private static final Resources RESOURCES = Resources.getResources(SystemsPane.class.getPackage());
 
 	private static final long serialVersionUID = 1L;
 
@@ -132,11 +134,11 @@ public class SystemsPane extends JPanel {
 	void addToolBars(JToolBar toolBar) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		final String allLabel = accessor.getMessage("SystemsPane.alertLevel.all.label");
-		final String lowLabel = accessor.getMessage("SystemsPane.alertLevel.low.label");
-		final String mediumLabel = accessor.getMessage("SystemsPane.alertLevel.medium.label");
-		final String highLabel = accessor.getMessage("SystemsPane.alertLevel.high.label");
-		final String criticalLabel = accessor.getMessage("SystemsPane.alertLevel.critical.label");
+		final String allLabel = RESOURCES.getMessage("SystemsPane.alertLevel.all.label");
+		final String lowLabel = RESOURCES.getMessage("SystemsPane.alertLevel.low.label");
+		final String mediumLabel = RESOURCES.getMessage("SystemsPane.alertLevel.medium.label");
+		final String highLabel = RESOURCES.getMessage("SystemsPane.alertLevel.high.label");
+		final String criticalLabel = RESOURCES.getMessage("SystemsPane.alertLevel.critical.label");
 		JComboBox<String> alertLevel = new JComboBox<>(
 			new String[] {
 				allLabel,

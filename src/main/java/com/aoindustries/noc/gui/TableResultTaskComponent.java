@@ -22,7 +22,7 @@
  */
 package com.aoindustries.noc.gui;
 
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.i18n.Resources;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.Node;
 import com.aoindustries.noc.monitor.common.TableResult;
@@ -60,9 +60,11 @@ import javax.swing.table.TableCellRenderer;
  */
 public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
-	private static final long serialVersionUID = 1L;
-
 	private static final Logger logger = Logger.getLogger(TableResultTaskComponent.class.getName());
+
+	private static final Resources RESOURCES = Resources.getResources(TableResultTaskComponent.class.getPackage());
+
+	private static final long serialVersionUID = 1L;
 
 	final private NOC noc;
 	private TableResultNode tableResultNode;
@@ -226,18 +228,18 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 			long latency = tableResult.getLatency();
 			String retrievedLine =
 				latency < 1000000
-				? accessor.getMessage(
+				? RESOURCES.getMessage(
 					//locale,
 					"TableResultTaskComponent.retrieved.micro",
 					formattedDate,
 					SQLUtility.formatDecimal3(latency)
 				) : latency < 1000000000
-				? accessor.getMessage(
+				? RESOURCES.getMessage(
 					//locale,
 					"TableResultTaskComponent.retrieved.milli",
 					formattedDate,
 					SQLUtility.formatDecimal3(latency/1000)
-				) : accessor.getMessage(
+				) : RESOURCES.getMessage(
 					//locale,
 					"TableResultTaskComponent.retrieved.second",
 					formattedDate,

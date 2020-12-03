@@ -22,18 +22,19 @@
  */
 package com.aoindustries.noc.gui;
 
+import com.aoindustries.util.i18n.EditableResourceBundle;
+import java.util.Locale;
+
 /**
- * Provides a simplified interface for obtaining localized values from the ApplicationResources.properties files.
- *
  * @author  AO Industries, Inc.
  */
-final class ApplicationResourcesAccessor {
+public final class ApplicationResources_ja extends EditableResourceBundle {
 
-	/**
-	 * Make no instances.
-	 */
-	private ApplicationResourcesAccessor() {
+	public ApplicationResources_ja() {
+		super(
+			Locale.JAPANESE,
+			ApplicationResources.bundleSet,
+			ApplicationResources.getSourceFile("ApplicationResources_ja.properties")
+		);
 	}
-
-	static final com.aoindustries.util.i18n.ApplicationResourcesAccessor accessor = com.aoindustries.util.i18n.ApplicationResourcesAccessor.getInstance("com.aoindustries.noc.gui.ApplicationResources");
 }

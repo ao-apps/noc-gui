@@ -25,8 +25,8 @@ package com.aoindustries.noc.gui;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.aoserv.client.account.User;
 import com.aoindustries.awt.image.Images;
+import com.aoindustries.i18n.Resources;
 import com.aoindustries.lang.SysExits;
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
 import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.RootNode;
@@ -79,6 +79,8 @@ import javax.swing.event.ChangeListener;
 public class NOC {
 
 	private static final Logger logger = Logger.getLogger(NOC.class.getName());
+
+	private static final Resources RESOURCES = Resources.getResources(NOC.class.getPackage());
 
 	/**
 	 * In Java 7 and Debian 7, the keyboard stops working in the noc-gui the first
@@ -174,15 +176,15 @@ public class NOC {
 
 		// Either one of parent or singleFrame should exist
 		this.parent = parent;
-		this.singleFrame = parent==null ? new JFrame(accessor.getMessage("NOC.title")) : null;
+		this.singleFrame = parent==null ? new JFrame(RESOURCES.getMessage("NOC.title")) : null;
 
 		// If parent is not null, forces start-up as tabbed (for applet)
 		if(parent!=null) currentDisplayMode = Preferences.DisplayMode.TABS;
 		else currentDisplayMode = preferences.getDisplayMode();
 
-		this.alertsFrame = new JFrame(accessor.getMessage("NOC.alerts.title"));
-		this.communicationFrame = new JFrame(accessor.getMessage("NOC.communication.title"));
-		this.systemsFrame = new JFrame(accessor.getMessage("NOC.systems.title"));
+		this.alertsFrame = new JFrame(RESOURCES.getMessage("NOC.alerts.title"));
+		this.communicationFrame = new JFrame(RESOURCES.getMessage("NOC.communication.title"));
+		this.systemsFrame = new JFrame(RESOURCES.getMessage("NOC.systems.title"));
 
 		this.alerts = new AlertsPane(this);
 		this.communication = new CommunicationPane(this);
@@ -294,7 +296,7 @@ public class NOC {
 			}
 
 			PopupMenu popup = new PopupMenu();
-			MenuItem localLoginMenuItem = new MenuItem(accessor.getMessage("NOC.trayIcon.popup.login"));
+			MenuItem localLoginMenuItem = new MenuItem(RESOURCES.getMessage("NOC.trayIcon.popup.login"));
 			localLoginMenuItem.addActionListener((ActionEvent e) -> {
 				if(NOC.this.rootNode!=null) {
 					logout();
@@ -302,11 +304,11 @@ public class NOC {
 					login();
 				}
 			});
-			MenuItem openItem = new MenuItem(accessor.getMessage("NOC.trayIcon.popup.open"));
+			MenuItem openItem = new MenuItem(RESOURCES.getMessage("NOC.trayIcon.popup.open"));
 			openItem.addActionListener((ActionEvent e) -> {
 				trayIconOpen();
 			});
-			MenuItem exitItem = new MenuItem(accessor.getMessage("NOC.trayIcon.popup.exit"));
+			MenuItem exitItem = new MenuItem(RESOURCES.getMessage("NOC.trayIcon.popup.exit"));
 			exitItem.addActionListener((ActionEvent e) -> {
 				exitApplication();
 			});
@@ -316,7 +318,7 @@ public class NOC {
 			popup.addSeparator();
 			popup.add(exitItem);
 
-			TrayIcon localTrayIcon = new TrayIcon(localTrayIconDisabledImage, accessor.getMessage("NOC.trayIcon.name"), popup);
+			TrayIcon localTrayIcon = new TrayIcon(localTrayIconDisabledImage, RESOURCES.getMessage("NOC.trayIcon.name"), popup);
 			localTrayIcon.setImageAutoSize(autoSize);
 			localTrayIcon.addMouseListener(
 				new MouseAdapter() {
@@ -481,7 +483,7 @@ public class NOC {
 				ignoreChangeEvent = false;
 				{
 					alertsFrame.getContentPane().setLayout(new BorderLayout());
-					JToolBar toolBar = new JToolBar(accessor.getMessage("NOC.alerts.tools"));
+					JToolBar toolBar = new JToolBar(RESOURCES.getMessage("NOC.alerts.tools"));
 					toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
 					toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
 					alerts.addToolBars(toolBar);
@@ -494,7 +496,7 @@ public class NOC {
 				}
 				{
 					communicationFrame.getContentPane().setLayout(new BorderLayout());
-					JToolBar toolBar = new JToolBar(accessor.getMessage("NOC.communication.tools"));
+					JToolBar toolBar = new JToolBar(RESOURCES.getMessage("NOC.communication.tools"));
 					toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
 					toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
 					communication.addToolBars(toolBar);
@@ -507,7 +509,7 @@ public class NOC {
 				}
 				{
 					systemsFrame.getContentPane().setLayout(new BorderLayout());
-					JToolBar toolBar = new JToolBar(accessor.getMessage("NOC.systems.tools"));
+					JToolBar toolBar = new JToolBar(RESOURCES.getMessage("NOC.systems.tools"));
 					toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
 					toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
 					systems.addToolBars(toolBar);
@@ -564,7 +566,7 @@ public class NOC {
 		parent.removeAll();
 		parent.setLayout(new BorderLayout());
 
-		JToolBar toolBar = new JToolBar(accessor.getMessage("NOC.tools"));
+		JToolBar toolBar = new JToolBar(RESOURCES.getMessage("NOC.tools"));
 		toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
 		toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
 		alerts.addToolBars(toolBar);
@@ -584,9 +586,9 @@ public class NOC {
 		}
 		ignoreChangeEvent = true;
 		tabbedPane.removeAll();
-		tabbedPane.addTab(accessor.getMessage("NOC.alerts.tab"), alerts);
-		tabbedPane.addTab(accessor.getMessage("NOC.communication.tab"), communication);
-		tabbedPane.addTab(accessor.getMessage("NOC.systems.tab"), systems);
+		tabbedPane.addTab(RESOURCES.getMessage("NOC.alerts.tab"), alerts);
+		tabbedPane.addTab(RESOURCES.getMessage("NOC.communication.tab"), communication);
+		tabbedPane.addTab(RESOURCES.getMessage("NOC.systems.tab"), systems);
 		tabbedPane.setSelectedIndex(preferences.getTabbedPaneSelectedIndex());
 		ignoreChangeEvent = false;
 		parent.add(tabbedPane, BorderLayout.CENTER);
@@ -606,8 +608,8 @@ public class NOC {
 
 		JButton loginButton = new JButton(
 			rootNode==null
-			? accessor.getMessage("NOC.loginButton.label")
-			: accessor.getMessage("NOC.logoutButton.label")
+			? RESOURCES.getMessage("NOC.loginButton.label")
+			: RESOURCES.getMessage("NOC.logoutButton.label")
 		);
 		loginButton.addActionListener((ActionEvent e) -> {
 			if(rootNode==null) login();
@@ -618,7 +620,7 @@ public class NOC {
 		switch(currentDisplayMode) {
 			case FRAMES :
 			{
-				JButton framesButton = new JButton(accessor.getMessage("NOC.tabsButton.label"));
+				JButton framesButton = new JButton(RESOURCES.getMessage("NOC.tabsButton.label"));
 				toolBar.add(framesButton);
 				framesButton.addActionListener((ActionEvent e) -> {
 					setDisplayMode(Preferences.DisplayMode.TABS);
@@ -627,7 +629,7 @@ public class NOC {
 			}
 			case TABS :
 			{
-				JButton framesButton = new JButton(accessor.getMessage("NOC.framesButton.label"));
+				JButton framesButton = new JButton(RESOURCES.getMessage("NOC.framesButton.label"));
 				toolBar.add(framesButton);
 				framesButton.addActionListener((ActionEvent e) -> {
 					setDisplayMode(Preferences.DisplayMode.FRAMES);
@@ -665,14 +667,14 @@ public class NOC {
 	) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		String logoutLabel = accessor.getMessage("NOC.logoutButton.label");
+		String logoutLabel = RESOURCES.getMessage("NOC.logoutButton.label");
 		if(singleLoginButton!=null) singleLoginButton.setText(logoutLabel);
 		if(alertsLoginButton!=null) alertsLoginButton.setText(logoutLabel);
 		if(communicationLoginButton!=null) communicationLoginButton.setText(logoutLabel);
 		if(systemsLoginButton!=null) systemsLoginButton.setText(logoutLabel);
 		if(trayIcon!=null) {
 			setTrayIconImage(trayIconEnabledImage);
-			loginMenuItem.setLabel(accessor.getMessage("NOC.trayIcon.popup.logout"));
+			loginMenuItem.setLabel(RESOURCES.getMessage("NOC.trayIcon.popup.logout"));
 		}
 		preferences.setServer(server);
 		preferences.setServerPort(serverPort);
@@ -708,14 +710,14 @@ public class NOC {
 		this.port = -1;
 		this.csf = null;
 		this.ssf = null;
-		String loginLabel = accessor.getMessage("NOC.loginButton.label");
+		String loginLabel = RESOURCES.getMessage("NOC.loginButton.label");
 		if(singleLoginButton!=null) singleLoginButton.setText(loginLabel);
 		if(alertsLoginButton!=null) alertsLoginButton.setText(loginLabel);
 		if(communicationLoginButton!=null) communicationLoginButton.setText(loginLabel);
 		if(systemsLoginButton!=null) systemsLoginButton.setText(loginLabel);
 		if(trayIcon!=null) {
 			setTrayIconImage(trayIconDisabledImage);
-			loginMenuItem.setLabel(accessor.getMessage("NOC.trayIcon.popup.login"));
+			loginMenuItem.setLabel(RESOURCES.getMessage("NOC.trayIcon.popup.login"));
 		}
 	}
 
@@ -746,7 +748,7 @@ public class NOC {
 					// TODO: Enable tray icon alerts by category and alert level, such as showing new tickets, contacts, or emails
 					if(ENABLE_TRAY_ICON_ALERTS) {
 						trayIcon.displayMessage(
-							accessor.getMessage("NOC.trayIcon.alertMessage.caption"),
+							RESOURCES.getMessage("NOC.trayIcon.alertMessage.caption"),
 							sourceDisplay+" \r\n"+alertMessage,
 							newAlertLevel.compareTo(AlertLevel.HIGH)==0 ? TrayIcon.MessageType.WARNING : TrayIcon.MessageType.ERROR
 						);

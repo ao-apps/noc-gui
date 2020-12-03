@@ -22,7 +22,7 @@
  */
 package com.aoindustries.noc.gui;
 
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.i18n.Resources;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.Node;
 import com.aoindustries.noc.monitor.common.SingleResult;
@@ -58,6 +58,8 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = Logger.getLogger(SingleResultTaskComponent.class.getName());
+
+	private static final Resources RESOURCES = Resources.getResources(SingleResultTaskComponent.class.getPackage());
 
 	final private NOC noc;
 	private SingleResultNode singleResultNode;
@@ -167,18 +169,18 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 				long latency = singleResult.getLatency();
 				text.append(
 					latency < 1000000
-					? accessor.getMessage(
+					? RESOURCES.getMessage(
 						//locale,
 						"SingleResultTaskComponent.retrieved.micro",
 						formattedDate,
 						SQLUtility.formatDecimal3(latency)
 					) : latency < 1000000000
-					? accessor.getMessage(
+					? RESOURCES.getMessage(
 						//locale,
 						"SingleResultTaskComponent.retrieved.milli",
 						formattedDate,
 						SQLUtility.formatDecimal3(latency/1000)
-					) : accessor.getMessage(
+					) : RESOURCES.getMessage(
 						//locale,
 						"SingleResultTaskComponent.retrieved.second",
 						formattedDate,

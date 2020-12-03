@@ -23,7 +23,7 @@
 package com.aoindustries.noc.gui;
 
 import com.aoindustries.aoserv.client.AOServConnector;
-import static com.aoindustries.noc.gui.ApplicationResourcesAccessor.accessor;
+import com.aoindustries.i18n.Resources;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -47,6 +47,8 @@ public class TicketEditorFrame extends JFrame {
 
 	private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 
+	private static final Resources RESOURCES = Resources.getResources(TicketEditorFrame.class.getPackage());
+
 	private static final long serialVersionUID = 1L;
 
 	private final TicketEditor ticketEditor;
@@ -54,7 +56,7 @@ public class TicketEditorFrame extends JFrame {
 
 	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TicketEditorFrame(final NOC noc, final Integer ticketId) {
-		super(accessor.getMessage("TicketEditorFrame.title", ticketId));
+		super(RESOURCES.getMessage("TicketEditorFrame.title", ticketId));
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
