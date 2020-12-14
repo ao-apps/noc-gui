@@ -61,7 +61,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 
 	private static final Logger logger = Logger.getLogger(TableMultiResultTaskComponent.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(TableMultiResultTaskComponent.class.getPackage());
+	private static final Resources RESOURCES = Resources.getResources(TableMultiResultTaskComponent.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -192,8 +192,8 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 			final int rows = results.size();
 
 			final List<Object> allHeaders = new ArrayList<>(columnHeaders.size()+2);
-			allHeaders.add(RESOURCES.getMessage("TableMultiResultTaskComponent.time.header"));
-			allHeaders.add(RESOURCES.getMessage("TableMultiResultTaskComponent.latency.header"));
+			allHeaders.add(RESOURCES.getMessage("time.header"));
+			allHeaders.add(RESOURCES.getMessage("latency.header"));
 			allHeaders.addAll(columnHeaders);
 			final int columns = allHeaders.size();
 
@@ -248,7 +248,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 								alertLevel,
 								RESOURCES.getMessage(
 									//locale,
-									"TableMultiResultTaskComponent.time",
+									"time",
 									df.format(new Date(result.getTime()))
 								)
 							),

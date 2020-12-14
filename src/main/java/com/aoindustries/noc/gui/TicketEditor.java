@@ -116,7 +116,7 @@ public class TicketEditor extends JPanel implements TableListener {
 
 	private static final Logger logger = Logger.getLogger(TicketEditor.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(TicketEditor.class.getPackage());
+	private static final Resources RESOURCES = Resources.getResources(TicketEditor.class);
 
 	// <editor-fold defaultstate="collapsed" desc="Constants">
 	private static final String LAYOUT_DEF = "(ROW "
@@ -379,29 +379,29 @@ public class TicketEditor extends JPanel implements TableListener {
 		// Small Fields
 		JPanel smallFieldsPanel = new JPanel(new LabelledGridLayout(7, 1, 0, 1, 4, false));
 		// brand
-		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("TicketEditor.header.brand")));
+		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("header.brand")));
 		smallFieldsPanel.add(brandLabel);
 		// ticketNumber
-		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("TicketEditor.header.ticketNumber")));
+		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("header.ticketNumber")));
 		smallFieldsPanel.add(ticketNumberLabel);
 		// type
-		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("TicketEditor.header.type")));
+		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("header.type")));
 		typeComboBox.setEditable(false);
 		typeComboBox.addFocusListener(typeComboBoxFocusListener);
 		smallFieldsPanel.add(typeComboBox);
 		// status
-		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("TicketEditor.header.status")));
+		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("header.status")));
 		statusComboBox.setEditable(false);
 		statusComboBox.addFocusListener(statusComboBoxFocusListener);
 		smallFieldsPanel.add(statusComboBox);
 		// openDate
-		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("TicketEditor.header.openDate")));
+		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("header.openDate")));
 		smallFieldsPanel.add(openDateLabel);
 		// openedBy
-		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("TicketEditor.header.openedBy")));
+		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("header.openedBy")));
 		smallFieldsPanel.add(openedByLabel);
 		// account
-		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("TicketEditor.header.account")));
+		smallFieldsPanel.add(new JLabel(RESOURCES.getMessage("header.account")));
 		accountComboBox.setEditable(false);
 		accountComboBox.addFocusListener(accountComboBoxFocusListener);
 		smallFieldsPanel.add(accountComboBox);
@@ -428,7 +428,7 @@ public class TicketEditor extends JPanel implements TableListener {
 		JPanel summaryPanel = new JPanel(new BorderLayout());
 		summaryPanel.add(
 			new JLabel(
-				RESOURCES.getMessage("TicketEditor.summary.label"),
+				RESOURCES.getMessage("summary.label"),
 				SwingConstants.LEFT
 			)
 		);
@@ -456,7 +456,7 @@ public class TicketEditor extends JPanel implements TableListener {
 		JPanel internalNotesPanel = new JPanel(new BorderLayout());
 		internalNotesPanel.add(
 			new JLabel(
-				RESOURCES.getMessage("TicketEditor.internalNotes.label"),
+				RESOURCES.getMessage("internalNotes.label"),
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);

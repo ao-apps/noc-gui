@@ -61,7 +61,7 @@ import javax.swing.table.TableRowSorter;
 // TODO: Tab alert levels, like GatheringTab.java
 public class AlertsPane extends JPanel {
 
-	private static final Resources RESOURCES = Resources.getResources(AlertsPane.class.getPackage());
+	private static final Resources RESOURCES = Resources.getResources(AlertsPane.class);
 
 	/**
 	 * The maximum history size or {@link Integer#MAX_VALUE} for unlimited.
@@ -138,11 +138,11 @@ public class AlertsPane extends JPanel {
 
 		tableModel = new DefaultTableModel(
 			new String[] {
-				RESOURCES.getMessage("AlertsPane.time.header"),
-				RESOURCES.getMessage("AlertsPane.alertLevel.header"),
-				RESOURCES.getMessage("AlertsPane.alertCategory.header"),
-				RESOURCES.getMessage("AlertsPane.sourceDisplay.header"),
-				RESOURCES.getMessage("AlertsPane.alertMessage.header")
+				RESOURCES.getMessage("time.header"),
+				RESOURCES.getMessage("alertLevel.header"),
+				RESOURCES.getMessage("alertCategory.header"),
+				RESOURCES.getMessage("sourceDisplay.header"),
+				RESOURCES.getMessage("alertMessage.header")
 			},
 			0
 		) {
@@ -205,9 +205,9 @@ public class AlertsPane extends JPanel {
 						DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
 						value = df.format((Date)value);
 					} else if(column1 == COLUMN_ALERT_LEVEL) {
-						value = RESOURCES.getMessage("AlertsPane.alertLevel." + ((AlertLevel)value).name());
+						value = RESOURCES.getMessage("alertLevel." + ((AlertLevel)value).name());
 					} else if(column1 == COLUMN_ALERT_CATEGORY) {
-						value = RESOURCES.getMessage("AlertsPane.alertCategory." + ((AlertCategory)value).name());
+						value = RESOURCES.getMessage("alertCategory." + ((AlertCategory)value).name());
 					}
 					Component component = renderer.getTableCellRendererComponent(table1, value, isSelected, hasFocus, row1, column1);
 					if(!isSelected) {
@@ -272,7 +272,7 @@ public class AlertsPane extends JPanel {
 	void addToolBars(JToolBar toolBar) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		JButton buzzerTest = new JButton(RESOURCES.getMessage("AlertsPane.buzzerTest.label"));
+		JButton buzzerTest = new JButton(RESOURCES.getMessage("buzzerTest.label"));
 		toolBar.add(buzzerTest);
 		buzzerTest.addActionListener((ActionEvent e) -> {
 			// TODO: Call a method on the server, which will callback a method here, so buzzer only plays on successful bidirectional communication

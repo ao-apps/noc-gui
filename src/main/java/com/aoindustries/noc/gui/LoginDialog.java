@@ -74,7 +74,7 @@ import javax.swing.SwingUtilities;
  */
 final public class LoginDialog extends JDialog {
 
-	private static final Resources RESOURCES = Resources.getResources(LoginDialog.class.getPackage());
+	private static final Resources RESOURCES = Resources.getResources(LoginDialog.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -90,7 +90,7 @@ final public class LoginDialog extends JDialog {
 	private final JButton cancelButton;
 
 	public LoginDialog(NOC noc, Component owner) {
-		super((owner instanceof Frame) ? (Frame)owner : new JFrame(), RESOURCES.getMessage("LoginDialog.title"), true);
+		super((owner instanceof Frame) ? (Frame)owner : new JFrame(), RESOURCES.getMessage("title"), true);
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		assert owner != null;
 
@@ -102,12 +102,12 @@ final public class LoginDialog extends JDialog {
 
 		// Add the labels
 		JPanel P=new JPanel(new GridLayout(6, 1, 0, 2));
-		P.add(new JLabel(RESOURCES.getMessage("LoginDialog.server.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("LoginDialog.serverPort.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("LoginDialog.external.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("LoginDialog.localPort.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("LoginDialog.username.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("LoginDialog.password.prompt")));
+		P.add(new JLabel(RESOURCES.getMessage("server.prompt")));
+		P.add(new JLabel(RESOURCES.getMessage("serverPort.prompt")));
+		P.add(new JLabel(RESOURCES.getMessage("external.prompt")));
+		P.add(new JLabel(RESOURCES.getMessage("localPort.prompt")));
+		P.add(new JLabel(RESOURCES.getMessage("username.prompt")));
+		P.add(new JLabel(RESOURCES.getMessage("password.prompt")));
 		localContentPane.add(P, BorderLayout.WEST);
 
 		// Add the fields
@@ -126,8 +126,8 @@ final public class LoginDialog extends JDialog {
 		localContentPane.add(P, BorderLayout.CENTER);
 
 		P=new JPanel(new FlowLayout());
-		P.add(okButton=new JButton(RESOURCES.getMessage("LoginDialog.ok.label")));
-		P.add(cancelButton=new JButton(RESOURCES.getMessage("LoginDialog.cancel.label")));
+		P.add(okButton=new JButton(RESOURCES.getMessage("ok.label")));
+		P.add(cancelButton=new JButton(RESOURCES.getMessage("cancel.label")));
 		localContentPane.add(P, BorderLayout.SOUTH);
 
 		// Handle escape button
@@ -234,7 +234,7 @@ final public class LoginDialog extends JDialog {
 				} catch(ValidationException e) {
 					usernameField.selectAll();
 					usernameField.requestFocus();
-					new ErrorDialog(owner, RESOURCES.getMessage("LoginDialog.login.invalidUsername"), e).setVisible(true);
+					new ErrorDialog(owner, RESOURCES.getMessage("login.invalidUsername"), e).setVisible(true);
 					return;
 				}
 				final String password = new String(passwordField.getPassword());
@@ -329,7 +329,7 @@ final public class LoginDialog extends JDialog {
 							loginThread = null;
 						}
 						SwingUtilities.invokeLater(() -> {
-							new ErrorDialog(owner, RESOURCES.getMessage("LoginDialog.login.ioError"), err).setVisible(true);
+							new ErrorDialog(owner, RESOURCES.getMessage("login.ioError"), err).setVisible(true);
 							serverField.setEditable(true);
 							serverPortField.setEditable(true);
 							externalField.setEditable(true);
@@ -347,7 +347,7 @@ final public class LoginDialog extends JDialog {
 							loginThread = null;
 						}
 						SwingUtilities.invokeLater(() -> {
-							new ErrorDialog(owner, RESOURCES.getMessage("LoginDialog.login.rmiNotBoundError"), err).setVisible(true);
+							new ErrorDialog(owner, RESOURCES.getMessage("login.rmiNotBoundError"), err).setVisible(true);
 							serverField.setEditable(true);
 							serverPortField.setEditable(true);
 							externalField.setEditable(true);
@@ -367,7 +367,7 @@ final public class LoginDialog extends JDialog {
 							loginThread = null;
 						}
 						SwingUtilities.invokeLater(() -> {
-							new ErrorDialog(owner, RESOURCES.getMessage("LoginDialog.login.runtimeError"), t).setVisible(true);
+							new ErrorDialog(owner, RESOURCES.getMessage("login.runtimeError"), t).setVisible(true);
 							serverField.setEditable(true);
 							serverPortField.setEditable(true);
 							externalField.setEditable(true);

@@ -74,7 +74,7 @@ public class SystemsPane extends JPanel {
 
 	private static final Logger logger = Logger.getLogger(SystemsPane.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(SystemsPane.class.getPackage());
+	private static final Resources RESOURCES = Resources.getResources(SystemsPane.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -134,11 +134,11 @@ public class SystemsPane extends JPanel {
 	void addToolBars(JToolBar toolBar) {
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-		final String allLabel = RESOURCES.getMessage("SystemsPane.alertLevel.all.label");
-		final String lowLabel = RESOURCES.getMessage("SystemsPane.alertLevel.low.label");
-		final String mediumLabel = RESOURCES.getMessage("SystemsPane.alertLevel.medium.label");
-		final String highLabel = RESOURCES.getMessage("SystemsPane.alertLevel.high.label");
-		final String criticalLabel = RESOURCES.getMessage("SystemsPane.alertLevel.critical.label");
+		final String allLabel = RESOURCES.getMessage("alertLevel.all.label");
+		final String lowLabel = RESOURCES.getMessage("alertLevel.low.label");
+		final String mediumLabel = RESOURCES.getMessage("alertLevel.medium.label");
+		final String highLabel = RESOURCES.getMessage("alertLevel.high.label");
+		final String criticalLabel = RESOURCES.getMessage("alertLevel.critical.label");
 		JComboBox<String> alertLevel = new JComboBox<>(
 			new String[] {
 				allLabel,

@@ -59,7 +59,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 
 	private static final Logger logger = Logger.getLogger(SingleResultTaskComponent.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(SingleResultTaskComponent.class.getPackage());
+	private static final Resources RESOURCES = Resources.getResources(SingleResultTaskComponent.class);
 
 	final private NOC noc;
 	private SingleResultNode singleResultNode;
@@ -171,18 +171,18 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 					latency < 1000000
 					? RESOURCES.getMessage(
 						//locale,
-						"SingleResultTaskComponent.retrieved.micro",
+						"retrieved.micro",
 						formattedDate,
 						SQLUtility.formatDecimal3(latency)
 					) : latency < 1000000000
 					? RESOURCES.getMessage(
 						//locale,
-						"SingleResultTaskComponent.retrieved.milli",
+						"retrieved.milli",
 						formattedDate,
 						SQLUtility.formatDecimal3(latency/1000)
 					) : RESOURCES.getMessage(
 						//locale,
-						"SingleResultTaskComponent.retrieved.second",
+						"retrieved.second",
 						formattedDate,
 						SQLUtility.formatDecimal3(latency/1000000)
 					)

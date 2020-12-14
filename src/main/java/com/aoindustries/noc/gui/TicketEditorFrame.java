@@ -47,7 +47,7 @@ public class TicketEditorFrame extends JFrame {
 
 	private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(TicketEditorFrame.class.getPackage());
+	private static final Resources RESOURCES = Resources.getResources(TicketEditorFrame.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +56,7 @@ public class TicketEditorFrame extends JFrame {
 
 	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TicketEditorFrame(final NOC noc, final Integer ticketId) {
-		super(RESOURCES.getMessage("TicketEditorFrame.title", ticketId));
+		super(RESOURCES.getMessage("title", ticketId));
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
