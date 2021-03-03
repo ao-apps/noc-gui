@@ -330,7 +330,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			</dependency>
 			<!-- Runtime Transitive -->
 			<dependency>
-				<groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId><version>3.10.0</version>
+				<groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId><version>3.11.0</version>
 			</dependency>
 			<dependency>
 				<!-- Stay on 5.1.* for <= MySQL 5.1 support -->
