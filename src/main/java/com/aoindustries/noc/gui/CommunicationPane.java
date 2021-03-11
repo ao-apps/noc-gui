@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2019, 2020  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2019, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -700,7 +700,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 							final Tree<Brand> brandTree;
 							final Tree<Reseller> resellerTree;
 							final List<Ticket> allTickets;
-							final Map<Ticket,Administrator> ticketAssignments;
+							final Map<Ticket, Administrator> ticketAssignments;
 							final List<TicketType> ticketTypes;
 							final List<Status> ticketStatuses;
 							final List<Priority> ticketPriorities;
@@ -1597,7 +1597,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 	// </editor-fold>
 
 	// <editor-fold defaultstate="collapsed" desc="Tickets Frames">
-	private final Map<Integer,TicketEditorFrame> ticketEditorFrames = new HashMap<>();
+	private final Map<Integer, TicketEditorFrame> ticketEditorFrames = new HashMap<>();
 
 	/**
 	 * Must run on Swing event thread.

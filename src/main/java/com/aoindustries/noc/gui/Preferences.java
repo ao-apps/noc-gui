@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -81,7 +81,7 @@ public class Preferences {
 	private String communicationMultiSplitLayoutModelLayoutDef;
 
 	private final Map<TicketEditor.PreferencesSet,byte[]> ticketEditorMultiSplitLayoutModels;
-	private final Map<TicketEditor.PreferencesSet,String> ticketEditorMultiSplitLayoutModelLayoutDefs;
+	private final Map<TicketEditor.PreferencesSet, String> ticketEditorMultiSplitLayoutModelLayoutDefs;
 
 	private Rectangle ticketEditorFrameBounds;
 

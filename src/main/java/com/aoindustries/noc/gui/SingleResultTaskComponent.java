@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2008-2013, 2016, 2018, 2019, 2020  AO Industries, Inc.
+ * Copyright (C) 2008-2013, 2016, 2018, 2019, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -187,7 +187,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 						SQLUtility.formatDecimal3(latency/1000000)
 					)
 				);
-				Function<Locale,String> error = singleResult.getError();
+				Function<Locale, String> error = singleResult.getError();
 				if(error != null) {
 					text.append("\n----------------------------------------------------------\n").append(error.apply(Locale.getDefault()));
 				}

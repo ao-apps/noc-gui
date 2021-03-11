@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2008-2013, 2016, 2018, 2019, 2020  AO Industries, Inc.
+ * Copyright (C) 2008-2013, 2016, 2018, 2019, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -72,7 +72,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
 	final private JLabel retrievedLabel;
 	// The JTable is swapped-out based on the column names
-	final private Map<List<String>,JTable> tables = new HashMap<>();
+	final private Map<List<String>, JTable> tables = new HashMap<>();
 	// The current table in the scrollPane
 	private JTable table;
 	final private JScrollPane scrollPane;

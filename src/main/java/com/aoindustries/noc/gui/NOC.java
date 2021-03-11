@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -414,7 +414,7 @@ public class NOC {
 		} else throw new AssertionError("Both parent and singleFrame are null");
 	}
 
-	private static final Map<String,Image> getImageFromResourcesCache = new HashMap<>();
+	private static final Map<String, Image> getImageFromResourcesCache = new HashMap<>();
 
 	static Image getImageFromResources(String name) throws IOException {
 		synchronized(getImageFromResourcesCache) {
