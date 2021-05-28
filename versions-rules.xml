@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 noc-gui - Graphical User Interface for Network Operations Center.
-Copyright (C) 2020  AO Industries, Inc.
+Copyright (C) 2020, 2021  AO Industries, Inc.
 	support@aoindustries.com
 	7262 Bull Pen Cir
 	Mobile, AL 36695
@@ -28,16 +28,14 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 	xsi:schemaLocation="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0 https://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd"
 >
 	<rules>
-		<rule groupId="mysql" artifactId="mysql-connector-java" comparisonMethod="maven">
-			<!-- Stay on 5.1.* for <= MySQL 5.1 support -->
-			<ignoreVersions>
-				<ignoreVersion type="regex">6\..*</ignoreVersion>
-				<ignoreVersion type="regex">8\..*</ignoreVersion>
-			</ignoreVersions>
-		</rule>
 		<rule groupId="org.postgresql" artifactId="postgresql" comparisonMethod="maven">
 			<ignoreVersions>
 				<ignoreVersion type="regex">.*\.jre[67]</ignoreVersion>
+			</ignoreVersions>
+		</rule>
+		<rule groupId="com.google.protobuf" artifactId="protobuf-java" comparisonMethod="maven">
+			<ignoreVersions>
+				<ignoreVersion type="regex">.*-rc-[0-9]*</ignoreVersion>
 			</ignoreVersions>
 		</rule>
 		<rule groupId="org.slf4j" artifactId="slf4j-api" comparisonMethod="maven">
