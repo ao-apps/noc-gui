@@ -1,6 +1,6 @@
 //
 // noc-gui - Graphical User Interface for Network Operations Center.
-// Copyright (C) 2008, 2013, 2020  AO Industries, Inc.
+// Copyright (C) 2008, 2013, 2020, 2021  AO Industries, Inc.
 //     support@aoindustries.com
 //     7262 Bull Pen Cir
 //     Mobile, AL 36695
@@ -53,7 +53,7 @@ grant codeBase "file:${user.dir}/noc-gui.jar" {
 	permission java.util.PropertyPermission     "user.name",                       "read";
 	permission java.util.PropertyPermission     "user.timezone",                   "write";
 };
-grant codeBase "file:${user.dir}/lib/aocode-public.jar" {
+grant codeBase "file:${user.dir}/lib/ao-hodgepodge.jar" {
 	permission java.awt.AWTPermission           "accessEventQueue";
 	permission java.awt.AWTPermission           "showWindowWithoutWarningBanner";
 	permission java.lang.RuntimePermission      "modifyThreadGroup";
