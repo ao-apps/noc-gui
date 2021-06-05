@@ -22,13 +22,13 @@
  */
 package com.aoindustries.noc.gui;
 
-import com.aoindustries.i18n.Resources;
+import com.aoapps.lang.i18n.Resources;
+import com.aoapps.sql.SQLUtility;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.Node;
 import com.aoindustries.noc.monitor.common.SingleResult;
 import com.aoindustries.noc.monitor.common.SingleResultListener;
 import com.aoindustries.noc.monitor.common.SingleResultNode;
-import com.aoindustries.sql.SQLUtility;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.rmi.RemoteException;

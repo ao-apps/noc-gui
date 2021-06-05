@@ -22,10 +22,10 @@
  */
 package com.aoindustries.noc.gui;
 
+import com.aoapps.lang.validation.ValidationException;
 import com.aoindustries.aoserv.client.account.User;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import com.aoindustries.noc.monitor.common.Monitor;
-import com.aoindustries.validation.ValidationException;
 import java.awt.Rectangle;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;

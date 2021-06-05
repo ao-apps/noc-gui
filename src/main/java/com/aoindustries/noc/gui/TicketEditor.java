@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2009-2013, 2016, 2017, 2018, 2019, 2020  AO Industries, Inc.
+ * Copyright (C) 2009-2013, 2016, 2017, 2018, 2019, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -22,6 +22,12 @@
  */
 package com.aoindustries.noc.gui;
 
+import com.aoapps.hodgepodge.awt.LabelledGridLayout;
+import com.aoapps.hodgepodge.swing.SynchronizingComboBoxModel;
+import com.aoapps.hodgepodge.table.Table;
+import com.aoapps.hodgepodge.table.TableListener;
+import com.aoapps.lang.i18n.Resources;
+import com.aoapps.sql.SQLUtility;
 import com.aoindustries.aoserv.client.AOServConnector;
 import com.aoindustries.aoserv.client.account.Account;
 import com.aoindustries.aoserv.client.account.Administrator;
@@ -29,12 +35,6 @@ import com.aoindustries.aoserv.client.reseller.Brand;
 import com.aoindustries.aoserv.client.ticket.Status;
 import com.aoindustries.aoserv.client.ticket.Ticket;
 import com.aoindustries.aoserv.client.ticket.TicketType;
-import com.aoindustries.awt.LabelledGridLayout;
-import com.aoindustries.i18n.Resources;
-import com.aoindustries.sql.SQLUtility;
-import com.aoindustries.swing.SynchronizingComboBoxModel;
-import com.aoindustries.table.Table;
-import com.aoindustries.table.TableListener;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.FocusAdapter;
