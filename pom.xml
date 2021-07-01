@@ -373,7 +373,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			</dependency>
 			<!-- Runtime Transitive -->
 			<dependency>
-				<groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId><version>3.13.0</version>
+				<groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId><version>3.15.0</version>
 			</dependency>
 			<dependency>
 				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>8.0.25</version>
