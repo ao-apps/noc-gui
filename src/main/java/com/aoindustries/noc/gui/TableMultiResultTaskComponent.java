@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -61,7 +62,8 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 
 	private static final Logger logger = Logger.getLogger(TableMultiResultTaskComponent.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(TableMultiResultTaskComponent.class);
+	private static final Resources RESOURCES =
+		Resources.getResources(ResourceBundle::getBundle, TableMultiResultTaskComponent.class);
 
 	private static final long serialVersionUID = 1L;
 

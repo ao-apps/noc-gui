@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2020, 2021  AO Industries, Inc.
+ * Copyright (C) 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -20,21 +20,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with noc-gui.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.aoindustries.noc.gui;
-
-import com.aoapps.hodgepodge.i18n.EditableResourceBundle;
-import java.util.Locale;
-
-/**
- * @author  AO Industries, Inc.
- */
-public final class ApplicationResources_ja extends EditableResourceBundle {
-
-	public ApplicationResources_ja() {
-		super(
-			Locale.JAPANESE,
-			ApplicationResources.bundleSet,
-			ApplicationResources.getSourceFile("ApplicationResources_ja.properties")
-		);
-	}
+module com.aoindustries.noc.gui.devel {
+	exports com.aoindustries.noc.gui.i18n;
+	// Direct
+	requires com.aoapps.hodgepodge; // <groupId>com.aoapps</groupId><artifactId>ao-hodgepodge</artifactId>
 }

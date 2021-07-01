@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -62,7 +63,8 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
 	private static final Logger logger = Logger.getLogger(TableResultTaskComponent.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(TableResultTaskComponent.class);
+	private static final Resources RESOURCES =
+		Resources.getResources(ResourceBundle::getBundle, TableResultTaskComponent.class);
 
 	private static final long serialVersionUID = 1L;
 

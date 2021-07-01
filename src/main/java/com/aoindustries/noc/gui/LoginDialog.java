@@ -53,6 +53,7 @@ import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -74,7 +75,7 @@ import javax.swing.SwingUtilities;
  */
 final public class LoginDialog extends JDialog {
 
-	private static final Resources RESOURCES = Resources.getResources(LoginDialog.class);
+	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, LoginDialog.class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -150,8 +151,8 @@ final public class LoginDialog extends JDialog {
 		Rectangle parentBounds=owner.getBounds();
 		Dimension size=getSize();
 		setBounds(
-			parentBounds.x+(parentBounds.width-size.width)/2, 
-			parentBounds.y+(parentBounds.height-size.height)/2, 
+			parentBounds.x+(parentBounds.width-size.width)/2,
+			parentBounds.y+(parentBounds.height-size.height)/2,
 			size.width,
 			size.height
 		);

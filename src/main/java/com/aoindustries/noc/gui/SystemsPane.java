@@ -46,6 +46,7 @@ import java.rmi.server.RMIClientSocketFactory;
 import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -74,7 +75,7 @@ public class SystemsPane extends JPanel {
 
 	private static final Logger logger = Logger.getLogger(SystemsPane.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(SystemsPane.class);
+	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, SystemsPane.class);
 
 	private static final long serialVersionUID = 1L;
 

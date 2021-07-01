@@ -33,6 +33,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 	<packaging>bundle</packaging>
 
 	<properties>
+		<module.name>com.aoindustries.noc.gui</module.name>
 		<javadoc.breadcrumbs><![CDATA[<a target="${javadoc.target}" href="https://aoindustries.com/noc/">NOC</a>
 / <a target="${javadoc.target}" href="${project.url}">GUI</a>]]></javadoc.breadcrumbs>
 		<description.html><![CDATA[Graphical User Interface for <a target="${javadoc.target}" href="https://aoindustries.com/noc/">Network Operations Center</a>.]]></description.html>
@@ -235,6 +236,26 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.felix</groupId><artifactId>maven-bundle-plugin</artifactId>
+						<configuration>
+							<instructions>
+								<!--
+									Releases use "Automatic-Module-Name" instead of "module-info.java"
+									since has direct dependencies that are not yet modularized.
+								-->
+								<Automatic-Module-Name>${module.name}</Automatic-Module-Name>
+								<Private-Package>!.</Private-Package>
+							</instructions>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 	<dependencyManagement>
@@ -269,6 +290,10 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			</dependency>
 			<dependency>
 				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId><version>${swingx-core.version}</version>
+				<exclusions>
+					<!-- TODO: Java modules do not supported split packages: -->
+					<exclusion><groupId>org.swinglabs.swingx</groupId><artifactId>swingx-plaf</artifactId></exclusion>
+				</exclusions>
 			</dependency>
 			<!-- Transitive -->
 			<dependency>
@@ -337,9 +362,11 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 			<dependency>
 				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-painters</artifactId><version>1.6.5-1</version>
 			</dependency>
+			<!-- TODO: Java modules do not supported split packages:
 			<dependency>
 				<groupId>org.swinglabs.swingx</groupId><artifactId>swingx-plaf</artifactId><version>1.6.5-1</version>
 			</dependency>
+			-->
 			<!-- Runtime Direct -->
 			<dependency>
 				<groupId>org.slf4j</groupId><artifactId>slf4j-jdk14</artifactId><version>1.7.30</version>

@@ -57,6 +57,7 @@ import java.rmi.server.RMIServerSocketFactory;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -80,7 +81,7 @@ public class NOC {
 
 	private static final Logger logger = Logger.getLogger(NOC.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(NOC.class);
+	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, NOC.class);
 
 	/**
 	 * In Java 7 and Debian 7, the keyboard stops working in the noc-gui the first

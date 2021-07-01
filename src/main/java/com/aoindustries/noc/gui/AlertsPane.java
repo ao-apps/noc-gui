@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -61,7 +62,7 @@ import javax.swing.table.TableRowSorter;
 // TODO: Tab alert levels, like GatheringTab.java
 public class AlertsPane extends JPanel {
 
-	private static final Resources RESOURCES = Resources.getResources(AlertsPane.class);
+	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, AlertsPane.class);
 
 	/**
 	 * The maximum history size or {@link Integer#MAX_VALUE} for unlimited.

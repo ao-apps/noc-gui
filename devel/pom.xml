@@ -33,8 +33,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 	<packaging>bundle</packaging>
 
 	<properties>
-		<javadoc.breadcrumbs><![CDATA[<a target="${javadoc.target}" href="https://aoindustries.com/noc/">NOC</a>
-/ <a target="${javadoc.target}" href="${project.url}">GUI Devel</a>]]></javadoc.breadcrumbs>
+		<module.name>com.aoindustries.noc.gui.devel</module.name>
 		<!-- TODO: Remove once moved to oss.aoapps.com -->
 		<google.analytics.trackingId>UA-86871646-1</google.analytics.trackingId>
 	</properties>
@@ -93,38 +92,6 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 		</repository>
 		-->
 	</distributionManagement>
-
-	<build>
-		<plugins>
-			<!-- Never generate Javadocs: local development only -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId><artifactId>maven-javadoc-plugin</artifactId>
-				<configuration><skip>true</skip></configuration>
-			</plugin>
-			<!-- Never attach sources: local development only -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId><artifactId>maven-source-plugin</artifactId>
-				<configuration><skipSource>true</skipSource></configuration>
-			</plugin>
-			<!-- Never sign: local development only -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId><artifactId>maven-gpg-plugin</artifactId>
-				<configuration><skip>true</skip></configuration>
-			</plugin>
-			<!-- Never deploy: local development only -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId><artifactId>maven-deploy-plugin</artifactId>
-				<configuration><skip>true</skip></configuration>
-			</plugin>
-			<!-- Never stage: local development only -->
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId><artifactId>nexus-staging-maven-plugin</artifactId>
-				<configuration>
-					<skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 
 	<dependencyManagement>
 		<dependencies>

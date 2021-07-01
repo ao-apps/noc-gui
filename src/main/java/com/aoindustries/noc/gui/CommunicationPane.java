@@ -69,6 +69,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -115,7 +116,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 
 	private static final Logger logger = Logger.getLogger(CommunicationPane.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(CommunicationPane.class);
+	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, CommunicationPane.class);
 
 	// <editor-fold defaultstate="collapsed" desc="Constants">
 	private static final String LAYOUT_DEF = "(ROW "

@@ -46,6 +46,7 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -116,7 +117,7 @@ public class TicketEditor extends JPanel implements TableListener {
 
 	private static final Logger logger = Logger.getLogger(TicketEditor.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(TicketEditor.class);
+	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, TicketEditor.class);
 
 	// <editor-fold defaultstate="collapsed" desc="Constants">
 	private static final String LAYOUT_DEF = "(ROW "
@@ -484,7 +485,7 @@ public class TicketEditor extends JPanel implements TableListener {
 
 	/**
 	 * Shows the specified ticket or empty if <code>null</code>.
-	 * 
+	 *
 	 * This may be called by any thread, if called by the Swing event dispatch
 	 * thread, it will recall itself in the background using ExecutorService to
 	 * retrieve data.

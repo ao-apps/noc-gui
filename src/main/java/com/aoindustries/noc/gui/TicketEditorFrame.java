@@ -32,6 +32,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -47,7 +48,8 @@ public class TicketEditorFrame extends JFrame {
 
 	private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(TicketEditorFrame.class);
+	private static final Resources RESOURCES =
+		Resources.getResources(ResourceBundle::getBundle, TicketEditorFrame.class);
 
 	private static final long serialVersionUID = 1L;
 
