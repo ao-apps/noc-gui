@@ -420,8 +420,8 @@ public class NOC {
 	static Image getImageFromResources(String name) throws IOException {
 		synchronized(getImageFromResourcesCache) {
 			Image image = getImageFromResourcesCache.get(name);
-			if(image==null) {
-				image = Images.getImageFromResources(NOC.class, name);
+			if(image == null) {
+				image = Images.getImageFromResources(NOC.class::getResourceAsStream, name);
 				getImageFromResourcesCache.put(name, image);
 			}
 			return image;

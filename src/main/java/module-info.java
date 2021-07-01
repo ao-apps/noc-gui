@@ -22,7 +22,6 @@
  */
 module com.aoindustries.noc.gui {
 	exports com.aoindustries.noc.gui;
-	opens com.aoindustries.noc.gui to com.aoapps.hodgepodge; // For Images.getImageFromResources
 	// Direct
 	requires com.aoapps.collections; // <groupId>com.aoapps</groupId><artifactId>ao-collections</artifactId>
 	requires com.aoapps.hodgepodge; // <groupId>com.aoapps</groupId><artifactId>ao-hodgepodge</artifactId>
