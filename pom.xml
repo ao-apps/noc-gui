@@ -37,6 +37,10 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 		<javadoc.breadcrumbs><![CDATA[<a target="${javadoc.target}" href="https://aoindustries.com/noc/">NOC</a>
 / <a target="${javadoc.target}" href="${project.url}">GUI</a>]]></javadoc.breadcrumbs>
 		<description.html><![CDATA[Graphical User Interface for <a target="${javadoc.target}" href="https://aoindustries.com/noc/">Network Operations Center</a>.]]></description.html>
+		<!-- SonarCloud.io -->
+		<sonar.projectKey>com.aoapps.platform:noc-gui<!-- TODO: ${project.groupId}:${project.artifactId} --></sonar.projectKey>
+		<sonar.organization>aoindustries</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<!-- Dependencies -->
 		<swingx-core.version>1.6.5-1</swingx-core.version>
 		<!-- TODO: Remove once moved to oss.aoapps.com -->
