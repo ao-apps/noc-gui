@@ -9,6 +9,12 @@
 
 [![Build](https://github.com/aoindustries/noc-gui/workflows/Build/badge.svg?branch=master)](https://github.com/aoindustries/noc-gui/actions?query=workflow%3ABuild)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.aoindustries/noc-gui/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.aoindustries/noc-gui)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps.platform%3Anoc-gui&metric=alert_status)](https://sonarcloud.io/dashboard?branch=master&id=com.aoapps.platform%3Anoc-gui)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps.platform%3Anoc-gui&metric=ncloc)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps.platform%3Anoc-gui&metric=ncloc)  
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps.platform%3Anoc-gui&metric=reliability_rating)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps.platform%3Anoc-gui&metric=Reliability)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps.platform%3Anoc-gui&metric=security_rating)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps.platform%3Anoc-gui&metric=Security)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps.platform%3Anoc-gui&metric=sqale_rating)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps.platform%3Anoc-gui&metric=Maintainability)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?branch=master&project=com.aoapps.platform%3Anoc-gui&metric=coverage)](https://sonarcloud.io/component_measures?branch=master&id=com.aoapps.platform%3Anoc-gui&metric=Coverage)
 
 Graphical User Interface for [Network Operations Center](https://github.com/aoindustries/noc).
 
