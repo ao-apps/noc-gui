@@ -34,7 +34,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 
 	<properties>
 		<module.name>com.aoindustries.noc.gui.devel</module.name>
-		<!-- TODO: Remove once moved to oss.aoapps.com -->
+		<!-- TODO: Remove once moved to platform.aoapps.com -->
 		<google.analytics.trackingId>UA-86871646-1</google.analytics.trackingId>
 		<!-- com.aoindustries is on original Sonatype Nexus Repository Manager -->
 		<nexusUrl>https://oss.sonatype.org/</nexusUrl>
