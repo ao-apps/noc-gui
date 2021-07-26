@@ -57,7 +57,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 						modes, <code>module-info.java</code> does not perform any transitive requires.
 					</li>
 					<li>
-						Updated MySQL JDBC Drivers to 8.0.25.  Please note, our internal packaging may still use older
+						Updated MySQL JDBC Drivers to 8.0.26.  Please note, our internal packaging may still use older
 						drivers for compatibility with legacy applications that are not yet on MySQL 5.6 or newer.
 					</li>
 				</ul>
