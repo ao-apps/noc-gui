@@ -194,7 +194,7 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId><artifactId>maven-javadoc-plugin</artifactId>
 						<configuration>
-							<offlineLinks>
+							<offlineLinks combine.children="append">
 								<!-- Direct -->
 								<offlineLink>
 									<url>https://oss.aoapps.com/collections/apidocs/</url>
@@ -235,11 +235,6 @@ along with noc-gui.  If not, see <http://www.gnu.org/licenses />.
 								<offlineLink>
 									<url>https://javadoc.io/doc/org.swinglabs.swingx/swingx-core/${swingx-core.version}/</url>
 									<location>${project.build.directory}/offlineLinks/org.swinglabs.swingx/swingx-core</location>
-								</offlineLink>
-								<!-- Java SE -->
-								<offlineLink>
-									<url>${javadoc.link.javase}</url>
-									<location>${project.build.directory}/offlineLinks/com/aoapps/javadoc/offline/javase/${javase.release}</location>
 								</offlineLink>
 							</offlineLinks>
 						</configuration>
