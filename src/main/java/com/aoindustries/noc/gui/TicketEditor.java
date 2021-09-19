@@ -117,7 +117,7 @@ public class TicketEditor extends JPanel implements TableListener {
 
 	private static final Logger logger = Logger.getLogger(TicketEditor.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, TicketEditor.class);
+	private static final Resources RESOURCES = Resources.getResources(TicketEditor.class, ResourceBundle::getBundle);
 
 	// <editor-fold defaultstate="collapsed" desc="Constants">
 	private static final String LAYOUT_DEF = "(ROW "

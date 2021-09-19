@@ -75,7 +75,7 @@ import javax.swing.SwingUtilities;
  */
 final public class LoginDialog extends JDialog {
 
-	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, LoginDialog.class);
+	private static final Resources RESOURCES = Resources.getResources(LoginDialog.class, ResourceBundle::getBundle);
 
 	private static final long serialVersionUID = 1L;
 

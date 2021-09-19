@@ -116,7 +116,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 
 	private static final Logger logger = Logger.getLogger(CommunicationPane.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, CommunicationPane.class);
+	private static final Resources RESOURCES = Resources.getResources(CommunicationPane.class, ResourceBundle::getBundle);
 
 	// <editor-fold defaultstate="collapsed" desc="Constants">
 	private static final String LAYOUT_DEF = "(ROW "

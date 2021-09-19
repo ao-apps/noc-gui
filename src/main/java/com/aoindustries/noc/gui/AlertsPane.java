@@ -62,7 +62,7 @@ import javax.swing.table.TableRowSorter;
 // TODO: Tab alert levels, like GatheringTab.java
 public class AlertsPane extends JPanel {
 
-	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, AlertsPane.class);
+	private static final Resources RESOURCES = Resources.getResources(AlertsPane.class, ResourceBundle::getBundle);
 
 	/**
 	 * The maximum history size or {@link Integer#MAX_VALUE} for unlimited.

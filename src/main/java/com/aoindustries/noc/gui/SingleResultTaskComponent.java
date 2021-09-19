@@ -61,7 +61,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 	private static final Logger logger = Logger.getLogger(SingleResultTaskComponent.class.getName());
 
 	private static final Resources RESOURCES =
-		Resources.getResources(ResourceBundle::getBundle, SingleResultTaskComponent.class);
+		Resources.getResources(SingleResultTaskComponent.class, ResourceBundle::getBundle);
 
 	final private NOC noc;
 	private SingleResultNode singleResultNode;

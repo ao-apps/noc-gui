@@ -64,7 +64,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 	private static final Logger logger = Logger.getLogger(TableResultTaskComponent.class.getName());
 
 	private static final Resources RESOURCES =
-		Resources.getResources(ResourceBundle::getBundle, TableResultTaskComponent.class);
+		Resources.getResources(TableResultTaskComponent.class, ResourceBundle::getBundle);
 
 	private static final long serialVersionUID = 1L;
 
