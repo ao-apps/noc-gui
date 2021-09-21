@@ -75,7 +75,7 @@ public class SystemsPane extends JPanel {
 
 	private static final Logger logger = Logger.getLogger(SystemsPane.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(SystemsPane.class, ResourceBundle::getBundle);
+	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, SystemsPane.class);
 
 	private static final long serialVersionUID = 1L;
 

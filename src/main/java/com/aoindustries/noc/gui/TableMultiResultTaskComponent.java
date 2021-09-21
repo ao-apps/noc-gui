@@ -63,7 +63,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 	private static final Logger logger = Logger.getLogger(TableMultiResultTaskComponent.class.getName());
 
 	private static final Resources RESOURCES =
-		Resources.getResources(TableMultiResultTaskComponent.class, ResourceBundle::getBundle);
+		Resources.getResources(ResourceBundle::getBundle, TableMultiResultTaskComponent.class);
 
 	private static final long serialVersionUID = 1L;
 

@@ -81,7 +81,7 @@ public class NOC {
 
 	private static final Logger logger = Logger.getLogger(NOC.class.getName());
 
-	private static final Resources RESOURCES = Resources.getResources(NOC.class, ResourceBundle::getBundle);
+	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, NOC.class);
 
 	/**
 	 * In Java 7 and Debian 7, the keyboard stops working in the noc-gui the first

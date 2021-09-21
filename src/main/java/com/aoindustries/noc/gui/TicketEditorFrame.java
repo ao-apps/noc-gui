@@ -49,7 +49,7 @@ public class TicketEditorFrame extends JFrame {
 	private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 
 	private static final Resources RESOURCES =
-		Resources.getResources(TicketEditorFrame.class, ResourceBundle::getBundle);
+		Resources.getResources(ResourceBundle::getBundle, TicketEditorFrame.class);
 
 	private static final long serialVersionUID = 1L;
 
