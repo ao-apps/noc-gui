@@ -68,16 +68,16 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
 	private static final long serialVersionUID = 1L;
 
-	final private NOC noc;
+	private final NOC noc;
 	private TableResultNode tableResultNode;
 	private JComponent validationComponent;
 
-	final private JLabel retrievedLabel;
+	private final JLabel retrievedLabel;
 	// The JTable is swapped-out based on the column names
-	final private Map<List<String>, JTable> tables = new HashMap<>();
+	private final Map<List<String>, JTable> tables = new HashMap<>();
 	// The current table in the scrollPane
 	private JTable table;
-	final private JScrollPane scrollPane;
+	private final JScrollPane scrollPane;
 
 	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TableResultTaskComponent(NOC noc) {
@@ -99,8 +99,8 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 		return this;
 	}
 
-	final private Object tableResultListenerLock = new Object();
-	final private TableResultListener tableResultListener = (TableResult tableResult) -> {
+	private final Object tableResultListenerLock = new Object();
+	private final TableResultListener tableResultListener = (TableResult tableResult) -> {
 		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 		SwingUtilities.invokeLater(() -> {
 			updateValue(tableResult);

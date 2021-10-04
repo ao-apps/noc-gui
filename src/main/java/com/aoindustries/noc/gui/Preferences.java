@@ -57,7 +57,7 @@ public class Preferences {
 		TABS
 	}
 
-	static private final java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(Preferences.class);
+	private static final java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(Preferences.class);
 
 	private final NOC noc;
 

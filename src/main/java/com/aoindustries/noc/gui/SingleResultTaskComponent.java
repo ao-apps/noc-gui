@@ -63,12 +63,12 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 	private static final Resources RESOURCES =
 		Resources.getResources(ResourceBundle::getBundle, SingleResultTaskComponent.class);
 
-	final private NOC noc;
+	private final NOC noc;
 	private SingleResultNode singleResultNode;
 	private JComponent validationComponent;
 
-	final private JScrollPane scrollPane;
-	final private JTextArea textArea;
+	private final JScrollPane scrollPane;
+	private final JTextArea textArea;
 
 	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public SingleResultTaskComponent(NOC noc) {
@@ -90,7 +90,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 		return this;
 	}
 
-	final private SingleResultListener singleResultListener = (final SingleResult singleResult) -> {
+	private final SingleResultListener singleResultListener = (final SingleResult singleResult) -> {
 		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 		SwingUtilities.invokeLater(() -> {
 			updateValue(singleResult);

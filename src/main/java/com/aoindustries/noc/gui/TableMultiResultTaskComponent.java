@@ -67,15 +67,15 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 
 	private static final long serialVersionUID = 1L;
 
-	final private NOC noc;
+	private final NOC noc;
 	private TableMultiResultNode<? extends TableMultiResult> tableMultiResultNode;
 	private JComponent validationComponent;
 
 	// The JTable is swapped-out based on the column names
-	final private Map<List<?>, JTable> tables = new HashMap<>();
+	private final Map<List<?>, JTable> tables = new HashMap<>();
 	// The current table in the scrollPane
 	private JTable table;
-	final private JScrollPane scrollPane;
+	private final JScrollPane scrollPane;
 
 	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TableMultiResultTaskComponent(NOC noc) {
@@ -94,7 +94,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 		return this;
 	}
 
-	final private TableMultiResultListener<TableMultiResult> tableMultiResultListener = new TableMultiResultListener<TableMultiResult>() {
+	private final TableMultiResultListener<TableMultiResult> tableMultiResultListener = new TableMultiResultListener<TableMultiResult>() {
 		@Override
 		public void tableMultiResultAdded(final TableMultiResult tableMultiResult) {
 			assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
@@ -115,7 +115,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 			}
 		}
 	};
-	volatile private boolean tableMultiResultListenerExported = false;
+	private volatile boolean tableMultiResultListenerExported = false;
 
 	@Override
 	public void start(Node node, JComponent validationComponent) {

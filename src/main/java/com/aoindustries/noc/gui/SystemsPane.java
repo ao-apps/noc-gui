@@ -252,7 +252,7 @@ public class SystemsPane extends JPanel {
 	}
 
 	// Should only be updated from the Swing event thread
-	volatile private TreeListener treeListener;
+	private volatile TreeListener treeListener;
 
 	/**
 	 * start() should only be called when we have a login established.
@@ -499,7 +499,7 @@ public class SystemsPane extends JPanel {
 
 		private static final long serialVersionUID = 1L;
 
-		final private Node node;
+		private final Node node;
 
 		private AlertLevel alertLevel = AlertLevel.UNKNOWN;
 

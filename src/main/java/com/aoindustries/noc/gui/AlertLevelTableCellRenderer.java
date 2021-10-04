@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2008-2013, 2016, 2020  AO Industries, Inc.
+ * Copyright (C) 2008-2013, 2016, 2020, 2021  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -36,7 +36,7 @@ import javax.swing.table.TableCellRenderer;
 class AlertLevelTableCellRenderer implements TableCellRenderer {
 
 	// TODO: Should these colors go on the enum directly?
-	final static Color
+	static final Color
 		unknownColor = Color.LIGHT_GRAY,
 		criticalColor = Color.RED,
 		highColor = Color.ORANGE.darker(),

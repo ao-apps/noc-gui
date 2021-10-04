@@ -73,7 +73,7 @@ import javax.swing.SwingUtilities;
  *
  * @author  AO Industries, Inc.
  */
-final public class LoginDialog extends JDialog {
+public final class LoginDialog extends JDialog {
 
 	private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, LoginDialog.class);
 

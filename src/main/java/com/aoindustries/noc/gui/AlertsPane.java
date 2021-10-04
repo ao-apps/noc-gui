@@ -100,11 +100,11 @@ public class AlertsPane extends JPanel {
 	}
 	final NOC noc;
 
-	final private Buzzer buzzer = new Buzzer(this);
+	private final Buzzer buzzer = new Buzzer(this);
 
-	final private DefaultTableModel tableModel;
-	final private JScrollPane scrollPane;
-	final private JTable table;
+	private final DefaultTableModel tableModel;
+	private final JScrollPane scrollPane;
+	private final JTable table;
 
 	static class Alert {
 		final long time = System.currentTimeMillis();
@@ -128,7 +128,7 @@ public class AlertsPane extends JPanel {
 	}
 
 	// Only accessed by Swing event dispatch thread, no additional synchronization necessary
-	final private List<Alert> history = new ArrayList<>();
+	private final List<Alert> history = new ArrayList<>();
 
 	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public AlertsPane(NOC noc) {
