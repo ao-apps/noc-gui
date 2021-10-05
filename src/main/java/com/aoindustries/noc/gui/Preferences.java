@@ -80,7 +80,7 @@ public class Preferences {
 	private byte[] communicationMultiSplitLayoutModel;
 	private String communicationMultiSplitLayoutModelLayoutDef;
 
-	private final Map<TicketEditor.PreferencesSet,byte[]> ticketEditorMultiSplitLayoutModels;
+	private final Map<TicketEditor.PreferencesSet, byte[]> ticketEditorMultiSplitLayoutModels;
 	private final Map<TicketEditor.PreferencesSet, String> ticketEditorMultiSplitLayoutModelLayoutDefs;
 
 	private Rectangle ticketEditorFrameBounds;

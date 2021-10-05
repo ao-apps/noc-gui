@@ -79,7 +79,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 
 	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public TableMultiResultTaskComponent(NOC noc) {
-		super(new GridLayout(1,0));
+		super(new GridLayout(1, 0));
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 		this.noc = noc;
 

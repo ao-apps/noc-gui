@@ -72,7 +72,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 
 	@SuppressWarnings("OverridableMethodCallInConstructor")
 	public SingleResultTaskComponent(NOC noc) {
-		super(new GridLayout(1,0));
+		super(new GridLayout(1, 0));
 		this.noc = noc;
 		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
