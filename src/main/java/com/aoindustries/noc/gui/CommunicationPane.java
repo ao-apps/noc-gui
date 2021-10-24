@@ -1008,10 +1008,9 @@ public class CommunicationPane extends JPanel implements TableListener {
 		}
 
 		@Override
-		public boolean equals(Object O) {
-			if(O==null) return false;
-			if(!(O instanceof TicketCell<?>)) return false;
-			TicketCell<?> other = (TicketCell<?>)O;
+		public boolean equals(Object obj) {
+			if(!(obj instanceof TicketCell<?>)) return false;
+			TicketCell<?> other = (TicketCell<?>)obj;
 			return
 				(isStrikethrough==other.isStrikethrough)
 				&& value.equals(other.value)
