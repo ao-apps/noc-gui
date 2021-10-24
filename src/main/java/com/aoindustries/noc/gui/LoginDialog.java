@@ -102,34 +102,34 @@ public final class LoginDialog extends JDialog {
 		JRootPane localRootPane = getRootPane();
 
 		// Add the labels
-		JPanel P=new JPanel(new GridLayout(6, 1, 0, 2));
-		P.add(new JLabel(RESOURCES.getMessage("server.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("serverPort.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("external.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("localPort.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("username.prompt")));
-		P.add(new JLabel(RESOURCES.getMessage("password.prompt")));
-		localContentPane.add(P, BorderLayout.WEST);
+		JPanel p = new JPanel(new GridLayout(6, 1, 0, 2));
+		p.add(new JLabel(RESOURCES.getMessage("server.prompt")));
+		p.add(new JLabel(RESOURCES.getMessage("serverPort.prompt")));
+		p.add(new JLabel(RESOURCES.getMessage("external.prompt")));
+		p.add(new JLabel(RESOURCES.getMessage("localPort.prompt")));
+		p.add(new JLabel(RESOURCES.getMessage("username.prompt")));
+		p.add(new JLabel(RESOURCES.getMessage("password.prompt")));
+		localContentPane.add(p, BorderLayout.WEST);
 
 		// Add the fields
-		P=new JPanel(new GridLayout(6, 1, 0, 2));
-		P.add(serverField=new JTextField(16));
+		JPanel p2 = new JPanel(new GridLayout(6, 1, 0, 2));
+		p2.add(serverField=new JTextField(16));
 		serverField.setText(noc.preferences.getServer());
-		P.add(serverPortField=new JTextField(6));
+		p2.add(serverPortField=new JTextField(6));
 		serverPortField.setText(noc.preferences.getServerPort());
-		P.add(externalField=new JTextField(16));
+		p2.add(externalField=new JTextField(16));
 		externalField.setText(noc.preferences.getExternal());
-		P.add(localPortField=new JTextField(6));
+		p2.add(localPortField=new JTextField(6));
 		localPortField.setText(noc.preferences.getLocalPort());
-		P.add(usernameField=new JTextField(16));
+		p2.add(usernameField=new JTextField(16));
 		usernameField.setText(Objects.toString(noc.preferences.getUsername(), ""));
-		P.add(passwordField=new JPasswordField(16));
-		localContentPane.add(P, BorderLayout.CENTER);
+		p2.add(passwordField=new JPasswordField(16));
+		localContentPane.add(p2, BorderLayout.CENTER);
 
-		P=new JPanel(new FlowLayout());
-		P.add(okButton=new JButton(RESOURCES.getMessage("ok.label")));
-		P.add(cancelButton=new JButton(RESOURCES.getMessage("cancel.label")));
-		localContentPane.add(P, BorderLayout.SOUTH);
+		JPanel p3 = new JPanel(new FlowLayout());
+		p3.add(okButton=new JButton(RESOURCES.getMessage("ok.label")));
+		p3.add(cancelButton=new JButton(RESOURCES.getMessage("cancel.label")));
+		localContentPane.add(p3, BorderLayout.SOUTH);
 
 		// Handle escape button
 		KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
