@@ -369,7 +369,7 @@ public class SystemsPane extends JPanel {
 				noc.executorService.submit(() ->
 				{
 					try {
-						while(true) {
+						while(!Thread.currentThread().isInterrupted()) {
 							boolean doIt;
 							synchronized(batchCounterLock) {
 								if(batchCounter>lastCompletedBatchCounter) {
@@ -388,8 +388,12 @@ public class SystemsPane extends JPanel {
 									Thread.sleep(250);
 								} catch(InterruptedException err) {
 									logger.log(Level.WARNING, null, err);
+									// Restore the interrupted status
+									Thread.currentThread().interrupt();
 								}
-							} else break;
+							} else {
+								break;
+							}
 						}
 					} catch(RemoteException err) {
 						throw new UncheckedIOException(err);

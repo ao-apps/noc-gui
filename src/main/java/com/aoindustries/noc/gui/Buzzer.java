@@ -26,6 +26,7 @@ import com.aoapps.lang.NullArgumentException;
 import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -92,7 +93,11 @@ class Buzzer {
 							// Wait 1/10 of a second, since not too much of the clip should play after drain completes
 							Thread.sleep(100);
 						} catch(InterruptedException e) {
-							logger.log(Level.WARNING, "Interrupt unexpected", e);
+							// Restore the interrupted status
+							Thread.currentThread().interrupt();
+							InterruptedIOException ioErr = new InterruptedIOException();
+							ioErr.initCause(e);
+							throw ioErr;
 						}
 						sleepCount++;
 					} else {
@@ -177,6 +182,7 @@ class Buzzer {
 	 */
 	private class BuzzerThread {
 
+		private final Object sleepLock = new Object();
 		private Thread buzzerThread;
 
 		private AlertLevel level;
@@ -213,18 +219,18 @@ class Buzzer {
 					if(buzzerThread == null) {
 						// Start a new thread
 						buzzerThread = new Thread(() -> {
-							final Thread thisThread = Thread.currentThread();
+							final Thread currentThread = Thread.currentThread();
 							// Plays sound immediately when the thread is first started.
 							// This means we'll always buzz for the initial state, even when things changing rapidly
 							AlertLevel lastBuzzedLevel = newLevel;
 							AlertCategory lastBuzzedCategory = newCategory;
 							long lastBuzzedTime = System.currentTimeMillis();
 							playBuzzer(getBuzzerAudioResource(lastBuzzedLevel, lastBuzzedCategory));
-							while(true) {
+							while(!currentThread.isInterrupted()) {
 								AlertLevel currentLevel;
 								AlertCategory currentCategory;
 								synchronized(BuzzerThread.this) {
-									if(thisThread != buzzerThread) break;
+									if(currentThread != buzzerThread) break;
 									currentLevel = level;
 									currentCategory = category;
 								}
@@ -267,22 +273,28 @@ class Buzzer {
 									}
 								}
 								try {
-									Thread.sleep(sleepTime);
+									synchronized(sleepLock) {
+										sleepLock.wait(sleepTime);
+									}
 								} catch(InterruptedException err) {
-									// Normal during thread shutdown
+									err.printStackTrace(System.err);
+									// Restore the interrupted status
+									currentThread.interrupt();
 								}
 							}
 						});
 						buzzerThread.start();
 					} else {
-						// Interrupt existing thread so it can get updated data
-						buzzerThread.interrupt();
+						// Notify existing thread so it can get updated data
+						synchronized(sleepLock) {
+							sleepLock.notify(); // notifyAll() not needed since only one thread
+						}
 					}
 				} else {
 					// Stop the thread, if running
-					if(buzzerThread != null) {
-						buzzerThread.interrupt();
-						buzzerThread = null;
+					buzzerThread = null;
+					synchronized(sleepLock) {
+						sleepLock.notify(); // notifyAll() not needed since only one thread
 					}
 				}
 			}
@@ -291,9 +303,9 @@ class Buzzer {
 		private void exitApplication() {
 			synchronized(this) {
 				// Stop the thread, if running
-				if(buzzerThread != null) {
-					buzzerThread.interrupt();
-					buzzerThread = null;
+				buzzerThread = null;
+				synchronized(sleepLock) {
+					sleepLock.notify(); // notifyAll() not needed since only one thread
 				}
 			}
 		}

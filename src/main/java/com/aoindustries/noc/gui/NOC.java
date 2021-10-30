@@ -783,7 +783,11 @@ public class NOC {
 		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
 		try {
 			boolean unexported = false;
-			for(int c=0;c<100;c++) {
+			for(
+				int c = 0;
+				c < 100 && !Thread.currentThread().isInterrupted();
+				c++
+			) {
 				if(UnicastRemoteObject.unexportObject(remote, false)) {
 					unexported = true;
 					break;
@@ -792,6 +796,8 @@ public class NOC {
 					Thread.sleep(100);
 				} catch(InterruptedException err) {
 					logger.log(Level.WARNING, null, err);
+					// Restore the interrupted status
+					Thread.currentThread().interrupt();
 				}
 			}
 			if(!unexported) {
