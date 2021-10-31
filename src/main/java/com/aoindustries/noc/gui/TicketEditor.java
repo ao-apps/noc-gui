@@ -218,7 +218,7 @@ public class TicketEditor extends JPanel implements TableListener {
 										|| newStatus.getStatus().equals(Status.HOLD)
 									) {
 										// Default to one month (31 days)
-										statusTimeout = System.currentTimeMillis() + 31L * 24 * 60 * 60 * 1000;
+										statusTimeout = System.currentTimeMillis() + (31L * 24 * 60 * 60 * 1000);
 									} else {
 										statusTimeout = -1;
 									}
