@@ -414,7 +414,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				else return -1;
 			} else {
 				if(o2==null) return 1;
-				else return -o1.compareTo(o2);
+				else return o2.compareTo(o1);
 			}
 		};
 		tableRowSorter.setComparator(0, naturalComparator);
