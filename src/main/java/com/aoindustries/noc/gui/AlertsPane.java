@@ -275,10 +275,8 @@ public class AlertsPane extends JPanel {
 
 		JButton buzzerTest = new JButton(RESOURCES.getMessage("buzzerTest.label"));
 		toolBar.add(buzzerTest);
-		buzzerTest.addActionListener((ActionEvent e) -> {
-			// TODO: Call a method on the server, which will callback a method here, so buzzer only plays on successful bidirectional communication
-			buzzer.playBuzzer("buzzer.wav");
-		});
+		// TODO: Call a method on the server, which will callback a method here, so buzzer only plays on successful bidirectional communication
+		buzzerTest.addActionListener(e -> buzzer.playBuzzer("buzzer.wav"));
 		buzzerTest.setMaximumSize(buzzerTest.getPreferredSize());
 	}
 

@@ -39,7 +39,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeEvent;
 import java.io.UncheckedIOException;
 import java.rmi.RemoteException;
 import java.rmi.server.RMIClientSocketFactory;
@@ -58,7 +57,6 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -115,14 +113,11 @@ public class SystemsPane extends JPanel {
 		splitPane.setDividerLocation(noc.preferences.getSystemsSplitPaneDividerLocation());
 		splitPane.addPropertyChangeListener(
 			"dividerLocation",
-			(PropertyChangeEvent evt) -> {
-				//System.err.println("DEBUG: propertyName="+evt.getPropertyName());
-				noc.preferences.setSystemsSplitPaneDividerLocation(splitPane.getDividerLocation());
-			}
+			evt -> noc.preferences.setSystemsSplitPaneDividerLocation(splitPane.getDividerLocation())
 		);
 
 		add(splitPane, BorderLayout.CENTER);
-		tree.addTreeSelectionListener((TreeSelectionEvent e) -> {
+		tree.addTreeSelectionListener(e -> {
 			if(e.isAddedPath()) {
 				TreePath treePath = e.getPath();
 				if(treePath!=null) {
@@ -172,7 +167,7 @@ public class SystemsPane extends JPanel {
 				setAlertLevel(AlertLevel.MEDIUM);
 		}
 		toolBar.add(alertLevel);
-		alertLevel.addItemListener((ItemEvent e) -> {
+		alertLevel.addItemListener(e -> {
 			if(e.getStateChange()==ItemEvent.SELECTED) {
 				String command = (String)e.getItem();
 				if(allLabel.equals(command)) setAlertLevel(AlertLevel.NONE);

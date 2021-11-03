@@ -85,8 +85,6 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -243,9 +241,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		);
 		categoriesJTree.setRootVisible(true);
 		categoriesJTree.setCellRenderer(new DisablableTreeCellRenderer());
-		categoriesJTree.addTreeSelectionListener((TreeSelectionEvent e) -> {
-			refresh();
-		});
+		categoriesJTree.addTreeSelectionListener(e -> refresh());
 		categoriesPanel.add(new JScrollPane(categoriesJTree), BorderLayout.CENTER);
 		splitPane.add(categoriesPanel, "categories");
 
@@ -259,9 +255,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		);
 		accountsJTree.setRootVisible(true);
 		accountsJTree.setCellRenderer(new DisablableTreeCellRenderer());
-		accountsJTree.addTreeSelectionListener((TreeSelectionEvent e) -> {
-			refresh();
-		});
+		accountsJTree.addTreeSelectionListener(e -> refresh());
 		accountsPanel.add(new JScrollPane(accountsJTree), BorderLayout.CENTER);
 
 		splitPane.add(accountsPanel, "accounts");
@@ -276,9 +270,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		);
 		brandsJTree.setRootVisible(false);
 		brandsJTree.setCellRenderer(new DisablableTreeCellRenderer());
-		brandsJTree.addTreeSelectionListener((TreeSelectionEvent e) -> {
-			refresh();
-		});
+		brandsJTree.addTreeSelectionListener(e -> refresh());
 		brandsPanel.add(new JScrollPane(brandsJTree), BorderLayout.CENTER);
 		splitPane.add(brandsPanel, "brands");
 
@@ -292,9 +284,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		);
 		resellersJTree.setRootVisible(false);
 		resellersJTree.setCellRenderer(new DisablableTreeCellRenderer());
-		resellersJTree.addTreeSelectionListener((TreeSelectionEvent e) -> {
-			refresh();
-		});
+		resellersJTree.addTreeSelectionListener(e -> refresh());
 		resellersPanel.add(new JScrollPane(resellersJTree), BorderLayout.CENTER);
 		splitPane.add(resellersPanel, "resellers");
 
@@ -308,7 +298,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		);
 		final ListCellRenderer<? super Object> originalRenderer = assignmentsList.getCellRenderer();
 		assignmentsList.setCellRenderer(
-			new ListCellRenderer<Object>() {
+			new ListCellRenderer<>() {
 				private Font normalFont;
 				private Font strikethroughFont;
 
@@ -333,7 +323,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				}
 			}
 		);
-		assignmentsList.addListSelectionListener((ListSelectionEvent e) -> {
+		assignmentsList.addListSelectionListener(e -> {
 			if(!e.getValueIsAdjusting()) refresh();
 		});
 		assignmentsPanel.add(new JScrollPane(assignmentsList), BorderLayout.CENTER);
@@ -347,7 +337,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
-		typesList.addListSelectionListener((ListSelectionEvent e) -> {
+		typesList.addListSelectionListener(e -> {
 			if(!e.getValueIsAdjusting()) refresh();
 		});
 		typesPanel.add(new JScrollPane(typesList), BorderLayout.CENTER);
@@ -361,7 +351,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
-		statusesList.addListSelectionListener((ListSelectionEvent e) -> {
+		statusesList.addListSelectionListener(e -> {
 			if(!e.getValueIsAdjusting()) refresh();
 		});
 		statusesPanel.add(new JScrollPane(statusesList), BorderLayout.CENTER);
@@ -375,7 +365,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
-		prioritiesList.addListSelectionListener((ListSelectionEvent e) -> {
+		prioritiesList.addListSelectionListener(e -> {
 			if(!e.getValueIsAdjusting()) refresh();
 		});
 		prioritiesPanel.add(new JScrollPane(prioritiesList), BorderLayout.CENTER);
@@ -389,7 +379,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 				SwingConstants.CENTER
 			), BorderLayout.NORTH
 		);
-		languagesList.addListSelectionListener((ListSelectionEvent e) -> {
+		languagesList.addListSelectionListener(e -> {
 			if(!e.getValueIsAdjusting()) refresh();
 		});
 		languagesPanel.add(new JScrollPane(languagesList), BorderLayout.CENTER);
@@ -425,7 +415,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 		tableRowSorter.setComparator(5, naturalComparator);
 		tableRowSorter.setComparator(6, naturalComparator);
 		ticketsTable.setRowSorter(tableRowSorter);
-		ticketsTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+		ticketsTable.getSelectionModel().addListSelectionListener(e -> {
 			if(!e.getValueIsAdjusting()) {
 				int[] selectedRows = ticketsTable.getSelectedRows();
 				if(selectedRows.length==1) {
@@ -864,7 +854,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 							// either have tickets or have children with tickets.
 							final Tree<Category> filteredCategoryTree = new TreeCopy<>(
 								categoryTree,
-								new NodeFilter<Category>() {
+								new NodeFilter<>() {
 									@Override
 									public boolean isNodeFiltered(Node<Category> node) throws IOException, SQLException {
 										return !hasTicket(node, categoriesWithTickets);
@@ -883,7 +873,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 							);
 							final Tree<Account> filteredAccountTree = new TreeCopy<>(
 								accountTree,
-								new NodeFilter<Account>() {
+								new NodeFilter<>() {
 									@Override
 									public boolean isNodeFiltered(Node<Account> node) throws IOException, SQLException {
 										return !hasTicket(node, accountsWithTickets);

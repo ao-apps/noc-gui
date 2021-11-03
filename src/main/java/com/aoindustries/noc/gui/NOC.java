@@ -42,7 +42,6 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -69,7 +68,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
@@ -298,7 +296,7 @@ public class NOC {
 
 			PopupMenu popup = new PopupMenu();
 			MenuItem localLoginMenuItem = new MenuItem(RESOURCES.getMessage("trayIcon.popup.login"));
-			localLoginMenuItem.addActionListener((ActionEvent e) -> {
+			localLoginMenuItem.addActionListener(e -> {
 				if(NOC.this.rootNode!=null) {
 					logout();
 				} else {
@@ -306,13 +304,9 @@ public class NOC {
 				}
 			});
 			MenuItem openItem = new MenuItem(RESOURCES.getMessage("trayIcon.popup.open"));
-			openItem.addActionListener((ActionEvent e) -> {
-				trayIconOpen();
-			});
+			openItem.addActionListener(e -> trayIconOpen());
 			MenuItem exitItem = new MenuItem(RESOURCES.getMessage("trayIcon.popup.exit"));
-			exitItem.addActionListener((ActionEvent e) -> {
-				exitApplication();
-			});
+			exitItem.addActionListener(e -> exitApplication());
 
 			popup.add(openItem);
 			popup.add(localLoginMenuItem);
@@ -548,7 +542,7 @@ public class NOC {
 	}
 
 	private boolean ignoreChangeEvent = false;
-	private final ChangeListener changeListener = (ChangeEvent e) -> {
+	private final ChangeListener changeListener = e -> {
 		//System.out.println("stateChanged: ignoreChangeEvent="+ignoreChangeEvent+", selectedIndex="+tabbedPane.getSelectedIndex());
 		if(!ignoreChangeEvent) {
 			int selectedIndex = tabbedPane.getSelectedIndex();
@@ -612,7 +606,7 @@ public class NOC {
 			? RESOURCES.getMessage("loginButton.label")
 			: RESOURCES.getMessage("logoutButton.label")
 		);
-		loginButton.addActionListener((ActionEvent e) -> {
+		loginButton.addActionListener(e -> {
 			if(rootNode==null) login();
 			else logout();
 		});
@@ -623,18 +617,14 @@ public class NOC {
 			{
 				JButton framesButton = new JButton(RESOURCES.getMessage("tabsButton.label"));
 				toolBar.add(framesButton);
-				framesButton.addActionListener((ActionEvent e) -> {
-					setDisplayMode(Preferences.DisplayMode.TABS);
-				});
+				framesButton.addActionListener(e -> setDisplayMode(Preferences.DisplayMode.TABS));
 				break;
 			}
 			case TABS :
 			{
 				JButton framesButton = new JButton(RESOURCES.getMessage("framesButton.label"));
 				toolBar.add(framesButton);
-				framesButton.addActionListener((ActionEvent e) -> {
-					setDisplayMode(Preferences.DisplayMode.FRAMES);
-				});
+				framesButton.addActionListener(e -> setDisplayMode(Preferences.DisplayMode.FRAMES));
 				break;
 			}
 			default :

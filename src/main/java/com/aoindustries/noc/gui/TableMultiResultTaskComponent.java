@@ -94,7 +94,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 		return this;
 	}
 
-	private final TableMultiResultListener<TableMultiResult> tableMultiResultListener = new TableMultiResultListener<TableMultiResult>() {
+	private final TableMultiResultListener<TableMultiResult> tableMultiResultListener = new TableMultiResultListener<>() {
 		@Override
 		public void tableMultiResultAdded(final TableMultiResult tableMultiResult) {
 			assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";

@@ -100,11 +100,9 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 	}
 
 	private final Object tableResultListenerLock = new Object();
-	private final TableResultListener tableResultListener = (TableResult tableResult) -> {
+	private final TableResultListener tableResultListener = tableResult -> {
 		assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
-		SwingUtilities.invokeLater(() -> {
-			updateValue(tableResult);
-		});
+		SwingUtilities.invokeLater(() -> updateValue(tableResult));
 	};
 	private boolean tableResultListenerExported = false;
 

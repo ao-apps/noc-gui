@@ -158,35 +158,29 @@ public final class LoginDialog extends JDialog {
 		);
 
 		// Add actions
-		serverField.addActionListener((ActionEvent e) -> {
+		serverField.addActionListener(e -> {
 			serverPortField.selectAll();
 			serverPortField.requestFocus();
 		});
-		serverPortField.addActionListener((ActionEvent e) -> {
+		serverPortField.addActionListener(e -> {
 			externalField.selectAll();
 			externalField.requestFocus();
 		});
-		externalField.addActionListener((ActionEvent e) -> {
+		externalField.addActionListener(e -> {
 			localPortField.selectAll();
 			localPortField.requestFocus();
 		});
-		localPortField.addActionListener((ActionEvent e) -> {
+		localPortField.addActionListener(e -> {
 			usernameField.selectAll();
 			usernameField.requestFocus();
 		});
-		usernameField.addActionListener((ActionEvent e) -> {
+		usernameField.addActionListener(e -> {
 			passwordField.selectAll();
 			passwordField.requestFocus();
 		});
-		passwordField.addActionListener((ActionEvent e) -> {
-			login();
-		});
-		okButton.addActionListener((ActionEvent e) -> {
-			login();
-		});
-		cancelButton.addActionListener((ActionEvent e) -> {
-			cancel();
-		});
+		passwordField.addActionListener(e -> login());
+		okButton.addActionListener(e -> login());
+		cancelButton.addActionListener(e -> cancel());
 
 		addWindowListener(
 			new WindowAdapter() {
