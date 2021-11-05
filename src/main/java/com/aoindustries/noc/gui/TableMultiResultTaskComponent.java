@@ -307,5 +307,6 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 
 	@Override
 	public void systemsAlertLevelChanged(AlertLevel systemsAlertLevel) {
+		// Do nothing
 	}
 }

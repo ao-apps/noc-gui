@@ -206,5 +206,6 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
 
 	@Override
 	public void systemsAlertLevelChanged(AlertLevel systemsAlertLevel) {
+		// Do nothing
 	}
 }
