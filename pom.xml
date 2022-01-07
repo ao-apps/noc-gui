@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 noc-gui - Graphical User Interface for Network Operations Center.
-Copyright (C) 2020, 2021  AO Industries, Inc.
+Copyright (C) 2020, 2021, 2022  AO Industries, Inc.
 	support@aoindustries.com
 	7262 Bull Pen Cir
 	Mobile, AL 36695
@@ -396,7 +396,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
 				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.3.1</version>
 			</dependency>
 			<dependency>
-				<groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.19.1</version>
+				<groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.19.2</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
