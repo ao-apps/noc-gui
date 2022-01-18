@@ -390,7 +390,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
 				<groupId>org.checkerframework</groupId><artifactId>checker-qual</artifactId><version>3.21.1</version>
 			</dependency>
 			<dependency>
-				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>8.0.27</version>
+				<groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>8.0.28</version>
 			</dependency>
 			<dependency>
 				<groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.3.1</version>
