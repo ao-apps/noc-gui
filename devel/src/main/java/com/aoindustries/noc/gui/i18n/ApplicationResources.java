@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package com.aoindustries.noc.gui.i18n;
 
 import com.aoapps.hodgepodge.i18n.EditableResourceBundle;
