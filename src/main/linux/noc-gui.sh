@@ -13,19 +13,19 @@ cd "$HOME/noc-gui"
 export CLASSPATH='/opt/noc-gui/classes'
 for JAR in /opt/noc-gui/lib/*.jar
 do
-	export CLASSPATH="${CLASSPATH}:${JAR}"
+  export CLASSPATH="${CLASSPATH}:${JAR}"
 done
 
 ulimit -n 40960
 
-#	-Djava.security.debug=access,failure \
+# -Djava.security.debug=access,failure \
 
 exec java \
-	-Xms256M \
-	-ea:com.aoindustries... \
-	-Djava.security.policy='/opt/noc-gui/security.policy.wideopen' \
-	-Dsun.net.maxDatagramSockets=4096 \
-	-Djavax.net.ssl.trustStore='/opt/noc-gui/truststore' \
-	'com.aoindustries.noc.gui.NOC' >& 'noc-gui.err'
+  -Xms256M \
+  -ea:com.aoindustries... \
+  -Djava.security.policy='/opt/noc-gui/security.policy.wideopen' \
+  -Dsun.net.maxDatagramSockets=4096 \
+  -Djavax.net.ssl.trustStore='/opt/noc-gui/truststore' \
+  'com.aoindustries.noc.gui.NOC' >& 'noc-gui.err'
 
-#	2>&1 | grep -v "allowed" >&noc-gui.err
+# 2>&1 | grep -v "allowed" >&noc-gui.err

@@ -37,57 +37,57 @@ import javax.swing.SwingUtilities;
  */
 public class NOCApplet extends JApplet {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = Logger.getLogger(NOCApplet.class.getName());
+  private static final Logger logger = Logger.getLogger(NOCApplet.class.getName());
 
-	private NOC noc;
+  private NOC noc;
 
-	@Override
-	public void start() {
-		if(!SwingUtilities.isEventDispatchThread()) {
-			try {
-				SwingUtilities.invokeAndWait(this::start);
-			} catch(InterruptedException e) {
-				logger.log(Level.SEVERE, null, e);
-				// Restore the interrupted status
-				Thread.currentThread().interrupt();
-			} catch(InvocationTargetException e) {
-				logger.log(Level.SEVERE, null, e);
-			}
-		} else {
-			try {
-				this.noc = new NOC(getContentPane());
-			} catch(IOException err) {
-				logger.log(Level.SEVERE, null, err);
-			}
-		}
-	}
+  @Override
+  public void start() {
+    if (!SwingUtilities.isEventDispatchThread()) {
+      try {
+        SwingUtilities.invokeAndWait(this::start);
+      } catch (InterruptedException e) {
+        logger.log(Level.SEVERE, null, e);
+        // Restore the interrupted status
+        Thread.currentThread().interrupt();
+      } catch (InvocationTargetException e) {
+        logger.log(Level.SEVERE, null, e);
+      }
+    } else {
+      try {
+        this.noc = new NOC(getContentPane());
+      } catch (IOException err) {
+        logger.log(Level.SEVERE, null, err);
+      }
+    }
+  }
 
-	/**
-	 * Auto logs-out on stop.
-	 */
-	@Override
-	public void stop() {
-		if(!SwingUtilities.isEventDispatchThread()) {
-			try {
-				SwingUtilities.invokeAndWait(this::stop);
-			} catch(InterruptedException e) {
-				logger.log(Level.SEVERE, null, e);
-				// Restore the interrupted status
-				Thread.currentThread().interrupt();
-			} catch(InvocationTargetException e) {
-				logger.log(Level.SEVERE, null, e);
-			}
-		} else {
-			if(noc!=null) {
-				noc.logout();
-				noc.alertsFrame.setVisible(false);
-				noc.communicationFrame.setVisible(false);
-				noc.systemsFrame.setVisible(false);
-				noc=null;
-			}
-			getContentPane().removeAll();
-		}
-	}
+  /**
+   * Auto logs-out on stop.
+   */
+  @Override
+  public void stop() {
+    if (!SwingUtilities.isEventDispatchThread()) {
+      try {
+        SwingUtilities.invokeAndWait(this::stop);
+      } catch (InterruptedException e) {
+        logger.log(Level.SEVERE, null, e);
+        // Restore the interrupted status
+        Thread.currentThread().interrupt();
+      } catch (InvocationTargetException e) {
+        logger.log(Level.SEVERE, null, e);
+      }
+    } else {
+      if (noc != null) {
+        noc.logout();
+        noc.alertsFrame.setVisible(false);
+        noc.communicationFrame.setVisible(false);
+        noc.systemsFrame.setVisible(false);
+        noc=null;
+      }
+      getContentPane().removeAll();
+    }
+  }
 }

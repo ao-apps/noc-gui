@@ -34,23 +34,23 @@ import javax.swing.JComponent;
  */
 public interface TaskComponent {
 
-	/**
-	 * Gets the component that should be added to the task area.
-	 */
-	JComponent getComponent();
+  /**
+   * Gets the component that should be added to the task area.
+   */
+  JComponent getComponent();
 
-	/**
-	 * Called just after the component has been added.
-	 */
-	void start(Node node, JComponent validationComponent);
+  /**
+   * Called just after the component has been added.
+   */
+  void start(Node node, JComponent validationComponent);
 
-	/**
-	 * Called just before the component is removed.
-	 */
-	void stop();
+  /**
+   * Called just before the component is removed.
+   */
+  void stop();
 
-	/**
-	 * Called just after the systems alert level is changed.
-	 */
-	void systemsAlertLevelChanged(AlertLevel systemsAlertLevel);
+  /**
+   * Called just after the systems alert level is changed.
+   */
+  void systemsAlertLevelChanged(AlertLevel systemsAlertLevel);
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 noc-gui - Graphical User Interface for Network Operations Center.
-Copyright (C) 2020, 2021  AO Industries, Inc.
-	support@aoindustries.com
-	7262 Bull Pen Cir
-	Mobile, AL 36695
+Copyright (C) 2020, 2021, 2022  AO Industries, Inc.
+    support@aoindustries.com
+    7262 Bull Pen Cir
+    Mobile, AL 36695
 
 This file is part of noc-gui.
 
@@ -22,33 +22,33 @@ You should have received a copy of the GNU Lesser General Public License
 along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <ruleset
-	comparisonMethod="maven"
-	xmlns="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0 https://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd"
+  comparisonMethod="maven"
+  xmlns="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0 https://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd"
 >
-	<rules>
-		<rule groupId="org.postgresql" artifactId="postgresql" comparisonMethod="maven">
-			<ignoreVersions>
-				<ignoreVersion type="regex">.*\.jre[67]</ignoreVersion>
-			</ignoreVersions>
-		</rule>
-		<rule groupId="com.google.protobuf" artifactId="protobuf-java" comparisonMethod="maven">
-			<ignoreVersions>
-				<ignoreVersion type="regex">.*-rc-[0-9]*</ignoreVersion>
-			</ignoreVersions>
-		</rule>
-		<rule groupId="org.slf4j" artifactId="slf4j-api" comparisonMethod="maven">
-			<ignoreVersions>
-				<ignoreVersion type="regex">.*-alpha[0-9]*</ignoreVersion>
-				<ignoreVersion type="regex">.*-beta[0-9]*</ignoreVersion>
-			</ignoreVersions>
-		</rule>
-		<rule groupId="org.slf4j" artifactId="slf4j-jdk14" comparisonMethod="maven">
-			<ignoreVersions>
-				<ignoreVersion type="regex">.*-alpha[0-9]*</ignoreVersion>
-				<ignoreVersion type="regex">.*-beta[0-9]*</ignoreVersion>
-			</ignoreVersions>
-		</rule>
-	</rules>
+  <rules>
+    <rule groupId="org.postgresql" artifactId="postgresql" comparisonMethod="maven">
+      <ignoreVersions>
+        <ignoreVersion type="regex">.*\.jre[67]</ignoreVersion>
+      </ignoreVersions>
+    </rule>
+    <rule groupId="com.google.protobuf" artifactId="protobuf-java" comparisonMethod="maven">
+      <ignoreVersions>
+        <ignoreVersion type="regex">.*-rc-[0-9]*</ignoreVersion>
+      </ignoreVersions>
+    </rule>
+    <rule groupId="org.slf4j" artifactId="slf4j-api" comparisonMethod="maven">
+      <ignoreVersions>
+        <ignoreVersion type="regex">.*-alpha[0-9]*</ignoreVersion>
+        <ignoreVersion type="regex">.*-beta[0-9]*</ignoreVersion>
+      </ignoreVersions>
+    </rule>
+    <rule groupId="org.slf4j" artifactId="slf4j-jdk14" comparisonMethod="maven">
+      <ignoreVersions>
+        <ignoreVersion type="regex">.*-alpha[0-9]*</ignoreVersion>
+        <ignoreVersion type="regex">.*-beta[0-9]*</ignoreVersion>
+      </ignoreVersions>
+    </rule>
+  </rules>
 </ruleset>

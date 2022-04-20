@@ -21,10 +21,10 @@
  * along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
  */
 module com.aoindustries.noc.gui.devel {
-	exports com.aoindustries.noc.gui.i18n;
-	// Direct
-	requires com.aoapps.hodgepodge; // <groupId>com.aoapps</groupId><artifactId>ao-hodgepodge</artifactId>
-	requires static jsr305; // <groupId>com.google.code.findbugs</groupId><artifactId>jsr305</artifactId>
-	// Java SE
-	requires java.logging;
+  exports com.aoindustries.noc.gui.i18n;
+  // Direct
+  requires com.aoapps.hodgepodge; // <groupId>com.aoapps</groupId><artifactId>ao-hodgepodge</artifactId>
+  requires static jsr305; // <groupId>com.google.code.findbugs</groupId><artifactId>jsr305</artifactId>
+  // Java SE
+  requires java.logging;
 }

@@ -32,16 +32,16 @@ import com.aoindustries.noc.monitor.common.AlertLevel;
  */
 class AlertLevelAndData {
 
-	final AlertLevel alertLevel;
-	final Object data;
+  final AlertLevel alertLevel;
+  final Object data;
 
-	AlertLevelAndData(AlertLevel alertLevel, Object data) {
-		this.alertLevel = alertLevel;
-		this.data = data;
-	}
+  AlertLevelAndData(AlertLevel alertLevel, Object data) {
+    this.alertLevel = alertLevel;
+    this.data = data;
+  }
 
-	@Override
-	public String toString() {
-		return data==null ? "null" : data.toString();
-	}
+  @Override
+  public String toString() {
+    return data == null ? "null" : data.toString();
+  }
 }

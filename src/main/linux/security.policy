@@ -1,6 +1,6 @@
 //
 // noc-gui - Graphical User Interface for Network Operations Center.
-// Copyright (C) 2008, 2013, 2020, 2021  AO Industries, Inc.
+// Copyright (C) 2008, 2013, 2020, 2021, 2022  AO Industries, Inc.
 //     support@aoindustries.com
 //     7262 Bull Pen Cir
 //     Mobile, AL 36695
@@ -26,67 +26,67 @@
 // java -Djava.security.debug=access,failure -ea:com.aoindustries... -Djava.security.policy="$HOME/maven2/ao/noc/gui/security.policy" -jar noc-gui.jar 2>&1 | grep -v allowed | less -S
 
 grant codeBase "file:${user.dir}/noc-gui.jar" {
-	permission java.awt.AWTPermission           "accessClipboard";
-	permission java.awt.AWTPermission           "accessEventQueue";
-	permission java.awt.AWTPermission           "accessSystemTray";
-	permission java.awt.AWTPermission           "showWindowWithoutWarningBanner";
-	permission java.io.FilePermission           "${user.dir}/lib/noc-monitor.jar", "read";
-	permission java.io.FilePermission           "persistence",                     "read,write";
-	permission java.io.FilePermission           "persistence/-",                   "read,write";
-	permission java.lang.RuntimePermission      "modifyThreadGroup";
-	permission java.lang.RuntimePermission      "preferences";
-	permission java.net.SocketPermission        "127.0.0.1:1024-",                 "accept,resolve";
-	permission java.net.SocketPermission        "127.0.0.1:4584",                  "connect,resolve";
-	permission java.net.SocketPermission        "master.aoindustries.com",         "resolve";
-	permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
-	permission java.net.SocketPermission        "monitor.aoindustries.com",        "resolve";
-	permission java.net.SocketPermission        "70.91.161.42:1024-",              "accept,resolve";
-	permission java.net.SocketPermission        "70.91.161.42:4584",               "connect,resolve";
-	permission java.security.SecurityPermission "insertProvider.SunJSSE";
-	permission java.util.PropertyPermission     "java.rmi.server.disableHttp",     "write";
-	permission java.util.PropertyPermission     "java.rmi.server.hostname",        "write";
-	permission java.util.PropertyPermission     "java.rmi.server.randomIDs",       "write";
-	permission java.util.PropertyPermission     "java.rmi.server.useCodebaseOnly", "write";
-	permission java.util.PropertyPermission     "javax.net.ssl.keyStore",          "read, write";
-	permission java.util.PropertyPermission     "javax.net.ssl.keyStorePassword",  "read, write";
-	permission java.util.PropertyPermission     "user.home",                       "read";
-	permission java.util.PropertyPermission     "user.name",                       "read";
-	permission java.util.PropertyPermission     "user.timezone",                   "write";
+  permission java.awt.AWTPermission           "accessClipboard";
+  permission java.awt.AWTPermission           "accessEventQueue";
+  permission java.awt.AWTPermission           "accessSystemTray";
+  permission java.awt.AWTPermission           "showWindowWithoutWarningBanner";
+  permission java.io.FilePermission           "${user.dir}/lib/noc-monitor.jar", "read";
+  permission java.io.FilePermission           "persistence",                     "read,write";
+  permission java.io.FilePermission           "persistence/-",                   "read,write";
+  permission java.lang.RuntimePermission      "modifyThreadGroup";
+  permission java.lang.RuntimePermission      "preferences";
+  permission java.net.SocketPermission        "127.0.0.1:1024-",                 "accept,resolve";
+  permission java.net.SocketPermission        "127.0.0.1:4584",                  "connect,resolve";
+  permission java.net.SocketPermission        "master.aoindustries.com",         "resolve";
+  permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
+  permission java.net.SocketPermission        "monitor.aoindustries.com",        "resolve";
+  permission java.net.SocketPermission        "70.91.161.42:1024-",              "accept,resolve";
+  permission java.net.SocketPermission        "70.91.161.42:4584",               "connect,resolve";
+  permission java.security.SecurityPermission "insertProvider.SunJSSE";
+  permission java.util.PropertyPermission     "java.rmi.server.disableHttp",     "write";
+  permission java.util.PropertyPermission     "java.rmi.server.hostname",        "write";
+  permission java.util.PropertyPermission     "java.rmi.server.randomIDs",       "write";
+  permission java.util.PropertyPermission     "java.rmi.server.useCodebaseOnly", "write";
+  permission java.util.PropertyPermission     "javax.net.ssl.keyStore",          "read, write";
+  permission java.util.PropertyPermission     "javax.net.ssl.keyStorePassword",  "read, write";
+  permission java.util.PropertyPermission     "user.home",                       "read";
+  permission java.util.PropertyPermission     "user.name",                       "read";
+  permission java.util.PropertyPermission     "user.timezone",                   "write";
 };
 grant codeBase "file:${user.dir}/lib/ao-hodgepodge.jar" {
-	permission java.awt.AWTPermission           "accessEventQueue";
-	permission java.awt.AWTPermission           "showWindowWithoutWarningBanner";
-	permission java.lang.RuntimePermission      "modifyThreadGroup";
-	permission java.net.SocketPermission        "master.aoindustries.com",         "resolve";
-	permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
-	permission java.security.SecurityPermission "insertProvider.SunJSSE";
-	permission java.util.PropertyPermission     "user.timezone",                   "write";
+  permission java.awt.AWTPermission           "accessEventQueue";
+  permission java.awt.AWTPermission           "showWindowWithoutWarningBanner";
+  permission java.lang.RuntimePermission      "modifyThreadGroup";
+  permission java.net.SocketPermission        "master.aoindustries.com",         "resolve";
+  permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
+  permission java.security.SecurityPermission "insertProvider.SunJSSE";
+  permission java.util.PropertyPermission     "user.timezone",                   "write";
 };
 grant codeBase "file:${user.dir}/lib/aoserv-client.jar" {
-	permission java.io.FilePermission           "${user.dir}/lib/noc-monitor.jar", "read";
-	permission java.lang.RuntimePermission      "modifyThreadGroup";
-	permission java.net.SocketPermission        "master.aoindustries.com",         "resolve";
-	permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
-	permission java.security.SecurityPermission "insertProvider.SunJSSE";
+  permission java.io.FilePermission           "${user.dir}/lib/noc-monitor.jar", "read";
+  permission java.lang.RuntimePermission      "modifyThreadGroup";
+  permission java.net.SocketPermission        "master.aoindustries.com",         "resolve";
+  permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
+  permission java.security.SecurityPermission "insertProvider.SunJSSE";
 };
 grant codeBase "file:${user.dir}/lib/noc-monitor-common.jar" {
-	permission java.net.SocketPermission        "127.0.0.1:4584",                  "connect,resolve";
-	permission java.net.SocketPermission        "monitor.aoindustries.com",        "resolve";
-	permission java.net.SocketPermission        "70.91.161.42:4584",               "connect,resolve";
-	permission java.util.PropertyPermission     "user.timezone",                   "write";
+  permission java.net.SocketPermission        "127.0.0.1:4584",                  "connect,resolve";
+  permission java.net.SocketPermission        "monitor.aoindustries.com",        "resolve";
+  permission java.net.SocketPermission        "70.91.161.42:4584",               "connect,resolve";
+  permission java.util.PropertyPermission     "user.timezone",                   "write";
 };
 grant codeBase "file:${user.dir}/lib/noc-monitor.jar" {
-	permission java.io.FilePermission           "persistence",                     "read,write";
-	permission java.io.FilePermission           "persistence/-",                   "read,write";
-	permission java.lang.RuntimePermission      "modifyThreadGroup";
-	permission java.net.SocketPermission        "master.aoindustries.com",         "resolve";
-	permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
-	permission java.security.SecurityPermission "insertProvider.SunJSSE";
-	permission java.util.PropertyPermission     "user.timezone",                   "write";
+  permission java.io.FilePermission           "persistence",                     "read,write";
+  permission java.io.FilePermission           "persistence/-",                   "read,write";
+  permission java.lang.RuntimePermission      "modifyThreadGroup";
+  permission java.net.SocketPermission        "master.aoindustries.com",         "resolve";
+  permission java.net.SocketPermission        "66.160.183.1:4583",               "connect,resolve";
+  permission java.security.SecurityPermission "insertProvider.SunJSSE";
+  permission java.util.PropertyPermission     "user.timezone",                   "write";
 };
 grant codeBase "file:${user.dir}/lib/noc-monitor-client.jar" {
-	permission java.net.SocketPermission        "127.0.0.1:4584",                  "connect,resolve";
-	permission java.net.SocketPermission        "monitor.aoindustries.com",        "resolve";
-	permission java.net.SocketPermission        "70.91.161.42:4584",               "connect,resolve";
-	permission java.util.PropertyPermission     "user.timezone",                   "write";
+  permission java.net.SocketPermission        "127.0.0.1:4584",                  "connect,resolve";
+  permission java.net.SocketPermission        "monitor.aoindustries.com",        "resolve";
+  permission java.net.SocketPermission        "70.91.161.42:4584",               "connect,resolve";
+  permission java.util.PropertyPermission     "user.timezone",                   "write";
 };

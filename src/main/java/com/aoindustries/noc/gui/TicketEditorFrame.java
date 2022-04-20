@@ -47,73 +47,76 @@ import javax.swing.WindowConstants;
  */
 public class TicketEditorFrame extends JFrame {
 
-	private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
+  private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 
-	private static final Resources RESOURCES =
-		Resources.getResources(ResourceBundle::getBundle, TicketEditorFrame.class);
+  private static final Resources RESOURCES =
+    Resources.getResources(ResourceBundle::getBundle, TicketEditorFrame.class);
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private final TicketEditor ticketEditor;
-	//private final Integer ticketId;
+  private final TicketEditor ticketEditor;
+  //private final Integer ticketId;
 
-	@SuppressWarnings("OverridableMethodCallInConstructor")
-	public TicketEditorFrame(final NOC noc, final Integer ticketId) {
-		super(RESOURCES.getMessage("title", ticketId));
-		assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-		Container contentPane = getContentPane();
-		contentPane.setLayout(new BorderLayout());
-		ticketEditor = new TicketEditor(noc, TicketEditor.PreferencesSet.FRAME);
-		ticketEditor.setVisible(false);
-		contentPane.add(ticketEditor, BorderLayout.CENTER);
-		//this.ticketId = ticketId;
-		Component glassPane = getGlassPane();
-		glassPane.setCursor(Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
-		glassPane.setVisible(true);
-		ticketEditor.currentTicketExecutorService.submit(() -> {
-			try {
-				AOServConnector conn = noc.conn;
-				if(conn!=null) ticketEditor.showTicket(conn, ticketId);
-				else ticketEditor.showTicket(null, null);
-			}catch(Exception err) {
-				logger.log(Level.SEVERE, null, err);
-			} finally {
-				SwingUtilities.invokeLater(() -> {
-					assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-					Component glassPane1 = getGlassPane();
-					glassPane1.setCursor(null);
-					glassPane1.setVisible(false);
-				});
-			}
-		});
+  @SuppressWarnings("OverridableMethodCallInConstructor")
+  public TicketEditorFrame(final NOC noc, final Integer ticketId) {
+    super(RESOURCES.getMessage("title", ticketId));
+    assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+    Container contentPane = getContentPane();
+    contentPane.setLayout(new BorderLayout());
+    ticketEditor = new TicketEditor(noc, TicketEditor.PreferencesSet.FRAME);
+    ticketEditor.setVisible(false);
+    contentPane.add(ticketEditor, BorderLayout.CENTER);
+    //this.ticketId = ticketId;
+    Component glassPane = getGlassPane();
+    glassPane.setCursor(Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
+    glassPane.setVisible(true);
+    ticketEditor.currentTicketExecutorService.submit(() -> {
+      try {
+        AOServConnector conn = noc.conn;
+        if (conn != null) {
+          ticketEditor.showTicket(conn, ticketId);
+        } else {
+          ticketEditor.showTicket(null, null);
+        }
+      } catch (Exception err) {
+        logger.log(Level.SEVERE, null, err);
+      } finally {
+        SwingUtilities.invokeLater(() -> {
+          assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+          Component glassPane1 = getGlassPane();
+          glassPane1.setCursor(null);
+          glassPane1.setVisible(false);
+        });
+      }
+    });
 
-		// Save/Restore GUI settings from preferences
-		setBounds(noc.preferences.getTicketEditorFrameBounds());
-		addComponentListener(
-			new ComponentAdapter() {
-				@Override
-				public void componentResized(ComponentEvent e) {
-					noc.preferences.setTicketEditorFrameBounds(getBounds());
-				}
-				@Override
-				public void componentMoved(ComponentEvent e) {
-					noc.preferences.setTicketEditorFrameBounds(getBounds());
-				}
-			}
-		);
+    // Save/Restore GUI settings from preferences
+    setBounds(noc.preferences.getTicketEditorFrameBounds());
+    addComponentListener(
+      new ComponentAdapter() {
+        @Override
+        public void componentResized(ComponentEvent e) {
+          noc.preferences.setTicketEditorFrameBounds(getBounds());
+        }
+        @Override
+        public void componentMoved(ComponentEvent e) {
+          noc.preferences.setTicketEditorFrameBounds(getBounds());
+        }
+      }
+    );
 
-		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		addWindowListener(
-			new WindowAdapter() {
-				@Override
-				public void windowClosing(WindowEvent e) {
-					noc.communication.closeTicketFrame(ticketId);
-				}
-			}
-		);
-	}
+    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    addWindowListener(
+      new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+          noc.communication.closeTicketFrame(ticketId);
+        }
+      }
+    );
+  }
 
-	TicketEditor getTicketEditor() {
-		return ticketEditor;
-	}
+  TicketEditor getTicketEditor() {
+    return ticketEditor;
+  }
 }
