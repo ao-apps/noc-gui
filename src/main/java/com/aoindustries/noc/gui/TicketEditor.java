@@ -122,26 +122,26 @@ public class TicketEditor extends JPanel implements TableListener {
 
   // <editor-fold defaultstate="collapsed" desc="Constants">
   private static final String LAYOUT_DEF = "(ROW "
-    + "  (COLUMN weight=0.33 "
-    + "    (ROW weight=0.2 "
-    + "      (LEAF name=smallFields weight=0.5) "
-    + "      (COLUMN weight=0.5 "
-    + "        (LEAF name=category weight=0.33) "
-    + "        (LEAF name=account weight=0.34) "
-    + "        (LEAF name=escalation weight=0.33) "
-    + "      ) "
-    + "    ) "
-    + "    (LEAF name=emailAddresses weight=0.1) "
-    + "    (LEAF name=phoneNumbers weight=0.1) "
-    + "    (LEAF name=ticketDetails weight=0.6) "
-    + "  ) "
-    + "  (COLUMN weight=0.34 "
-    + "    (LEAF name=actionList weight=0.2) "
-    + "    (LEAF name=actionDisplay weight=0.4) "
-    + "    (LEAF name=addAnnotation weight=0.4) "
-    + "  ) "
-    + "  (LEAF name=internalNotes weight=0.33) "
-    + ") ";
+      + "  (COLUMN weight=0.33 "
+      + "    (ROW weight=0.2 "
+      + "      (LEAF name=smallFields weight=0.5) "
+      + "      (COLUMN weight=0.5 "
+      + "        (LEAF name=category weight=0.33) "
+      + "        (LEAF name=account weight=0.34) "
+      + "        (LEAF name=escalation weight=0.33) "
+      + "      ) "
+      + "    ) "
+      + "    (LEAF name=emailAddresses weight=0.1) "
+      + "    (LEAF name=phoneNumbers weight=0.1) "
+      + "    (LEAF name=ticketDetails weight=0.6) "
+      + "  ) "
+      + "  (COLUMN weight=0.34 "
+      + "    (LEAF name=actionList weight=0.2) "
+      + "    (LEAF name=actionDisplay weight=0.4) "
+      + "    (LEAF name=addAnnotation weight=0.4) "
+      + "  ) "
+      + "  (LEAF name=internalNotes weight=0.33) "
+      + ") ";
   // </editor-fold>
 
   private static final long serialVersionUID = 1L;
@@ -170,7 +170,7 @@ public class TicketEditor extends JPanel implements TableListener {
     @Override
     @SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
     public void focusLost(FocusEvent e) {
-      final TicketType newType = (TicketType)typeComboBox.getSelectedItem();
+      final TicketType newType = (TicketType) typeComboBox.getSelectedItem();
       if (newType != null) {
         currentTicketExecutorService.submit(() -> {
           synchronized (currentTicketLock) {
@@ -205,7 +205,7 @@ public class TicketEditor extends JPanel implements TableListener {
     @Override
     @SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
     public void focusLost(FocusEvent e) {
-      final Status newStatus = (Status)statusComboBox.getSelectedItem();
+      final Status newStatus = (Status) statusComboBox.getSelectedItem();
       if (newStatus != null) {
         currentTicketExecutorService.submit(() -> {
           synchronized (currentTicketLock) {
@@ -216,8 +216,8 @@ public class TicketEditor extends JPanel implements TableListener {
                   // TODO: Time-out from GUI
                   long statusTimeout;
                   if (
-                    newStatus.getStatus().equals(Status.BOUNCED)
-                    || newStatus.getStatus().equals(Status.HOLD)
+                      newStatus.getStatus().equals(Status.BOUNCED)
+                          || newStatus.getStatus().equals(Status.HOLD)
                   ) {
                     // Default to one month (31 days)
                     statusTimeout = System.currentTimeMillis() + (31L * 24 * 60 * 60 * 1000);
@@ -255,7 +255,7 @@ public class TicketEditor extends JPanel implements TableListener {
     @Override
     @SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
     public void focusLost(FocusEvent e) {
-      final Account newAccount = accountComboBox.getSelectedIndex() == 0 ? null : (Account)accountComboBox.getSelectedItem();
+      final Account newAccount = accountComboBox.getSelectedIndex() == 0 ? null : (Account) accountComboBox.getSelectedItem();
       currentTicketExecutorService.submit(() -> {
         synchronized (currentTicketLock) {
           if (currentTicket != null) {
@@ -263,7 +263,7 @@ public class TicketEditor extends JPanel implements TableListener {
               Account oldAccount = currentTicket.getAccount();
               if (!Objects.equals(newAccount, oldAccount)) {
                 if (logger.isLoggable(Level.FINE)) {
-                  logger.fine("currentTicket.setAccount("+newAccount+");");
+                  logger.fine("currentTicket.setAccount(" + newAccount + ");");
                 }
                 currentTicket.setAccount(oldAccount, newAccount);
                 Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
@@ -299,7 +299,7 @@ public class TicketEditor extends JPanel implements TableListener {
               String oldSummary = currentTicket.getSummary();
               if (!newSummary.equals(oldSummary)) {
                 // TODO: Add oldSummary to call for atomic behavior
-                if (newSummary.length()>0) {
+                if (newSummary.length() > 0) {
                   currentTicket.setSummary(newSummary);
                 }
                 Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
@@ -337,7 +337,7 @@ public class TicketEditor extends JPanel implements TableListener {
               String oldInternalNotes = currentTicket.getInternalNotes();
               if (!newInternalNotes.equals(oldInternalNotes)) {
                 if (logger.isLoggable(Level.FINE)) {
-                  logger.fine("currentTicket.setInternalNotes(\""+oldInternalNotes+"\", \""+newInternalNotes+"\");");
+                  logger.fine("currentTicket.setInternalNotes(\"" + oldInternalNotes + "\", \"" + newInternalNotes + "\");");
                 }
                 currentTicket.setInternalNotes(oldInternalNotes, newInternalNotes);
                 Ticket newTicket = currentTicket.getTable().getConnector().getTicket().getTicket().get(currentTicket.getPkey());
@@ -440,10 +440,10 @@ public class TicketEditor extends JPanel implements TableListener {
     JPanel detailsPanel = new JPanel(new BorderLayout());
     JPanel summaryPanel = new JPanel(new BorderLayout());
     summaryPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("summary.label"),
-        SwingConstants.LEFT
-      )
+        new JLabel(
+            RESOURCES.getMessage("summary.label"),
+            SwingConstants.LEFT
+        )
     );
     summaryTextField.addFocusListener(summaryTextFieldFocusListener);
     summaryPanel.add(summaryTextField, BorderLayout.CENTER);
@@ -468,10 +468,10 @@ public class TicketEditor extends JPanel implements TableListener {
     // Internal Notes
     JPanel internalNotesPanel = new JPanel(new BorderLayout());
     internalNotesPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("internalNotes.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("internalNotes.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     {
       Font oldFont = internalNotesTextArea.getFont();
@@ -518,7 +518,7 @@ public class TicketEditor extends JPanel implements TableListener {
       // Run in background thread for data lookups
       //       Make happen in order
       currentTicketExecutorService.submit(() ->
-        showTicket(requestConn, requestedTicketId)
+          showTicket(requestConn, requestedTicketId)
       );
     } else {
       synchronized (currentTicketLock) {
@@ -528,7 +528,7 @@ public class TicketEditor extends JPanel implements TableListener {
           Integer ticketId;
           if (requestConn == null || requestedTicketId == null) {
             ticket = null;
-            ticketId=null;
+            ticketId = null;
           } else {
             ticket = requestConn.getTicket().getTicket().get(requestedTicketId.intValue());
             ticketId = ticket == null ? null : ticket.getKey();

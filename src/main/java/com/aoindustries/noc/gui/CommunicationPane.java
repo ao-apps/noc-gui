@@ -119,24 +119,24 @@ public class CommunicationPane extends JPanel implements TableListener {
 
   // <editor-fold defaultstate="collapsed" desc="Constants">
   private static final String LAYOUT_DEF = "(ROW "
-    + "  (COLUMN weight=0.3 "
-    + "    (LEAF name=categories weight=0.5) "
-    + "    (LEAF name=accounts weight=0.5) "
-    + "  ) "
-    + "  (COLUMN weight=0.7 "
-    + "    (ROW weight=0.2 "
-    + "      (LEAF name=brands weight=0.1428) "
-    + "      (LEAF name=resellers weight=0.1428) "
-    + "      (LEAF name=assignments weight=0.1428) "
-    + "      (LEAF name=types weight=0.1428) "
-    + "      (LEAF name=statuses weight=0.1428) "
-    + "      (LEAF name=priorities weight=0.1428) "
-    + "      (LEAF name=languages weight=0.1428) "
-    + "    ) "
-    + "    (LEAF name=tickets weight=0.3) "
-    + "    (LEAF name=ticketEditor weight=0.5) "
-    + "  ) "
-    + ") ";
+      + "  (COLUMN weight=0.3 "
+      + "    (LEAF name=categories weight=0.5) "
+      + "    (LEAF name=accounts weight=0.5) "
+      + "  ) "
+      + "  (COLUMN weight=0.7 "
+      + "    (ROW weight=0.2 "
+      + "      (LEAF name=brands weight=0.1428) "
+      + "      (LEAF name=resellers weight=0.1428) "
+      + "      (LEAF name=assignments weight=0.1428) "
+      + "      (LEAF name=types weight=0.1428) "
+      + "      (LEAF name=statuses weight=0.1428) "
+      + "      (LEAF name=priorities weight=0.1428) "
+      + "      (LEAF name=languages weight=0.1428) "
+      + "    ) "
+      + "    (LEAF name=tickets weight=0.3) "
+      + "    (LEAF name=ticketEditor weight=0.5) "
+      + "  ) "
+      + ") ";
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc="Fields">
@@ -177,23 +177,23 @@ public class CommunicationPane extends JPanel implements TableListener {
   private final JList<Language> languagesList = new JList<>(languagesListModel);
   // Tickets
   private final DefaultTableModel ticketsTableModel = new UneditableDefaultTableModel(
-    new Object[] {
-      RESOURCES.getMessage("ticketsTable.header.ticketNumber"),
-      RESOURCES.getMessage("ticketsTable.header.priority"),
-      RESOURCES.getMessage("ticketsTable.header.status"),
-      RESOURCES.getMessage("ticketsTable.header.openDate"),
-      RESOURCES.getMessage("ticketsTable.header.openedBy"),
-      RESOURCES.getMessage("ticketsTable.header.account"),
-      RESOURCES.getMessage("ticketsTable.header.summary")
-    },
-    0
+      new Object[]{
+          RESOURCES.getMessage("ticketsTable.header.ticketNumber"),
+          RESOURCES.getMessage("ticketsTable.header.priority"),
+          RESOURCES.getMessage("ticketsTable.header.status"),
+          RESOURCES.getMessage("ticketsTable.header.openDate"),
+          RESOURCES.getMessage("ticketsTable.header.openedBy"),
+          RESOURCES.getMessage("ticketsTable.header.account"),
+          RESOURCES.getMessage("ticketsTable.header.summary")
+      },
+      0
   );
   private final JTable ticketsTable = new JTable(ticketsTableModel) {
     private static final long serialVersionUID = 1L;
     @Override
     public TableCellRenderer getCellRenderer(int row, int column) {
       return new TicketCellRenderer(
-        super.getCellRenderer(row, column)
+          super.getCellRenderer(row, column)
       );
     }
   };
@@ -235,10 +235,10 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Categories
     JPanel categoriesPanel = new JPanel(new BorderLayout());
     categoriesPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("categories.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("categories.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     categoriesJTree.setRootVisible(true);
     categoriesJTree.setCellRenderer(new DisablableTreeCellRenderer());
@@ -249,10 +249,10 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Accounts
     JPanel accountsPanel = new JPanel(new BorderLayout());
     accountsPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("accounts.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("accounts.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     accountsJTree.setRootVisible(true);
     accountsJTree.setCellRenderer(new DisablableTreeCellRenderer());
@@ -264,10 +264,10 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Brands
     JPanel brandsPanel = new JPanel(new BorderLayout());
     brandsPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("brands.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("brands.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     brandsJTree.setRootVisible(false);
     brandsJTree.setCellRenderer(new DisablableTreeCellRenderer());
@@ -278,10 +278,10 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Resellers
     JPanel resellersPanel = new JPanel(new BorderLayout());
     resellersPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("resellers.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("resellers.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     resellersJTree.setRootVisible(false);
     resellersJTree.setCellRenderer(new DisablableTreeCellRenderer());
@@ -292,37 +292,37 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Assignments
     JPanel assignmentsPanel = new JPanel(new BorderLayout());
     assignmentsPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("assignments.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("assignments.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     final ListCellRenderer<? super Object> originalRenderer = assignmentsList.getCellRenderer();
     assignmentsList.setCellRenderer(
-      new ListCellRenderer<>() {
-        private Font normalFont;
-        private Font strikethroughFont;
+        new ListCellRenderer<>() {
+          private Font normalFont;
+          private Font strikethroughFont;
 
-        @Override
-        public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-          Component rendererComponent = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-          if (normalFont == null) {
-            normalFont = rendererComponent.getFont();
-            strikethroughFont = normalFont.deriveFont(Collections.singletonMap(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON));
-          }
-          Font font = normalFont;
-          //Color color = Color.BLACK;
-          if (value instanceof Disablable && ((Disablable)value).isDisabled()) {
-            font = strikethroughFont;
-            // color = Color.RED;
-          }
-          //rendererComponent.setForeground(color);
-          // setFont seems to come with a bunch of complexity - this avoids the call if the font hasn't changed.
-          rendererComponent.setFont(font);
+          @Override
+          public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            Component rendererComponent = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (normalFont == null) {
+              normalFont = rendererComponent.getFont();
+              strikethroughFont = normalFont.deriveFont(Collections.singletonMap(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON));
+            }
+            Font font = normalFont;
+            //Color color = Color.BLACK;
+            if (value instanceof Disablable && ((Disablable) value).isDisabled()) {
+              font = strikethroughFont;
+              // color = Color.RED;
+            }
+            //rendererComponent.setForeground(color);
+            // setFont seems to come with a bunch of complexity - this avoids the call if the font hasn't changed.
+            rendererComponent.setFont(font);
 
-          return rendererComponent;
+            return rendererComponent;
+          }
         }
-      }
     );
     assignmentsList.addListSelectionListener(e -> {
       if (!e.getValueIsAdjusting()) {
@@ -335,10 +335,10 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Types
     JPanel typesPanel = new JPanel(new BorderLayout());
     typesPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("types.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("types.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     typesList.addListSelectionListener(e -> {
       if (!e.getValueIsAdjusting()) {
@@ -351,10 +351,10 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Statuses
     JPanel statusesPanel = new JPanel(new BorderLayout());
     statusesPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("statuses.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("statuses.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     statusesList.addListSelectionListener(e -> {
       if (!e.getValueIsAdjusting()) {
@@ -367,10 +367,10 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Priorities
     JPanel prioritiesPanel = new JPanel(new BorderLayout());
     prioritiesPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("priorities.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("priorities.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     prioritiesList.addListSelectionListener(e -> {
       if (!e.getValueIsAdjusting()) {
@@ -383,10 +383,10 @@ public class CommunicationPane extends JPanel implements TableListener {
     // Languages
     JPanel languagesPanel = new JPanel(new BorderLayout());
     languagesPanel.add(
-      new JLabel(
-        RESOURCES.getMessage("languages.label"),
-        SwingConstants.CENTER
-      ), BorderLayout.NORTH
+        new JLabel(
+            RESOURCES.getMessage("languages.label"),
+            SwingConstants.CENTER
+        ), BorderLayout.NORTH
     );
     languagesList.addListSelectionListener(e -> {
       if (!e.getValueIsAdjusting()) {
@@ -444,7 +444,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         if (selectedRows.length == 1) {
           int selectedRow = selectedRows[0];
           int selectedModelRow = ticketsTable.convertRowIndexToModel(selectedRow);
-          Integer ticketId = (Integer)((TicketCell)ticketsTableModel.getValueAt(selectedModelRow, 0)).value;
+          Integer ticketId = (Integer) ((TicketCell) ticketsTableModel.getValueAt(selectedModelRow, 0)).value;
           // System.out.println("DEBUG: selectedModelRow: "+ticketId);
           showTicketEditor(ticketId);
         } else {
@@ -453,28 +453,28 @@ public class CommunicationPane extends JPanel implements TableListener {
       }
     });
     ticketsTable.addMouseListener(
-      new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-          if (
-            !e.isAltDown()
-            && !e.isAltGraphDown()
-            && !e.isControlDown()
-            && !e.isMetaDown()
-            && !e.isShiftDown()
-            && e.getClickCount() == 2
-          ) {
-            // System.out.println("DEBUG: double clicked");
-            int[] selectedRows = ticketsTable.getSelectedRows();
-            for (int selectedRow : selectedRows) {
-              int selectedModelRow = ticketsTable.convertRowIndexToModel(selectedRow);
-              Integer ticketId = (Integer)((TicketCell)ticketsTableModel.getValueAt(selectedModelRow, 0)).value;
-              // System.out.println("DEBUG: selectedModelRow: "+ticketId);
-              openTicketFrame(ticketId);
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            if (
+                !e.isAltDown()
+                    && !e.isAltGraphDown()
+                    && !e.isControlDown()
+                    && !e.isMetaDown()
+                    && !e.isShiftDown()
+                    && e.getClickCount() == 2
+            ) {
+              // System.out.println("DEBUG: double clicked");
+              int[] selectedRows = ticketsTable.getSelectedRows();
+              for (int selectedRow : selectedRows) {
+                int selectedModelRow = ticketsTable.convertRowIndexToModel(selectedRow);
+                Integer ticketId = (Integer) ((TicketCell) ticketsTableModel.getValueAt(selectedModelRow, 0)).value;
+                // System.out.println("DEBUG: selectedModelRow: "+ticketId);
+                openTicketFrame(ticketId);
+              }
             }
           }
         }
-      }
     );
     splitPane.add(new JScrollPane(ticketsTable), "tickets");
 
@@ -487,6 +487,7 @@ public class CommunicationPane extends JPanel implements TableListener {
   void addToolBars(JToolBar toolBar) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
   }
+
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc="Start/Stop/Exit">
@@ -547,6 +548,7 @@ public class CommunicationPane extends JPanel implements TableListener {
     noc.preferences.setCommunicationMultiSplitLayoutModel(LAYOUT_DEF, splitPane.getMultiSplitLayout().getModel());
     return true;
   }
+
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc="Refreshing">
@@ -590,11 +592,11 @@ public class CommunicationPane extends JPanel implements TableListener {
           boolean myIncludeUncategorized = false;
           selectedCategories = AoCollections.newHashSet(selectedCategoryPaths.length);
           for (TreePath treePath : selectedCategoryPaths) {
-            TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
+            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
             if (treeNode == categoriesRootNode) {
               myIncludeUncategorized = true;
             } else {
-              Category ticketCategory = (Category)((DefaultMutableTreeNode)treeNode).getUserObject();
+              Category ticketCategory = (Category) ((DefaultMutableTreeNode) treeNode).getUserObject();
               selectedCategories.add(ticketCategory);
             }
           }
@@ -612,11 +614,11 @@ public class CommunicationPane extends JPanel implements TableListener {
           boolean myIncludeNoAccount = false;
           selectedAccounts = AoCollections.newHashSet(selectedAccountPaths.length);
           for (TreePath treePath : selectedAccountPaths) {
-            TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
+            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
             if (treeNode == accountsRootNode) {
               myIncludeNoAccount = true;
             } else {
-              Account account = (Account)((DefaultMutableTreeNode)treeNode).getUserObject();
+              Account account = (Account) ((DefaultMutableTreeNode) treeNode).getUserObject();
               selectedAccounts.add(account);
             }
           }
@@ -631,9 +633,9 @@ public class CommunicationPane extends JPanel implements TableListener {
         } else {
           selectedBrands = AoCollections.newHashSet(selectedBrandPaths.length);
           for (TreePath treePath : selectedBrandPaths) {
-            TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
+            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
             if (treeNode != brandsRootNode) {
-              Brand brand = (Brand)((DefaultMutableTreeNode)treeNode).getUserObject();
+              Brand brand = (Brand) ((DefaultMutableTreeNode) treeNode).getUserObject();
               selectedBrands.add(brand);
             }
           }
@@ -647,9 +649,9 @@ public class CommunicationPane extends JPanel implements TableListener {
         } else {
           selectedResellers = AoCollections.newHashSet(selectedResellerPaths.length);
           for (TreePath treePath : selectedResellerPaths) {
-            TreeNode treeNode = (TreeNode)treePath.getLastPathComponent();
+            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
             if (treeNode != resellersRootNode) {
-              Reseller reseller = (Reseller)((DefaultMutableTreeNode)treeNode).getUserObject();
+              Reseller reseller = (Reseller) ((DefaultMutableTreeNode) treeNode).getUserObject();
               selectedResellers.add(reseller);
             }
           }
@@ -665,7 +667,7 @@ public class CommunicationPane extends JPanel implements TableListener {
           if (selectedValue == assignmentsListModel.getElementAt(0)) {
             myIncludeUnassigned = true;
           } else {
-            Administrator administrator = (Administrator)selectedValue;
+            Administrator administrator = (Administrator) selectedValue;
             selectedAssignments.add(administrator);
           }
         }
@@ -783,9 +785,9 @@ public class CommunicationPane extends JPanel implements TableListener {
                 final Account currentAccount = currentAdministrator.getUsername().getPackage().getAccount();
                 for (Administrator administrator : administrators) {
                   if (
-                    !administrator.isDisabled()
-                    && administrator.hasPermission(Permission.Name.edit_ticket)
-                    && administrator.getUsername().getPackage().getAccount().equals(currentAccount)
+                      !administrator.isDisabled()
+                          && administrator.hasPermission(Permission.Name.edit_ticket)
+                          && administrator.getUsername().getPackage().getAccount().equals(currentAccount)
                   ) {
                     assignableUsersSet.add(administrator);
                   }
@@ -904,50 +906,50 @@ public class CommunicationPane extends JPanel implements TableListener {
               // Prune the categories and accounts trees to only include nodes that
               // either have tickets or have children with tickets.
               final Tree<Category> filteredCategoryTree = new TreeCopy<>(
-                categoryTree,
-                new NodeFilter<>() {
-                  @Override
-                  public boolean isNodeFiltered(Node<Category> node) throws IOException, SQLException {
-                    return !hasTicket(node, categoriesWithTickets);
-                  }
-                  private boolean hasTicket(Node<Category> node, Set<Category> categoriesWithTickets) throws IOException, SQLException {
-                    if (categoriesWithTickets.contains(node.getValue())) {
-                      return true;
+                  categoryTree,
+                  new NodeFilter<>() {
+                    @Override
+                    public boolean isNodeFiltered(Node<Category> node) throws IOException, SQLException {
+                      return !hasTicket(node, categoriesWithTickets);
                     }
-                    List<Node<Category>> children = node.getChildren();
-                    if (children != null) {
-                      for (Node<Category> child : children) {
-                        if (hasTicket(child, categoriesWithTickets)) {
-                          return true;
+                    private boolean hasTicket(Node<Category> node, Set<Category> categoriesWithTickets) throws IOException, SQLException {
+                      if (categoriesWithTickets.contains(node.getValue())) {
+                        return true;
+                      }
+                      List<Node<Category>> children = node.getChildren();
+                      if (children != null) {
+                        for (Node<Category> child : children) {
+                          if (hasTicket(child, categoriesWithTickets)) {
+                            return true;
+                          }
                         }
                       }
+                      return false;
                     }
-                    return false;
                   }
-                }
               );
               final Tree<Account> filteredAccountTree = new TreeCopy<>(
-                accountTree,
-                new NodeFilter<>() {
-                  @Override
-                  public boolean isNodeFiltered(Node<Account> node) throws IOException, SQLException {
-                    return !hasTicket(node, accountsWithTickets);
-                  }
-                  private boolean hasTicket(Node<Account> node, Set<Account> accountsWithTickets) throws IOException, SQLException {
-                    if (accountsWithTickets.contains(node.getValue())) {
-                      return true;
+                  accountTree,
+                  new NodeFilter<>() {
+                    @Override
+                    public boolean isNodeFiltered(Node<Account> node) throws IOException, SQLException {
+                      return !hasTicket(node, accountsWithTickets);
                     }
-                    List<Node<Account>> children = node.getChildren();
-                    if (children != null) {
-                      for (Node<Account> child : children) {
-                        if (hasTicket(child, accountsWithTickets)) {
-                          return true;
+                    private boolean hasTicket(Node<Account> node, Set<Account> accountsWithTickets) throws IOException, SQLException {
+                      if (accountsWithTickets.contains(node.getValue())) {
+                        return true;
+                      }
+                      List<Node<Account>> children = node.getChildren();
+                      if (children != null) {
+                        for (Node<Account> child : children) {
+                          if (hasTicket(child, accountsWithTickets)) {
+                            return true;
+                          }
                         }
                       }
+                      return false;
                     }
-                    return false;
                   }
-                }
               );
               // Perform ticket data lookups before going to the Swing thread
               final List<TicketRow> ticketRows = new ArrayList<>(tickets.size());
@@ -960,25 +962,25 @@ public class CommunicationPane extends JPanel implements TableListener {
                 Administrator openedBy = ticket.getCreatedBy();
                 Email fromAddress = ticket.getFromAddress();
                 ticketRows.add(
-                  new TicketRow(
-                    account != null && account.isDisabled(), // isStrikethrough
-                    ticket.getKey(),
-                    priority,
-                    ticket.getStatus(),
-                    ticket.getOpenDate().getTime(),
-                    openedBy == null
-                      ? (
-                        fromAddress == null
-                          ? ""
-                          : ('('+fromAddress.toString()+')')
-                      ) : (
-                        fromAddress == null
-                          ? openedBy.getKey().toString()
-                          : (openedBy.getKey()+" ("+fromAddress.toString()+')')
-                      ),
-                    account == null ? "" : account.getKey().toString(),
-                    ticket.getSummary()
-                  )
+                    new TicketRow(
+                        account != null && account.isDisabled(), // isStrikethrough
+                        ticket.getKey(),
+                        priority,
+                        ticket.getStatus(),
+                        ticket.getOpenDate().getTime(),
+                        openedBy == null
+                            ? (
+                            fromAddress == null
+                                ? ""
+                                : ('(' + fromAddress.toString() + ')')
+                        ) : (
+                            fromAddress == null
+                                ? openedBy.getKey().toString()
+                                : (openedBy.getKey() + " (" + fromAddress.toString() + ')')
+                        ),
+                        account == null ? "" : account.getKey().toString(),
+                        ticket.getSummary()
+                    )
                 );
               }
               // Perform GUI updates
@@ -1034,6 +1036,7 @@ public class CommunicationPane extends JPanel implements TableListener {
       });
     }
   }
+
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc="Tickets Table">
@@ -1063,11 +1066,11 @@ public class CommunicationPane extends JPanel implements TableListener {
       if (!(obj instanceof TicketCell<?>)) {
         return false;
       }
-      TicketCell<?> other = (TicketCell<?>)obj;
+      TicketCell<?> other = (TicketCell<?>) obj;
       return
-        (isStrikethrough == other.isStrikethrough)
-        && value.equals(other.value)
-        && foregroundColor.equals(other.foregroundColor)
+          (isStrikethrough == other.isStrikethrough)
+              && value.equals(other.value)
+              && foregroundColor.equals(other.foregroundColor)
       ;
     }
 
@@ -1135,14 +1138,14 @@ public class CommunicationPane extends JPanel implements TableListener {
     final String summary;
 
     TicketRow(
-      boolean isStrikethrough,
-      Integer ticketNumber,
-      Priority priority,
-      Status status,
-      long openDate,
-      String openedBy,
-      String account,
-      String summary
+        boolean isStrikethrough,
+        Integer ticketNumber,
+        Priority priority,
+        Status status,
+        long openDate,
+        String openedBy,
+        String account,
+        String summary
     ) {
       this.isStrikethrough = isStrikethrough;
       this.ticketNumber = ticketNumber;
@@ -1156,14 +1159,14 @@ public class CommunicationPane extends JPanel implements TableListener {
 
     Object[] getObjectArray() {
       Color foregroundColor = getForegroundColor();
-      return new Object[] {
-        new TicketCell<>(ticketNumber, foregroundColor, isStrikethrough),
-        new TicketCell<>(priority, foregroundColor, isStrikethrough),
-        new TicketCell<>(status, foregroundColor, isStrikethrough),
-        new DateTimeTicketCell(openDate, foregroundColor, isStrikethrough),
-        new TicketCell<>(openedBy, foregroundColor, isStrikethrough),
-        new TicketCell<>(account, foregroundColor, isStrikethrough),
-        new TicketCell<>(summary, foregroundColor, isStrikethrough)
+      return new Object[]{
+          new TicketCell<>(ticketNumber, foregroundColor, isStrikethrough),
+          new TicketCell<>(priority, foregroundColor, isStrikethrough),
+          new TicketCell<>(status, foregroundColor, isStrikethrough),
+          new DateTimeTicketCell(openDate, foregroundColor, isStrikethrough),
+          new TicketCell<>(openedBy, foregroundColor, isStrikethrough),
+          new TicketCell<>(account, foregroundColor, isStrikethrough),
+          new TicketCell<>(summary, foregroundColor, isStrikethrough)
       };
     }
 
@@ -1173,9 +1176,9 @@ public class CommunicationPane extends JPanel implements TableListener {
     Color getForegroundColor() {
       String statusString = status.getStatus();
       if (
-        statusString.equals(Status.JUNK)
-        || statusString.equals(Status.DELETED)
-        || statusString.equals(Status.CLOSED)
+          statusString.equals(Status.JUNK)
+              || statusString.equals(Status.DELETED)
+              || statusString.equals(Status.CLOSED)
       ) {
         return AlertLevelTableCellRenderer.defaultColor;
       }
@@ -1192,7 +1195,7 @@ public class CommunicationPane extends JPanel implements TableListener {
       if (priorityString.equals(Priority.URGENT)) {
         return AlertLevelTableCellRenderer.criticalColor;
       } else {
-        throw new AssertionError("Unexpected value for priority: "+priority);
+        throw new AssertionError("Unexpected value for priority: " + priority);
       }
     }
   }
@@ -1206,26 +1209,26 @@ public class CommunicationPane extends JPanel implements TableListener {
 
     // Make minimal changes to the table during the synchronization
     int size = tickets.size();
-    for (int index=0; index<size; index++) {
+    for (int index = 0; index < size; index++) {
       TicketRow ticketRow = tickets.get(index);
       if (index >= ticketsTableModel.getRowCount()) {
         ticketsTableModel.addRow(ticketRow.getObjectArray());
       } else {
         Integer ticketNumber = ticketRow.ticketNumber;
         boolean needsCheckCells;
-        if (!ticketNumber.equals(((TicketCell<?>)ticketsTableModel.getValueAt(index, 0)).value)) {
+        if (!ticketNumber.equals(((TicketCell<?>) ticketsTableModel.getValueAt(index, 0)).value)) {
           // Objects don't match
           // If this object is found further down the list, then move it to this address
           int foundIndex = -1;
-          for (int searchIndex = index+1; searchIndex<ticketsTableModel.getRowCount(); searchIndex++) {
-            if (ticketNumber.equals(((TicketCell<?>)ticketsTableModel.getValueAt(searchIndex, 0)).value)) {
+          for (int searchIndex = index + 1; searchIndex < ticketsTableModel.getRowCount(); searchIndex++) {
+            if (ticketNumber.equals(((TicketCell<?>) ticketsTableModel.getValueAt(searchIndex, 0)).value)) {
               foundIndex = searchIndex;
               break;
             }
           }
           if (foundIndex != -1) {
             // Seems to lose selection pretty badly: ticketsTableModel.moveRow(foundIndex, foundIndex, index);
-            for (int removeIndex = foundIndex-1; removeIndex >= index; removeIndex--) {
+            for (int removeIndex = foundIndex - 1; removeIndex >= index; removeIndex--) {
               ticketsTableModel.removeRow(removeIndex);
             }
             needsCheckCells = true;
@@ -1243,134 +1246,134 @@ public class CommunicationPane extends JPanel implements TableListener {
           boolean isStrikethrough = ticketRow.isStrikethrough;
           // ticketNumber
           {
-            TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 0);
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 0);
             if (
-              ticketCell.isStrikethrough != isStrikethrough
-              || !ticketCell.value.equals(ticketRow.ticketNumber)
-              || !ticketCell.foregroundColor.equals(foregroundColor)
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.ticketNumber)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
             ) {
               ticketsTableModel.setValueAt(
-                new TicketCell<>(
-                  ticketRow.ticketNumber,
-                  foregroundColor,
-                  isStrikethrough
-                ),
-                index,
-                0
+                  new TicketCell<>(
+                      ticketRow.ticketNumber,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  0
               );
             }
           }
           // priority
           {
-            TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 1);
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 1);
             if (
-              ticketCell.isStrikethrough != isStrikethrough
-              || !ticketCell.value.equals(ticketRow.priority)
-              || !ticketCell.foregroundColor.equals(foregroundColor)
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.priority)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
             ) {
               ticketsTableModel.setValueAt(
-                new TicketCell<>(
-                  ticketRow.priority,
-                  foregroundColor,
-                  isStrikethrough
-                ),
-                index,
-                1
+                  new TicketCell<>(
+                      ticketRow.priority,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  1
               );
             }
           }
           // status
           {
-            TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 2);
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 2);
             if (
-              ticketCell.isStrikethrough != isStrikethrough
-              || !ticketCell.value.equals(ticketRow.status)
-              || !ticketCell.foregroundColor.equals(foregroundColor)
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.status)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
             ) {
               ticketsTableModel.setValueAt(
-                new TicketCell<>(
-                  ticketRow.status,
-                  foregroundColor,
-                  isStrikethrough
-                ),
-                index,
-                2
+                  new TicketCell<>(
+                      ticketRow.status,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  2
               );
             }
           }
           // openDate
           {
-            DateTimeTicketCell ticketCell = (DateTimeTicketCell)ticketsTableModel.getValueAt(index, 3);
+            DateTimeTicketCell ticketCell = (DateTimeTicketCell) ticketsTableModel.getValueAt(index, 3);
             if (
-              ticketCell.isStrikethrough != isStrikethrough
-              || !ticketCell.value.equals(ticketRow.openDate)
-              || !ticketCell.foregroundColor.equals(foregroundColor)
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.openDate)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
             ) {
               ticketsTableModel.setValueAt(
-                new DateTimeTicketCell(
-                  ticketRow.openDate,
-                  foregroundColor,
-                  isStrikethrough
-                ),
-                index,
-                3
+                  new DateTimeTicketCell(
+                      ticketRow.openDate,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  3
               );
             }
           }
           // openedBy
           {
-            TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 4);
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 4);
             if (
-              ticketCell.isStrikethrough != isStrikethrough
-              || !ticketCell.value.equals(ticketRow.openedBy)
-              || !ticketCell.foregroundColor.equals(foregroundColor)
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.openedBy)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
             ) {
               ticketsTableModel.setValueAt(
-                new TicketCell<>(
-                  ticketRow.openedBy,
-                  foregroundColor,
-                  isStrikethrough
-                ),
-                index,
-                4
+                  new TicketCell<>(
+                      ticketRow.openedBy,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  4
               );
             }
           }
           // account
           {
-            TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 5);
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 5);
             if (
-              ticketCell.isStrikethrough != isStrikethrough
-              || !ticketCell.value.equals(ticketRow.account)
-              || !ticketCell.foregroundColor.equals(foregroundColor)
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.account)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
             ) {
               ticketsTableModel.setValueAt(
-                new TicketCell<>(
-                  ticketRow.account,
-                  foregroundColor,
-                  isStrikethrough
-                ),
-                index,
-                5
+                  new TicketCell<>(
+                      ticketRow.account,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  5
               );
             }
           }
           // summary
           {
-            TicketCell<?> ticketCell = (TicketCell<?>)ticketsTableModel.getValueAt(index, 6);
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 6);
             if (
-              ticketCell.isStrikethrough != isStrikethrough
-              || !ticketCell.value.equals(ticketRow.summary)
-              || !ticketCell.foregroundColor.equals(foregroundColor)
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.summary)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
             ) {
               ticketsTableModel.setValueAt(
-                new TicketCell<>(
-                  ticketRow.summary,
-                  foregroundColor,
-                  isStrikethrough
-                ),
-                index,
-                6
+                  new TicketCell<>(
+                      ticketRow.summary,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  6
               );
             }
           }
@@ -1379,7 +1382,7 @@ public class CommunicationPane extends JPanel implements TableListener {
     }
     // Remove any extra
     while (ticketsTableModel.getRowCount() > size) {
-      ticketsTableModel.removeRow(ticketsTableModel.getRowCount()-1);
+      ticketsTableModel.removeRow(ticketsTableModel.getRowCount() - 1);
     }
   }
 
@@ -1399,7 +1402,7 @@ public class CommunicationPane extends JPanel implements TableListener {
       if (value == null) {
         return wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
       } else if (value instanceof TicketCell<?>) {
-        TicketCell<?> ticketCell = (TicketCell<?>)value;
+        TicketCell<?> ticketCell = (TicketCell<?>) value;
         value = ticketCell.getRendererValue();
         Component component = wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         component.setForeground(ticketCell.foregroundColor);
@@ -1424,10 +1427,11 @@ public class CommunicationPane extends JPanel implements TableListener {
         }
         return component;
       } else {
-        throw new IllegalArgumentException("value must be a TicketCell: value is "+value.getClass().getName());
+        throw new IllegalArgumentException("value must be a TicketCell: value is " + value.getClass().getName());
       }
     }
   }
+
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc="Trees">
@@ -1455,9 +1459,9 @@ public class CommunicationPane extends JPanel implements TableListener {
     DisablableTreeCellRenderer() {
       super();
       Object value = UIManager.get("Tree.drawsFocusBorderAroundIcon");
-      drawsFocusBorderAroundIcon = (value != null && (Boolean)value);
+      drawsFocusBorderAroundIcon = (value != null && (Boolean) value);
       value = UIManager.get("Tree.drawDashedFocusIndicator");
-      drawDashedFocusIndicator = (value != null && (Boolean)value);
+      drawDashedFocusIndicator = (value != null && (Boolean) value);
     }
 
     private Font normalFont;
@@ -1466,13 +1470,13 @@ public class CommunicationPane extends JPanel implements TableListener {
 
     @Override
     public Component getTreeCellRendererComponent(
-      JTree tree,
-      Object value,
-      boolean sel,
-      boolean expanded,
-      boolean leaf,
-      int row,
-      boolean hasFocus
+        JTree tree,
+        Object value,
+        boolean sel,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
     ) {
       assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -1513,9 +1517,9 @@ public class CommunicationPane extends JPanel implements TableListener {
       }
       Font font = normalFont;
       if (value instanceof DefaultMutableTreeNode) {
-        Object userObject = ((DefaultMutableTreeNode)value).getUserObject();
+        Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
         if (userObject instanceof Disablable) {
-          Disablable disablable = (Disablable)userObject;
+          Disablable disablable = (Disablable) userObject;
           if (disablable.isDisabled()) {
             font = strikethroughFont;
             // fg = Color.RED;
@@ -1600,10 +1604,10 @@ public class CommunicationPane extends JPanel implements TableListener {
         g.setColor(bColor);
         if (getComponentOrientation().isLeftToRight()) {
           g.fillRect(imageOffset, 0, getWidth() - imageOffset,
-                 getHeight());
+              getHeight());
         } else {
           g.fillRect(0, 0, getWidth() - imageOffset,
-                 getHeight());
+              getHeight());
         }
       }
 
@@ -1615,7 +1619,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         }
         if (getComponentOrientation().isLeftToRight()) {
           paintFocus(g, imageOffset, 0, getWidth() - imageOffset,
-                 getHeight(), bColor);
+              getHeight(), bColor);
         } else {
           paintFocus(g, 0, 0, getWidth() - imageOffset, getHeight(), bColor);
         }
@@ -1652,6 +1656,7 @@ public class CommunicationPane extends JPanel implements TableListener {
       return 0;
     }
   }
+
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc="Ticket Editor">
@@ -1675,8 +1680,8 @@ public class CommunicationPane extends JPanel implements TableListener {
     TicketEditorFrame existing = ticketEditorFrames.get(ticketId);
     if (existing != null) {
       int state = existing.getExtendedState();
-      if ((state&Frame.ICONIFIED) != 0) {
-        existing.setExtendedState(state-Frame.ICONIFIED);
+      if ((state & Frame.ICONIFIED) != 0) {
+        existing.setExtendedState(state - Frame.ICONIFIED);
       }
       existing.toFront();
       // existing.requestFocus();

@@ -106,15 +106,15 @@ public class SystemsPane extends JPanel {
 
     taskPanel = new JPanel(new GridLayout(1, 1));
     splitPane = new JSplitPane(
-      JSplitPane.HORIZONTAL_SPLIT,
-      true,
-      new JScrollPane(tree),
-      taskPanel
+        JSplitPane.HORIZONTAL_SPLIT,
+        true,
+        new JScrollPane(tree),
+        taskPanel
     );
     splitPane.setDividerLocation(noc.preferences.getSystemsSplitPaneDividerLocation());
     splitPane.addPropertyChangeListener(
-      "dividerLocation",
-      evt -> noc.preferences.setSystemsSplitPaneDividerLocation(splitPane.getDividerLocation())
+        "dividerLocation",
+        evt -> noc.preferences.setSystemsSplitPaneDividerLocation(splitPane.getDividerLocation())
     );
 
     add(splitPane, BorderLayout.CENTER);
@@ -122,7 +122,7 @@ public class SystemsPane extends JPanel {
       if (e.isAddedPath()) {
         TreePath treePath = e.getPath();
         if (treePath != null) {
-          selectNode((SystemsTreeNode)treePath.getLastPathComponent());
+          selectNode((SystemsTreeNode) treePath.getLastPathComponent());
         }
       }
     });
@@ -137,13 +137,13 @@ public class SystemsPane extends JPanel {
     final String highLabel = RESOURCES.getMessage("alertLevel.high.label");
     final String criticalLabel = RESOURCES.getMessage("alertLevel.critical.label");
     JComboBox<String> alertLevel = new JComboBox<>(
-      new String[] {
-        allLabel,
-        lowLabel,
-        mediumLabel,
-        highLabel,
-        criticalLabel
-      }
+        new String[]{
+            allLabel,
+            lowLabel,
+            mediumLabel,
+            highLabel,
+            criticalLabel
+        }
     );
     AlertLevel curAlertLevel = noc.preferences.getSystemsAlertLevel();
     switch (curAlertLevel) {
@@ -163,14 +163,14 @@ public class SystemsPane extends JPanel {
         alertLevel.setSelectedItem(criticalLabel);
         break;
       default:
-        logger.log(Level.WARNING, null, new AssertionError("Unexpected display level, resetting to Medium: "+curAlertLevel));
+        logger.log(Level.WARNING, null, new AssertionError("Unexpected display level, resetting to Medium: " + curAlertLevel));
         alertLevel.setSelectedItem(mediumLabel);
         setAlertLevel(AlertLevel.MEDIUM);
     }
     toolBar.add(alertLevel);
     alertLevel.addItemListener(e -> {
       if (e.getStateChange() == ItemEvent.SELECTED) {
-        String command = (String)e.getItem();
+        String command = (String) e.getItem();
         if (allLabel.equals(command)) {
           setAlertLevel(AlertLevel.NONE);
         } else if (lowLabel.equals(command)) {
@@ -182,7 +182,7 @@ public class SystemsPane extends JPanel {
         } else if (criticalLabel.equals(command)) {
           setAlertLevel(AlertLevel.CRITICAL);
         } else {
-          throw new AssertionError("Unexpected value for command: "+command);
+          throw new AssertionError("Unexpected value for command: " + command);
         }
       }
     });
@@ -313,13 +313,13 @@ public class SystemsPane extends JPanel {
             if (treeListener == thisTreeListener) {
               for (AlertChange change : changes) {
                 noc.alert(
-                  change.getNode(),
-                  change.getNodeFullPath(),
-                  change.getOldAlertLevel(),
-                  change.getNewAlertLevel(),
-                  change.getAlertMessage(),
-                  change.getOldAlertCategory(),
-                  change.getNewAlertCategory()
+                    change.getNode(),
+                    change.getNodeFullPath(),
+                    change.getOldAlertLevel(),
+                    change.getNewAlertLevel(),
+                    change.getAlertMessage(),
+                    change.getOldAlertCategory(),
+                    change.getNewAlertCategory()
                 );
               }
             }
@@ -364,7 +364,7 @@ public class SystemsPane extends JPanel {
     selectNode(null);
 
     while (rootTreeNode.getChildCount() > 0) {
-      recursiveRemoveNodeFromParent((SystemsTreeNode)rootTreeNode.getChildAt(rootTreeNode.getChildCount() - 1));
+      recursiveRemoveNodeFromParent((SystemsTreeNode) rootTreeNode.getChildAt(rootTreeNode.getChildCount() - 1));
     }
     tree.repaint();
   }
@@ -389,7 +389,7 @@ public class SystemsPane extends JPanel {
             while (!Thread.currentThread().isInterrupted()) {
               boolean doIt;
               synchronized (batchCounterLock) {
-                if (batchCounter>lastCompletedBatchCounter) {
+                if (batchCounter > lastCompletedBatchCounter) {
                   //System.out.println("DEBUG: Total in this batch: "+(batchCounter - lastCompletedBatchCounter));
                   lastCompletedBatchCounter = batchCounter;
                   doIt = true;
@@ -434,7 +434,7 @@ public class SystemsPane extends JPanel {
       // Skip if there is no root node
       if (rootTreeNode.getChildCount() != 0) {
         AlertLevel alertLevel = noc.preferences.getSystemsAlertLevel();
-        SystemsTreeNode newRootNode = (SystemsTreeNode)rootTreeNode.getChildAt(0);
+        SystemsTreeNode newRootNode = (SystemsTreeNode) rootTreeNode.getChildAt(0);
         newRootNode.setAlertLevel(rootNodeSnapshot.getAlertLevel());
         validateTreeNodes(rootNodeSnapshot, newRootNode, alertLevel);
       }
@@ -474,12 +474,12 @@ public class SystemsPane extends JPanel {
     Node childNode = child.getNode();
 
     // Look for an existing match anywhere at the correct position or later in the children
-    for (int scanIndex = index; scanIndex<parent.getChildCount() ; scanIndex++) {
-      SystemsTreeNode scanNode = (SystemsTreeNode)parent.getChildAt(scanIndex);
+    for (int scanIndex = index; scanIndex < parent.getChildCount(); scanIndex++) {
+      SystemsTreeNode scanNode = (SystemsTreeNode) parent.getChildAt(scanIndex);
       if (scanNode.getNode().equals(childNode)) {
         // Found existing, remove any extra nodes up to it (if any)
-        for (int deleteIndex = scanIndex-1; deleteIndex >= index ; deleteIndex--) {
-          SystemsTreeNode deletingNode = (SystemsTreeNode)parent.getChildAt(deleteIndex);
+        for (int deleteIndex = scanIndex - 1; deleteIndex >= index; deleteIndex--) {
+          SystemsTreeNode deletingNode = (SystemsTreeNode) parent.getChildAt(deleteIndex);
           recursiveRemoveNodeFromParent(deletingNode);
         }
         return scanNode;
@@ -494,8 +494,8 @@ public class SystemsPane extends JPanel {
   private void pruneChildren(DefaultTreeModel treeModel, SystemsTreeNode parent, int size) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-    while (parent.getChildCount()>size) {
-      SystemsTreeNode deletingNode = (SystemsTreeNode)parent.getChildAt(parent.getChildCount()-1);
+    while (parent.getChildCount() > size) {
+      SystemsTreeNode deletingNode = (SystemsTreeNode) parent.getChildAt(parent.getChildCount() - 1);
       recursiveRemoveNodeFromParent(deletingNode);
     }
   }
@@ -504,8 +504,8 @@ public class SystemsPane extends JPanel {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     // Delete children first
-    while (deletingNode.getChildCount()>0) {
-      recursiveRemoveNodeFromParent((SystemsTreeNode)deletingNode.getChildAt(deletingNode.getChildCount()-1));
+    while (deletingNode.getChildCount() > 0) {
+      recursiveRemoveNodeFromParent((SystemsTreeNode) deletingNode.getChildAt(deletingNode.getChildCount() - 1));
     }
     if (deletingNode == this.selectedTreeNode) {
       selectNode(null);
@@ -568,20 +568,20 @@ public class SystemsPane extends JPanel {
     SystemsTreeCellRenderer() {
       super();
       Object value = UIManager.get("Tree.drawsFocusBorderAroundIcon");
-      drawsFocusBorderAroundIcon = (value != null && (Boolean)value);
+      drawsFocusBorderAroundIcon = (value != null && (Boolean) value);
       value = UIManager.get("Tree.drawDashedFocusIndicator");
-      drawDashedFocusIndicator = (value != null && (Boolean)value);
+      drawDashedFocusIndicator = (value != null && (Boolean) value);
     }
 
     @Override
     public Component getTreeCellRendererComponent(
-      JTree tree,
-      Object value,
-      boolean sel,
-      boolean expanded,
-      boolean leaf,
-      int row,
-      boolean hasFocus
+        JTree tree,
+        Object value,
+        boolean sel,
+        boolean expanded,
+        boolean leaf,
+        int row,
+        boolean hasFocus
     ) {
       assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -614,7 +614,7 @@ public class SystemsPane extends JPanel {
       }
       // Override for SystemsTreeNodes
       if (value instanceof SystemsTreeNode) {
-        SystemsTreeNode snode = (SystemsTreeNode)value;
+        SystemsTreeNode snode = (SystemsTreeNode) value;
         AlertLevel alertLevel = snode.alertLevel;
         if (alertLevel == null) {
           throw new AssertionError("alertLevel is null");
@@ -711,10 +711,10 @@ public class SystemsPane extends JPanel {
         g.setColor(bColor);
         if (getComponentOrientation().isLeftToRight()) {
           g.fillRect(imageOffset, 0, getWidth() - imageOffset,
-                 getHeight());
+              getHeight());
         } else {
           g.fillRect(0, 0, getWidth() - imageOffset,
-                 getHeight());
+              getHeight());
         }
       }
 
@@ -726,7 +726,7 @@ public class SystemsPane extends JPanel {
         }
         if (getComponentOrientation().isLeftToRight()) {
           paintFocus(g, imageOffset, 0, getWidth() - imageOffset,
-                 getHeight(), bColor);
+              getHeight(), bColor);
         } else {
           paintFocus(g, 0, 0, getWidth() - imageOffset, getHeight(), bColor);
         }

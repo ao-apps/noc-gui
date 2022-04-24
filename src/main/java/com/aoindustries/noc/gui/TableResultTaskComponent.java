@@ -65,7 +65,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
   private static final Logger logger = Logger.getLogger(TableResultTaskComponent.class.getName());
 
   private static final Resources RESOURCES =
-    Resources.getResources(ResourceBundle::getBundle, TableResultTaskComponent.class);
+      Resources.getResources(ResourceBundle::getBundle, TableResultTaskComponent.class);
 
   private static final long serialVersionUID = 1L;
 
@@ -118,7 +118,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
       throw new IllegalArgumentException("validationComponent is null");
     }
 
-    final TableResultNode localTableResultNode = this.tableResultNode = (TableResultNode)node;
+    final TableResultNode localTableResultNode = this.tableResultNode = (TableResultNode) node;
     this.validationComponent = validationComponent;
 
     // Scroll back to the top
@@ -197,8 +197,8 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
       if (newTable == null) {
         //System.out.println("DEBUG: TableResultTaskComponent: creating new JTable: "+columnHeaders);
         UneditableDefaultTableModel tableModel = new UneditableDefaultTableModel(
-          tableResult.getRows(),
-          tableResult.getColumns()
+            tableResult.getRows(),
+            tableResult.getColumns()
         );
         tableModel.setColumnIdentifiers(columnHeaders.toArray());
         newTable = new JTable(tableModel) {
@@ -207,7 +207,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
           @Override
           public TableCellRenderer getCellRenderer(int row, int column) {
             return new AlertLevelTableCellRenderer(
-              super.getCellRenderer(row, column)
+                super.getCellRenderer(row, column)
             );
           }
         };
@@ -230,28 +230,28 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
       String formattedDate = df.format(new Date(tableResult.getTime()));
       long latency = tableResult.getLatency();
       String retrievedLine =
-        latency < 1000000
-        ? RESOURCES.getMessage(
-          //locale,
-          "retrieved.micro",
-          formattedDate,
-          SQLUtility.formatDecimal3(latency)
-        ) : latency < 1000000000
-        ? RESOURCES.getMessage(
-          //locale,
-          "retrieved.milli",
-          formattedDate,
-          SQLUtility.formatDecimal3(latency/1000)
-        ) : RESOURCES.getMessage(
-          //locale,
-          "retrieved.second",
-          formattedDate,
-          SQLUtility.formatDecimal3(latency/1000000)
-        )
+          latency < 1000000
+              ? RESOURCES.getMessage(
+              //locale,
+              "retrieved.micro",
+              formattedDate,
+              SQLUtility.formatDecimal3(latency)
+          ) : latency < 1000000000
+              ? RESOURCES.getMessage(
+              //locale,
+              "retrieved.milli",
+              formattedDate,
+              SQLUtility.formatDecimal3(latency / 1000)
+          ) : RESOURCES.getMessage(
+              //locale,
+              "retrieved.second",
+              formattedDate,
+              SQLUtility.formatDecimal3(latency / 1000000)
+          )
       ;
       retrievedLabel.setText(retrievedLine);
 
-      UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel)table.getModel();
+      UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel) table.getModel();
       int columns = tableResult.getColumns();
       if (columns != tableModel.getColumnCount()) {
         tableModel.setColumnCount(columns);
@@ -260,34 +260,34 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
       List<?> allTableData = tableResult.getTableData(locale);
       List<AlertLevel> allAlertLevels = tableResult.getAlertLevels();
       int allRows = tableResult.getRows();
-      List<Object> tableData = new ArrayList<>(allRows*columns);
+      List<Object> tableData = new ArrayList<>(allRows * columns);
       List<AlertLevel> alertLevels = new ArrayList<>(allRows);
       AlertLevel systemsAlertLevel = noc.preferences.getSystemsAlertLevel();
       int index = 0;
-      for (int row=0; row<allRows; row++) {
+      for (int row = 0; row < allRows; row++) {
         AlertLevel alertLevel = allAlertLevels.get(row);
         if (alertLevel.compareTo(systemsAlertLevel) >= 0) {
-          for (int col=0;col<columns;col++) {
+          for (int col = 0; col < columns; col++) {
             tableData.add(allTableData.get(index++));
           }
           alertLevels.add(alertLevel);
         } else {
-          index+=columns;
+          index += columns;
         }
       }
-      int rows = tableData.size()/columns;
+      int rows = tableData.size() / columns;
       if (rows != tableModel.getRowCount()) {
         tableModel.setRowCount(rows);
       }
 
       index = 0;
-      for (int row=0;row<rows;row++) {
+      for (int row = 0; row < rows; row++) {
         AlertLevel alertLevel = alertLevels.get(row);
-        for (int col=0;col<columns;col++) {
+        for (int col = 0; col < columns; col++) {
           tableModel.setValueAt(
-            new AlertLevelAndData(alertLevel, tableData.get(index++)),
-            row,
-            col
+              new AlertLevelAndData(alertLevel, tableData.get(index++)),
+              row,
+              col
           );
         }
       }

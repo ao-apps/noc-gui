@@ -143,8 +143,8 @@ class Buzzer {
           _highestLevel = alert.newAlertLevel;
           _highestCategory = alert.newAlertCategory;
         } else if (
-          alert.newAlertLevel == _highestLevel
-          && alert.newAlertCategory.compareTo(_highestCategory) > 0
+            alert.newAlertLevel == _highestLevel
+                && alert.newAlertCategory.compareTo(_highestCategory) > 0
         ) {
           _highestCategory = alert.newAlertCategory;
         }
@@ -253,13 +253,13 @@ class Buzzer {
                 int buzzInterval = getBuzzerInterval(currentLevel, currentCategory);
                 long sleepTime;
                 if (
-                  // Plays sound immediately when the alert level goes up.
-                  currentLevel.compareTo(lastBuzzedLevel) > 0
-                  || (
-                    // Plays sound immediately when in the same alert level, but the category goes up.
-                    currentLevel == lastBuzzedLevel
-                    && currentCategory.compareTo(lastBuzzedCategory) > 0
-                  )
+                    // Plays sound immediately when the alert level goes up.
+                    currentLevel.compareTo(lastBuzzedLevel) > 0
+                        || (
+                        // Plays sound immediately when in the same alert level, but the category goes up.
+                        currentLevel == lastBuzzedLevel
+                            && currentCategory.compareTo(lastBuzzedCategory) > 0
+                    )
                 ) {
                   // Buzz now if alert level increased
                   lastBuzzedLevel = currentLevel;

@@ -50,11 +50,12 @@ public class TicketEditorFrame extends JFrame {
   private static final Logger logger = Logger.getLogger(TicketEditorFrame.class.getName());
 
   private static final Resources RESOURCES =
-    Resources.getResources(ResourceBundle::getBundle, TicketEditorFrame.class);
+      Resources.getResources(ResourceBundle::getBundle, TicketEditorFrame.class);
 
   private static final long serialVersionUID = 1L;
 
   private final TicketEditor ticketEditor;
+
   //private final Integer ticketId;
 
   @SuppressWarnings("OverridableMethodCallInConstructor")
@@ -93,26 +94,26 @@ public class TicketEditorFrame extends JFrame {
     // Save/Restore GUI settings from preferences
     setBounds(noc.preferences.getTicketEditorFrameBounds());
     addComponentListener(
-      new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-          noc.preferences.setTicketEditorFrameBounds(getBounds());
+        new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            noc.preferences.setTicketEditorFrameBounds(getBounds());
+          }
+          @Override
+          public void componentMoved(ComponentEvent e) {
+            noc.preferences.setTicketEditorFrameBounds(getBounds());
+          }
         }
-        @Override
-        public void componentMoved(ComponentEvent e) {
-          noc.preferences.setTicketEditorFrameBounds(getBounds());
-        }
-      }
     );
 
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     addWindowListener(
-      new WindowAdapter() {
-        @Override
-        public void windowClosing(WindowEvent e) {
-          noc.communication.closeTicketFrame(ticketId);
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent e) {
+            noc.communication.closeTicketFrame(ticketId);
+          }
         }
-      }
     );
   }
 

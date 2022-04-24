@@ -196,53 +196,53 @@ public class NOC {
     // Add listeners for frame moves
     if (singleFrame != null) {
       singleFrame.addComponentListener(
-        new ComponentAdapter() {
-          @Override
-          public void componentResized(ComponentEvent e) {
-            preferences.setSingleFrameBounds(singleFrame.getBounds());
+          new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+              preferences.setSingleFrameBounds(singleFrame.getBounds());
+            }
+            @Override
+            public void componentMoved(ComponentEvent e) {
+              preferences.setSingleFrameBounds(singleFrame.getBounds());
+            }
           }
-          @Override
-          public void componentMoved(ComponentEvent e) {
-            preferences.setSingleFrameBounds(singleFrame.getBounds());
-          }
-        }
       );
     }
     alertsFrame.addComponentListener(
-      new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-          preferences.setAlertsFrameBounds(alertsFrame.getBounds());
+        new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            preferences.setAlertsFrameBounds(alertsFrame.getBounds());
+          }
+          @Override
+          public void componentMoved(ComponentEvent e) {
+            preferences.setAlertsFrameBounds(alertsFrame.getBounds());
+          }
         }
-        @Override
-        public void componentMoved(ComponentEvent e) {
-          preferences.setAlertsFrameBounds(alertsFrame.getBounds());
-        }
-      }
     );
     communicationFrame.addComponentListener(
-      new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-          preferences.setCommunicationFrameBounds(communicationFrame.getBounds());
+        new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            preferences.setCommunicationFrameBounds(communicationFrame.getBounds());
+          }
+          @Override
+          public void componentMoved(ComponentEvent e) {
+            preferences.setCommunicationFrameBounds(communicationFrame.getBounds());
+          }
         }
-        @Override
-        public void componentMoved(ComponentEvent e) {
-          preferences.setCommunicationFrameBounds(communicationFrame.getBounds());
-        }
-      }
     );
     systemsFrame.addComponentListener(
-      new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-          preferences.setSystemsFrameBounds(systemsFrame.getBounds());
+        new ComponentAdapter() {
+          @Override
+          public void componentResized(ComponentEvent e) {
+            preferences.setSystemsFrameBounds(systemsFrame.getBounds());
+          }
+          @Override
+          public void componentMoved(ComponentEvent e) {
+            preferences.setSystemsFrameBounds(systemsFrame.getBounds());
+          }
         }
-        @Override
-        public void componentMoved(ComponentEvent e) {
-          preferences.setSystemsFrameBounds(systemsFrame.getBounds());
-        }
-      }
     );
 
     // Add the listeners for window close
@@ -324,14 +324,14 @@ public class NOC {
       TrayIcon localTrayIcon = new TrayIcon(localTrayIconDisabledImage, RESOURCES.getMessage("trayIcon.name"), popup);
       localTrayIcon.setImageAutoSize(autoSize);
       localTrayIcon.addMouseListener(
-        new MouseAdapter() {
-          @Override
-          public void mouseClicked(MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON1) {
-              trayIconOpen();
+          new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+              if (e.getButton() == MouseEvent.BUTTON1) {
+                trayIconOpen();
+              }
             }
           }
-        }
       );
       try {
         tray.add(localTrayIcon);
@@ -389,7 +389,7 @@ public class NOC {
           //tabbedPane.setSelectedIndex(0);
         }
         break;
-      default: throw new AssertionError("Unexpected value for currentDisplayMode: "+currentDisplayMode);
+      default: throw new AssertionError("Unexpected value for currentDisplayMode: " + currentDisplayMode);
     }
   }
 
@@ -403,9 +403,9 @@ public class NOC {
     } else if (singleFrame != null) {
       // Give components a chance to save (with cancel possibility)
       if (
-        alerts.exitApplication()
-        && communication.exitApplication()
-        && systems.exitApplication()
+          alerts.exitApplication()
+              && communication.exitApplication()
+              && systems.exitApplication()
       ) {
         logout();
         singleFrame.setVisible(false);
@@ -500,45 +500,45 @@ public class NOC {
           parent.repaint();
         }
         ignoreChangeEvent = false;
-        {
-          alertsFrame.getContentPane().setLayout(new BorderLayout());
-          JToolBar toolBar = new JToolBar(RESOURCES.getMessage("alerts.tools"));
-          toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-          toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-          alerts.addToolBars(toolBar);
-          toolBar.addSeparator();
-          alertsLoginButton = addCommonButtons(toolBar);
-          alertsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-          alertsFrame.getContentPane().add(alerts, BorderLayout.CENTER);
-          alertsFrame.setBounds(preferences.getAlertsFrameBounds());
-          alertsFrame.setVisible(true);
-        }
-        {
-          communicationFrame.getContentPane().setLayout(new BorderLayout());
-          JToolBar toolBar = new JToolBar(RESOURCES.getMessage("communication.tools"));
-          toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-          toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-          communication.addToolBars(toolBar);
-          toolBar.addSeparator();
-          communicationLoginButton = addCommonButtons(toolBar);
-          communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-          communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
-          communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
-          communicationFrame.setVisible(true);
-        }
-        {
-          systemsFrame.getContentPane().setLayout(new BorderLayout());
-          JToolBar toolBar = new JToolBar(RESOURCES.getMessage("systems.tools"));
-          toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-          toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-          systems.addToolBars(toolBar);
-          toolBar.addSeparator();
-          systemsLoginButton = addCommonButtons(toolBar);
-          systemsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-          systemsFrame.getContentPane().add(systems, BorderLayout.CENTER);
-          systemsFrame.setBounds(preferences.getSystemsFrameBounds());
-          systemsFrame.setVisible(true);
-        }
+      {
+        alertsFrame.getContentPane().setLayout(new BorderLayout());
+        JToolBar toolBar = new JToolBar(RESOURCES.getMessage("alerts.tools"));
+        toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+        toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+        alerts.addToolBars(toolBar);
+        toolBar.addSeparator();
+        alertsLoginButton = addCommonButtons(toolBar);
+        alertsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+        alertsFrame.getContentPane().add(alerts, BorderLayout.CENTER);
+        alertsFrame.setBounds(preferences.getAlertsFrameBounds());
+        alertsFrame.setVisible(true);
+      }
+      {
+        communicationFrame.getContentPane().setLayout(new BorderLayout());
+        JToolBar toolBar = new JToolBar(RESOURCES.getMessage("communication.tools"));
+        toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+        toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+        communication.addToolBars(toolBar);
+        toolBar.addSeparator();
+        communicationLoginButton = addCommonButtons(toolBar);
+        communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+        communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
+        communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
+        communicationFrame.setVisible(true);
+      }
+      {
+        systemsFrame.getContentPane().setLayout(new BorderLayout());
+        JToolBar toolBar = new JToolBar(RESOURCES.getMessage("systems.tools"));
+        toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+        toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+        systems.addToolBars(toolBar);
+        toolBar.addSeparator();
+        systemsLoginButton = addCommonButtons(toolBar);
+        systemsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+        systemsFrame.getContentPane().add(systems, BorderLayout.CENTER);
+        systemsFrame.setBounds(preferences.getSystemsFrameBounds());
+        systemsFrame.setVisible(true);
+      }
         singleLoginButton = null;
         break;
       case TABS:
@@ -563,7 +563,7 @@ public class NOC {
         }
         break;
       default:
-        throw new AssertionError("Unknown value for currentDisplayMode: "+currentDisplayMode);
+        throw new AssertionError("Unknown value for currentDisplayMode: " + currentDisplayMode);
     }
   }
 
@@ -632,9 +632,9 @@ public class NOC {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     JButton loginButton = new JButton(
-      rootNode == null
-      ? RESOURCES.getMessage("loginButton.label")
-      : RESOURCES.getMessage("logoutButton.label")
+        rootNode == null
+            ? RESOURCES.getMessage("loginButton.label")
+            : RESOURCES.getMessage("logoutButton.label")
     );
     loginButton.addActionListener(e -> {
       if (rootNode == null) {
@@ -661,7 +661,7 @@ public class NOC {
         break;
       }
       default :
-        throw new AssertionError("Unexpected value for currentDisplayMode: "+currentDisplayMode);
+        throw new AssertionError("Unexpected value for currentDisplayMode: " + currentDisplayMode);
     }
     return loginButton;
   }
@@ -677,17 +677,17 @@ public class NOC {
    * @param  port  the port for the local objects, not the server port.
    */
   void loginCompleted(
-    AOServConnector conn,
-    RootNode rootNode,
-    String rootNodeLabel,
-    String server,
-    String serverPort,
-    String external,
-    String localPort,
-    User.Name username,
-    int port,
-    RMIClientSocketFactory csf,
-    RMIServerSocketFactory ssf
+      AOServConnector conn,
+      RootNode rootNode,
+      String rootNodeLabel,
+      String server,
+      String serverPort,
+      String external,
+      String localPort,
+      User.Name username,
+      int port,
+      RMIClientSocketFactory csf,
+      RMIServerSocketFactory ssf
   ) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -772,27 +772,27 @@ public class NOC {
 
     // Call system tray
     if (
-      (oldAlertLevel == AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel) > 0)
-      // TODO: Support per category, configurable alert level settings, might affect what blinks on task tray, too
-      && newAlertLevel.compareTo(AlertLevel.HIGH) >= 0
+        (oldAlertLevel == AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel) > 0)
+            // TODO: Support per category, configurable alert level settings, might affect what blinks on task tray, too
+            && newAlertLevel.compareTo(AlertLevel.HIGH) >= 0
     ) {
       // Only use displayMessage when alerts not active in window
       if (
-        currentDisplayMode == Preferences.DisplayMode.TABS
-        ? (
-          !singleFrame.isActive()
-          || tabbedPane.getSelectedIndex() != ALERTS_TAB_INDEX
-        ) : (
-          !alertsFrame.isActive()
-        )
+          currentDisplayMode == Preferences.DisplayMode.TABS
+              ? (
+              !singleFrame.isActive()
+                  || tabbedPane.getSelectedIndex() != ALERTS_TAB_INDEX
+          ) : (
+              !alertsFrame.isActive()
+          )
       ) {
         if (trayIcon != null) {
           // TODO: Enable tray icon alerts by category and alert level, such as showing new tickets, contacts, or emails
           if (ENABLE_TRAY_ICON_ALERTS) {
             trayIcon.displayMessage(
-              RESOURCES.getMessage("trayIcon.alertMessage.caption"),
-              sourceDisplay+" \r\n"+alertMessage,
-              newAlertLevel.compareTo(AlertLevel.HIGH) == 0 ? TrayIcon.MessageType.WARNING : TrayIcon.MessageType.ERROR
+                RESOURCES.getMessage("trayIcon.alertMessage.caption"),
+                sourceDisplay + " \r\n" + alertMessage,
+                newAlertLevel.compareTo(AlertLevel.HIGH) == 0 ? TrayIcon.MessageType.WARNING : TrayIcon.MessageType.ERROR
             );
           }
         } else {

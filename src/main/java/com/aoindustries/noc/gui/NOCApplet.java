@@ -85,7 +85,7 @@ public class NOCApplet extends JApplet {
         noc.alertsFrame.setVisible(false);
         noc.communicationFrame.setVisible(false);
         noc.systemsFrame.setVisible(false);
-        noc=null;
+        noc = null;
       }
       getContentPane().removeAll();
     }

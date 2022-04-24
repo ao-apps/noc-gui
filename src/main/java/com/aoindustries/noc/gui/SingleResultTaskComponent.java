@@ -62,7 +62,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
   private static final Logger logger = Logger.getLogger(SingleResultTaskComponent.class.getName());
 
   private static final Resources RESOURCES =
-    Resources.getResources(ResourceBundle::getBundle, SingleResultTaskComponent.class);
+      Resources.getResources(ResourceBundle::getBundle, SingleResultTaskComponent.class);
 
   private final NOC noc;
   private SingleResultNode singleResultNode;
@@ -94,7 +94,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
   private final SingleResultListener singleResultListener = (final SingleResult singleResult) -> {
     assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
     SwingUtilities.invokeLater(() ->
-      updateValue(singleResult)
+        updateValue(singleResult)
     );
   };
 
@@ -109,7 +109,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
       throw new IllegalArgumentException("validationComponent is null");
     }
 
-    final SingleResultNode localSingleResultNode = this.singleResultNode = (SingleResultNode)node;
+    final SingleResultNode localSingleResultNode = this.singleResultNode = (SingleResultNode) node;
     this.validationComponent = validationComponent;
 
     // Scroll back to the top
@@ -174,24 +174,24 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
         String formattedDate = df.format(new Date(singleResult.getTime()));
         long latency = singleResult.getLatency();
         text.append(
-          latency < 1000000
-          ? RESOURCES.getMessage(
-            //locale,
-            "retrieved.micro",
-            formattedDate,
-            SQLUtility.formatDecimal3(latency)
-          ) : latency < 1000000000
-          ? RESOURCES.getMessage(
-            //locale,
-            "retrieved.milli",
-            formattedDate,
-            SQLUtility.formatDecimal3(latency/1000)
-          ) : RESOURCES.getMessage(
-            //locale,
-            "retrieved.second",
-            formattedDate,
-            SQLUtility.formatDecimal3(latency/1000000)
-          )
+            latency < 1000000
+                ? RESOURCES.getMessage(
+                //locale,
+                "retrieved.micro",
+                formattedDate,
+                SQLUtility.formatDecimal3(latency)
+            ) : latency < 1000000000
+                ? RESOURCES.getMessage(
+                //locale,
+                "retrieved.milli",
+                formattedDate,
+                SQLUtility.formatDecimal3(latency / 1000)
+            ) : RESOURCES.getMessage(
+                //locale,
+                "retrieved.second",
+                formattedDate,
+                SQLUtility.formatDecimal3(latency / 1000000)
+            )
         );
         Function<Locale, String> error = singleResult.getError();
         if (error != null) {

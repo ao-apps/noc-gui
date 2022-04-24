@@ -38,12 +38,12 @@ class AlertLevelTableCellRenderer implements TableCellRenderer {
 
   // TODO: Should these colors go on the enum directly?
   static final Color
-    unknownColor = Color.LIGHT_GRAY,
-    criticalColor = Color.RED,
-    highColor = Color.ORANGE.darker(),
-    mediumColor = Color.BLUE,
-    lowColor = Color.GREEN.darker().darker(),
-    defaultColor = Color.BLACK
+      unknownColor = Color.LIGHT_GRAY,
+      criticalColor = Color.RED,
+      highColor = Color.ORANGE.darker(),
+      mediumColor = Color.BLUE,
+      lowColor = Color.GREEN.darker().darker(),
+      defaultColor = Color.BLACK
   ;
 
   // TODO: Should these colors go on the enum directly?
@@ -69,14 +69,14 @@ class AlertLevelTableCellRenderer implements TableCellRenderer {
     if (value == null) {
       return wrappedRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     } else if (value instanceof AlertLevelAndData) {
-      AlertLevelAndData alertLevelAndData = (AlertLevelAndData)value;
+      AlertLevelAndData alertLevelAndData = (AlertLevelAndData) value;
       AlertLevel alertLevel = alertLevelAndData.alertLevel;
       Object data = alertLevelAndData.data;
       Component component = wrappedRenderer.getTableCellRendererComponent(table, data, isSelected, hasFocus, row, column);
       component.setForeground(getColor(alertLevel));
       return component;
     } else {
-      throw new IllegalArgumentException("value must be a AlertLevelAndData: value is "+value.getClass().getName());
+      throw new IllegalArgumentException("value must be a AlertLevelAndData: value is " + value.getClass().getName());
     }
   }
 }

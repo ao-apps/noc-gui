@@ -76,21 +76,21 @@ public class AlertsPane extends JPanel {
    * Column indexes
    */
   private static final int
-    COLUMN_TIME = 0,
-    COLUMN_ALERT_LEVEL = COLUMN_TIME + 1,
-    COLUMN_ALERT_CATEGORY = COLUMN_ALERT_LEVEL + 1,
-    COLUMN_SOURCE_DISPLAY = COLUMN_ALERT_CATEGORY + 1,
-    COLUMN_ALERT_MESSAGE = COLUMN_SOURCE_DISPLAY + 1;
+      COLUMN_TIME = 0,
+      COLUMN_ALERT_LEVEL = COLUMN_TIME + 1,
+      COLUMN_ALERT_CATEGORY = COLUMN_ALERT_LEVEL + 1,
+      COLUMN_SOURCE_DISPLAY = COLUMN_ALERT_CATEGORY + 1,
+      COLUMN_ALERT_MESSAGE = COLUMN_SOURCE_DISPLAY + 1;
 
   /**
    * Column widths
    */
   private static final int
-    COLUMN_TIME_WIDTH = 120,
-    COLUMN_ALERT_LEVEL_WIDTH = 30,
-    COLUMN_ALERT_CATEGORY_WIDTH = 30,
-    COLUMN_SOURCE_DISPLAY_WIDTH = 410,
-    COLUMN_ALERT_MESSAGE_WIDTH = 410;
+      COLUMN_TIME_WIDTH = 120,
+      COLUMN_ALERT_LEVEL_WIDTH = 30,
+      COLUMN_ALERT_CATEGORY_WIDTH = 30,
+      COLUMN_SOURCE_DISPLAY_WIDTH = 410,
+      COLUMN_ALERT_MESSAGE_WIDTH = 410;
 
   static {
     final int expectedTotal = 1000;
@@ -99,6 +99,7 @@ public class AlertsPane extends JPanel {
       throw new ExceptionInInitializerError("Column widths do not add up to " + expectedTotal + ": " + total);
     }
   }
+
   final NOC noc;
 
   private final Buzzer buzzer = new Buzzer(this);
@@ -139,14 +140,14 @@ public class AlertsPane extends JPanel {
     this.noc = noc;
 
     tableModel = new DefaultTableModel(
-      new String[] {
-        RESOURCES.getMessage("time.header"),
-        RESOURCES.getMessage("alertLevel.header"),
-        RESOURCES.getMessage("alertCategory.header"),
-        RESOURCES.getMessage("sourceDisplay.header"),
-        RESOURCES.getMessage("alertMessage.header")
-      },
-      0
+        new String[]{
+            RESOURCES.getMessage("time.header"),
+            RESOURCES.getMessage("alertLevel.header"),
+            RESOURCES.getMessage("alertCategory.header"),
+            RESOURCES.getMessage("sourceDisplay.header"),
+            RESOURCES.getMessage("alertMessage.header")
+        },
+        0
     ) {
       private static final long serialVersionUID = 1L;
 
@@ -174,9 +175,9 @@ public class AlertsPane extends JPanel {
       @Override
       public TableCellRenderer getDefaultRenderer(Class<?> columnClass) {
         if (
-          columnClass == Date.class
-          || columnClass == AlertLevel.class
-          || columnClass == AlertCategory.class
+            columnClass == Date.class
+                || columnClass == AlertLevel.class
+                || columnClass == AlertCategory.class
         ) {
           return super.getDefaultRenderer(String.class);
         } else {
@@ -194,7 +195,7 @@ public class AlertsPane extends JPanel {
           // Only put color on selected columns
           switch (column) {
             case COLUMN_ALERT_LEVEL :
-              _foreground = AlertLevelTableCellRenderer.getColor((AlertLevel)tableModel.getValueAt(modelRow, column));
+              _foreground = AlertLevelTableCellRenderer.getColor((AlertLevel) tableModel.getValueAt(modelRow, column));
               break;
             // TODO: Associate a color with each category?
           }
@@ -207,11 +208,11 @@ public class AlertsPane extends JPanel {
           if (column1 == COLUMN_TIME) {
             Locale locale = Locale.getDefault();
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
-            value = df.format((Date)value);
+            value = df.format((Date) value);
           } else if (column1 == COLUMN_ALERT_LEVEL) {
-            value = RESOURCES.getMessage("alertLevel." + ((AlertLevel)value).name());
+            value = RESOURCES.getMessage("alertLevel." + ((AlertLevel) value).name());
           } else if (column1 == COLUMN_ALERT_CATEGORY) {
-            value = RESOURCES.getMessage("alertCategory." + ((AlertCategory)value).name());
+            value = RESOURCES.getMessage("alertCategory." + ((AlertCategory) value).name());
           }
           Component component = renderer.getTableCellRendererComponent(table1, value, isSelected, hasFocus, row1, column1);
           if (!isSelected) {
@@ -231,38 +232,38 @@ public class AlertsPane extends JPanel {
 
     // Respond to delete key
     table.getInputMap().put(
-      KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
-      "deleteSelectedRows"
+        KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
+        "deleteSelectedRows"
     );
     table.getActionMap().put(
-      "deleteSelectedRows",
-      new AbstractAction() {
-        private static final long serialVersionUID = 1L;
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          int[] selectedRows = table.getSelectedRows();
-          if (selectedRows.length>0) {
-            int firstSelectedRow = selectedRows[0];
-            for (int c=selectedRows.length-1;c >= 0;c--) {
-              final int modelRow = table.getRowSorter().convertRowIndexToModel(selectedRows[c]);
-              history.remove(modelRow);
-              tableModel.removeRow(modelRow);
+        "deleteSelectedRows",
+        new AbstractAction() {
+          private static final long serialVersionUID = 1L;
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            int[] selectedRows = table.getSelectedRows();
+            if (selectedRows.length > 0) {
+              int firstSelectedRow = selectedRows[0];
+              for (int c = selectedRows.length - 1; c >= 0; c--) {
+                final int modelRow = table.getRowSorter().convertRowIndexToModel(selectedRows[c]);
+                history.remove(modelRow);
+                tableModel.removeRow(modelRow);
+              }
+              // Re-select the first selected row, or the row before if at end of list
+              int rowCount = tableModel.getRowCount();
+              if (firstSelectedRow >= rowCount) {
+                firstSelectedRow = rowCount - 1;
+              }
+              if (firstSelectedRow >= 0) {
+                ListSelectionModel selectionModel = table.getSelectionModel();
+                selectionModel.clearSelection(); // Required?
+                selectionModel.setSelectionInterval(firstSelectedRow, firstSelectedRow);
+              }
+              setTrayIcon();
+              buzzer.controlBuzzer(history);
             }
-            // Re-select the first selected row, or the row before if at end of list
-            int rowCount = tableModel.getRowCount();
-            if (firstSelectedRow >= rowCount) {
-              firstSelectedRow = rowCount - 1;
-            }
-            if (firstSelectedRow >= 0) {
-              ListSelectionModel selectionModel = table.getSelectionModel();
-              selectionModel.clearSelection(); // Required?
-              selectionModel.setSelectionInterval(firstSelectedRow, firstSelectedRow);
-            }
-            setTrayIcon();
-            buzzer.controlBuzzer(history);
           }
         }
-      }
     );
     TableColumnModel columnModel = table.getColumnModel();
     columnModel.getColumn(COLUMN_TIME).setPreferredWidth(COLUMN_TIME_WIDTH);
@@ -300,7 +301,7 @@ public class AlertsPane extends JPanel {
 
     history.clear();
 
-    for (int row = tableModel.getRowCount()-1; row >= 0; row--) {
+    for (int row = tableModel.getRowCount() - 1; row >= 0; row--) {
       tableModel.removeRow(row);
     }
     buzzer.controlBuzzer(history);
@@ -351,9 +352,9 @@ public class AlertsPane extends JPanel {
     boolean modified;
     int existingRow = findExistingRow(source);
     if (
-      (existingRow != -1 || oldAlertLevel == AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel) > 0)
-      // TODO: We may have lower level alerts going here, too, based on user-selectable per-category thresholds
-      && newAlertLevel.compareTo(AlertLevel.HIGH) >= 0
+        (existingRow != -1 || oldAlertLevel == AlertLevel.UNKNOWN || newAlertLevel.compareTo(oldAlertLevel) > 0)
+            // TODO: We may have lower level alerts going here, too, based on user-selectable per-category thresholds
+            && newAlertLevel.compareTo(AlertLevel.HIGH) >= 0
     ) {
       Alert alert = new Alert(source, sourceDisplay, oldAlertLevel, newAlertLevel, alertMessage, oldAlertCategory, newAlertCategory);
       ListSelectionModel selectionModel = table.getSelectionModel();
@@ -376,14 +377,14 @@ public class AlertsPane extends JPanel {
       }
       history.add(0, alert);
       tableModel.insertRow(
-        0,
-        new Object[] {
-          new Date(alert.time),
-          alert.newAlertLevel,
-          alert.newAlertCategory,
-          alert.sourceDisplay,
-          alert.alertMessage
-        }
+          0,
+          new Object[]{
+              new Date(alert.time),
+              alert.newAlertLevel,
+              alert.newAlertCategory,
+              alert.sourceDisplay,
+              alert.alertMessage
+          }
       );
       modified = true;
       if (isSelected) {
@@ -432,7 +433,7 @@ public class AlertsPane extends JPanel {
       // Find the highest alertLevel in the list
       AlertLevel highest = AlertLevel.NONE;
       for (Alert alert : history) {
-        if (alert.newAlertLevel.compareTo(highest)>0) {
+        if (alert.newAlertLevel.compareTo(highest) > 0) {
           highest = alert.newAlertLevel;
           if (highest == AlertLevel.CRITICAL || highest == AlertLevel.UNKNOWN) {
             break;

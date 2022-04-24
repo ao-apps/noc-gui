@@ -92,7 +92,7 @@ public final class LoginDialog extends JDialog {
   private final JButton cancelButton;
 
   public LoginDialog(NOC noc, Component owner) {
-    super((owner instanceof Frame) ? (Frame)owner : new JFrame(), RESOURCES.getMessage("title"), true);
+    super((owner instanceof Frame) ? (Frame) owner : new JFrame(), RESOURCES.getMessage("title"), true);
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     assert owner != null;
 
@@ -114,22 +114,22 @@ public final class LoginDialog extends JDialog {
 
     // Add the fields
     JPanel p2 = new JPanel(new GridLayout(6, 1, 0, 2));
-    p2.add(serverField=new JTextField(16));
+    p2.add(serverField = new JTextField(16));
     serverField.setText(noc.preferences.getServer());
-    p2.add(serverPortField=new JTextField(6));
+    p2.add(serverPortField = new JTextField(6));
     serverPortField.setText(noc.preferences.getServerPort());
-    p2.add(externalField=new JTextField(16));
+    p2.add(externalField = new JTextField(16));
     externalField.setText(noc.preferences.getExternal());
-    p2.add(localPortField=new JTextField(6));
+    p2.add(localPortField = new JTextField(6));
     localPortField.setText(noc.preferences.getLocalPort());
-    p2.add(usernameField=new JTextField(16));
+    p2.add(usernameField = new JTextField(16));
     usernameField.setText(Objects.toString(noc.preferences.getUsername(), ""));
-    p2.add(passwordField=new JPasswordField(16));
+    p2.add(passwordField = new JPasswordField(16));
     localContentPane.add(p2, BorderLayout.CENTER);
 
     JPanel p3 = new JPanel(new FlowLayout());
-    p3.add(okButton=new JButton(RESOURCES.getMessage("ok.label")));
-    p3.add(cancelButton=new JButton(RESOURCES.getMessage("cancel.label")));
+    p3.add(okButton = new JButton(RESOURCES.getMessage("ok.label")));
+    p3.add(cancelButton = new JButton(RESOURCES.getMessage("cancel.label")));
     localContentPane.add(p3, BorderLayout.SOUTH);
 
     // Handle escape button
@@ -137,25 +137,25 @@ public final class LoginDialog extends JDialog {
     InputMap inputMap = localRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     inputMap.put(stroke, "ESCAPE");
     localRootPane.getActionMap().put(
-      "ESCAPE",
-      new AbstractAction() {
-        private static final long serialVersionUID = 1L;
-        @Override
-        public void actionPerformed(ActionEvent actionEvent) {
-          cancel();
+        "ESCAPE",
+        new AbstractAction() {
+          private static final long serialVersionUID = 1L;
+          @Override
+          public void actionPerformed(ActionEvent actionEvent) {
+            cancel();
+          }
         }
-      }
     );
 
     pack();
 
-    Rectangle parentBounds=owner.getBounds();
-    Dimension size=getSize();
+    Rectangle parentBounds = owner.getBounds();
+    Dimension size = getSize();
     setBounds(
-      parentBounds.x+(parentBounds.width-size.width)/2,
-      parentBounds.y+(parentBounds.height-size.height)/2,
-      size.width,
-      size.height
+        parentBounds.x + (parentBounds.width - size.width) / 2,
+        parentBounds.y + (parentBounds.height - size.height) / 2,
+        size.width,
+        size.height
     );
 
     // Add actions
@@ -184,24 +184,24 @@ public final class LoginDialog extends JDialog {
     cancelButton.addActionListener(e -> cancel());
 
     addWindowListener(
-      new WindowAdapter() {
-        @Override
-        public void windowOpened(WindowEvent e) {
-          assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-          if (usernameField.getText().length() == 0) {
-            usernameField.selectAll();
-            usernameField.requestFocus();
-          } else {
-            passwordField.selectAll();
-            passwordField.requestFocus();
+        new WindowAdapter() {
+          @Override
+          public void windowOpened(WindowEvent e) {
+            assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+            if (usernameField.getText().length() == 0) {
+              usernameField.selectAll();
+              usernameField.requestFocus();
+            } else {
+              passwordField.selectAll();
+              passwordField.requestFocus();
+            }
+          }
+          @Override
+          public void windowClosing(WindowEvent e) {
+            assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
+            cancel();
           }
         }
-        @Override
-        public void windowClosing(WindowEvent e) {
-          assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
-          cancel();
-        }
-      }
     );
   }
 
@@ -238,8 +238,8 @@ public final class LoginDialog extends JDialog {
           try {
             // First try to login to local AOServConnector
             final AOServConnector conn = AOServConnector.getConnector(
-              username,
-              password
+                username,
+                password
             );
             Monitor monitor;
             final RMIClientSocketFactory csf;
@@ -255,13 +255,13 @@ public final class LoginDialog extends JDialog {
               csf = new RMIClientSocketFactoryTCP("127.0.0.1");
               ssf = new RMIServerSocketFactoryTCP("127.0.0.1");
               monitor = new MonitorImpl(
-                Integer.parseInt(localPort),
-                csf,
-                ssf
+                  Integer.parseInt(localPort),
+                  csf,
+                  ssf
               );
             } else {
               // Setup the RMI system properties
-              if (external.trim().length()>0) {
+              if (external.trim().length() > 0) {
                 System.setProperty("java.rmi.server.hostname", external.trim());
               } else {
                 System.clearProperty("java.rmi.server.hostname");
@@ -273,14 +273,14 @@ public final class LoginDialog extends JDialog {
               // SSL for everything going over the network
               if (System.getProperty("javax.net.ssl.keyStorePassword") == null) {
                 System.setProperty(
-                  "javax.net.ssl.keyStorePassword",
-                  "changeit"
+                    "javax.net.ssl.keyStorePassword",
+                    "changeit"
                 );
               }
               if (System.getProperty("javax.net.ssl.keyStore") == null) {
                 System.setProperty(
-                  "javax.net.ssl.keyStore",
-                  System.getProperty("user.home")+File.separatorChar+".keystore"
+                    "javax.net.ssl.keyStore",
+                    System.getProperty("user.home") + File.separatorChar + ".keystore"
                 );
               }
               csf = new RMIClientSocketFactorySSL();
@@ -309,17 +309,17 @@ public final class LoginDialog extends JDialog {
             SwingUtilities.invokeLater(() -> {
               setVisible(false);
               noc.loginCompleted(
-                conn,
-                rootNode,
-                rootNodeLabel,
-                server,
-                serverPort,
-                external,
-                localPort,
-                username,
-                Integer.parseInt(localPort),
-                csf,
-                ssf
+                  conn,
+                  rootNode,
+                  rootNodeLabel,
+                  server,
+                  serverPort,
+                  external,
+                  localPort,
+                  username,
+                  Integer.parseInt(localPort),
+                  csf,
+                  ssf
               );
             });
           } catch (IOException err) {

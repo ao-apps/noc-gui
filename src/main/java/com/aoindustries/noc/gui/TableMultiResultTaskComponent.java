@@ -64,7 +64,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
   private static final Logger logger = Logger.getLogger(TableMultiResultTaskComponent.class.getName());
 
   private static final Resources RESOURCES =
-    Resources.getResources(ResourceBundle::getBundle, TableMultiResultTaskComponent.class);
+      Resources.getResources(ResourceBundle::getBundle, TableMultiResultTaskComponent.class);
 
   private static final long serialVersionUID = 1L;
 
@@ -130,7 +130,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
     }
 
     @SuppressWarnings("unchecked")
-    final TableMultiResultNode<? extends TableMultiResult> localTableMultiResultNode = this.tableMultiResultNode = (TableMultiResultNode)node;
+    final TableMultiResultNode<? extends TableMultiResult> localTableMultiResultNode = this.tableMultiResultNode = (TableMultiResultNode) node;
 
     this.validationComponent = validationComponent;
 
@@ -178,7 +178,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 
     validationComponent = null;
     if (table != null) {
-      UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel)table.getModel();
+      UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel) table.getModel();
       tableModel.setRowCount(1);
     }
   }
@@ -196,7 +196,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
       final List<? extends TableMultiResult> results = localTableMultiResultNode.getResults();
       final int rows = results.size();
 
-      final List<Object> allHeaders = new ArrayList<>(columnHeaders.size()+2);
+      final List<Object> allHeaders = new ArrayList<>(columnHeaders.size() + 2);
       allHeaders.add(RESOURCES.getMessage("time.header"));
       allHeaders.add(RESOURCES.getMessage("latency.header"));
       allHeaders.addAll(columnHeaders);
@@ -210,8 +210,8 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
           if (newTable == null) {
             //System.out.println("DEBUG: TableResultTaskComponent: creating new JTable: "+columnHeaders);
             UneditableDefaultTableModel tableModel = new UneditableDefaultTableModel(
-              rows,
-              columns
+                rows,
+                columns
             );
             tableModel.setColumnIdentifiers(allHeaders.toArray());
             newTable = new JTable(tableModel) {
@@ -219,7 +219,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
               @Override
               public TableCellRenderer getCellRenderer(int row, int column) {
                 return new AlertLevelTableCellRenderer(
-                  super.getCellRenderer(row, column)
+                    super.getCellRenderer(row, column)
                 );
               }
             };
@@ -230,7 +230,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
           if (newTable != table) {
             if (table != null) {
               scrollPane.setViewport(null);
-              UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel)table.getModel();
+              UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel) table.getModel();
               tableModel.setRowCount(0);
               table = null;
             }
@@ -239,7 +239,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
           }
 
           // Update the data in the table
-          UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel)table.getModel();
+          UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel) table.getModel();
           if (columns != tableModel.getColumnCount()) {
             tableModel.setColumnCount(columns);
           }
@@ -248,57 +248,57 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
             tableModel.setRowCount(rows);
           }
 
-          for (int row=0;row<rows;row++) {
+          for (int row = 0; row < rows; row++) {
             TableMultiResult result = results.get(row);
             AlertLevel alertLevel = result.getAlertLevel();
 
             tableModel.setValueAt(
-              new AlertLevelAndData(
-                alertLevel,
-                RESOURCES.getMessage(
-                  //locale,
-                  "time",
-                  df.format(new Date(result.getTime()))
-                )
-              ),
-              row,
-              0
+                new AlertLevelAndData(
+                    alertLevel,
+                    RESOURCES.getMessage(
+                        //locale,
+                        "time",
+                        df.format(new Date(result.getTime()))
+                    )
+                ),
+                row,
+                0
             );
             String error = result.getError();
             long latency = result.getLatency();
             tableModel.setValueAt(
-              new AlertLevelAndData(
-                alertLevel,
-                (error != null && columns == 2)
-                ? error
-                : NanoInterval.toString(latency)
-              ),
-              row,
-              1
+                new AlertLevelAndData(
+                    alertLevel,
+                    (error != null && columns == 2)
+                        ? error
+                        : NanoInterval.toString(latency)
+                ),
+                row,
+                1
             );
             if (error != null) {
               // TODO: Combine into a single cell
-              if (columns>2) {
+              if (columns > 2) {
                 tableModel.setValueAt(
-                  new AlertLevelAndData(alertLevel, error),
-                  row,
-                  2
+                    new AlertLevelAndData(alertLevel, error),
+                    row,
+                    2
                 );
               }
-              for (int col=3;col<columns;col++) {
+              for (int col = 3; col < columns; col++) {
                 tableModel.setValueAt(
-                  null,
-                  row,
-                  col
+                    null,
+                    row,
+                    col
                 );
               }
             } else {
               int rowDataSize = result.getRowDataSize();
-              for (int col=2;col<columns;col++) {
+              for (int col = 2; col < columns; col++) {
                 tableModel.setValueAt(
-                  new AlertLevelAndData(alertLevel, (col-2)<rowDataSize ? result.getRowData(col-2) : ""),
-                  row,
-                  col
+                    new AlertLevelAndData(alertLevel, (col - 2) < rowDataSize ? result.getRowData(col - 2) : ""),
+                    row,
+                    col
                 );
               }
             }
