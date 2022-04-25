@@ -19,3 +19,6 @@ d5fc2100233968519776fb0ce95cd27d5f232abf
 
 # Converted to UNIX newlines.
 0467b3e9b9c132b1287eb4d74e1339800298bed1
+
+# Performed automatic source code clean-up with rewrite-maven-plugin
+b219841dc6ab6a4e83eee9f63def9885228173c1
