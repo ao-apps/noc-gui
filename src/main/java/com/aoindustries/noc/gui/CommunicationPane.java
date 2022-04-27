@@ -86,6 +86,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -324,7 +325,7 @@ public class CommunicationPane extends JPanel implements TableListener {
           }
         }
     );
-    assignmentsList.addListSelectionListener(e -> {
+    assignmentsList.addListSelectionListener((ListSelectionEvent e) -> {
       if (!e.getValueIsAdjusting()) {
         refresh();
       }
@@ -340,7 +341,7 @@ public class CommunicationPane extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    typesList.addListSelectionListener(e -> {
+    typesList.addListSelectionListener((ListSelectionEvent e) -> {
       if (!e.getValueIsAdjusting()) {
         refresh();
       }
@@ -356,7 +357,7 @@ public class CommunicationPane extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    statusesList.addListSelectionListener(e -> {
+    statusesList.addListSelectionListener((ListSelectionEvent e) -> {
       if (!e.getValueIsAdjusting()) {
         refresh();
       }
@@ -372,7 +373,7 @@ public class CommunicationPane extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    prioritiesList.addListSelectionListener(e -> {
+    prioritiesList.addListSelectionListener((ListSelectionEvent e) -> {
       if (!e.getValueIsAdjusting()) {
         refresh();
       }
@@ -388,7 +389,7 @@ public class CommunicationPane extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    languagesList.addListSelectionListener(e -> {
+    languagesList.addListSelectionListener((ListSelectionEvent e) -> {
       if (!e.getValueIsAdjusting()) {
         refresh();
       }
@@ -438,7 +439,7 @@ public class CommunicationPane extends JPanel implements TableListener {
     tableRowSorter.setComparator(5, naturalComparator);
     tableRowSorter.setComparator(6, naturalComparator);
     ticketsTable.setRowSorter(tableRowSorter);
-    ticketsTable.getSelectionModel().addListSelectionListener(e -> {
+    ticketsTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
       if (!e.getValueIsAdjusting()) {
         int[] selectedRows = ticketsTable.getSelectedRows();
         if (selectedRows.length == 1) {
@@ -562,8 +563,8 @@ public class CommunicationPane extends JPanel implements TableListener {
     refresh();
   }
 
-  private boolean isRefreshing = false;
-  private boolean refreshRequestedWhileRefreshing = false;
+  private boolean isRefreshing;
+  private boolean refreshRequestedWhileRefreshing;
   private final Object refreshLock = new Object();
 
   /**
@@ -1459,9 +1460,9 @@ public class CommunicationPane extends JPanel implements TableListener {
     DisablableTreeCellRenderer() {
       super();
       Object value = UIManager.get("Tree.drawsFocusBorderAroundIcon");
-      drawsFocusBorderAroundIcon = (value != null && (Boolean) value);
+      drawsFocusBorderAroundIcon = value != null && (Boolean) value;
       value = UIManager.get("Tree.drawDashedFocusIndicator");
-      drawDashedFocusIndicator = (value != null && (Boolean) value);
+      drawDashedFocusIndicator = value != null && (Boolean) value;
     }
 
     private Font normalFont;

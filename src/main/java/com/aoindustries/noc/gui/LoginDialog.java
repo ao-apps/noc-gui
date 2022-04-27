@@ -159,23 +159,23 @@ public final class LoginDialog extends JDialog {
     );
 
     // Add actions
-    serverField.addActionListener(e -> {
+    serverField.addActionListener((ActionEvent e) -> {
       serverPortField.selectAll();
       serverPortField.requestFocus();
     });
-    serverPortField.addActionListener(e -> {
+    serverPortField.addActionListener((ActionEvent e) -> {
       externalField.selectAll();
       externalField.requestFocus();
     });
-    externalField.addActionListener(e -> {
+    externalField.addActionListener((ActionEvent e) -> {
       localPortField.selectAll();
       localPortField.requestFocus();
     });
-    localPortField.addActionListener(e -> {
+    localPortField.addActionListener((ActionEvent e) -> {
       usernameField.selectAll();
       usernameField.requestFocus();
     });
-    usernameField.addActionListener(e -> {
+    usernameField.addActionListener((ActionEvent e) -> {
       passwordField.selectAll();
       passwordField.requestFocus();
     });
@@ -206,7 +206,7 @@ public final class LoginDialog extends JDialog {
   }
 
   private final Object loginLock = new Object();
-  private Thread loginThread = null;
+  private Thread loginThread;
 
   @SuppressWarnings({"NestedSynchronizedStatement", "UseSpecificCatch", "TooBroadCatch"})
   private void login() {

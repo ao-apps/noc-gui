@@ -105,7 +105,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
     assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
     SwingUtilities.invokeLater(() -> updateValue(tableResult));
   };
-  private boolean tableResultListenerExported = false;
+  private boolean tableResultListenerExported;
 
   @Override
   public void start(Node node, JComponent validationComponent) {

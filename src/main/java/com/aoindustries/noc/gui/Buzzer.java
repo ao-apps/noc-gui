@@ -156,7 +156,7 @@ class Buzzer {
   }
 
   private final Object buzzerLock = new Object();
-  private boolean isBuzzing = false;
+  private boolean isBuzzing;
 
   /**
    * Returns immediately (works in a background thread).  Only one buzzer

@@ -43,6 +43,7 @@ import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -69,6 +70,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
@@ -304,7 +306,7 @@ public class NOC {
 
       PopupMenu popup = new PopupMenu();
       MenuItem localLoginMenuItem = new MenuItem(RESOURCES.getMessage("trayIcon.popup.login"));
-      localLoginMenuItem.addActionListener(e -> {
+      localLoginMenuItem.addActionListener((ActionEvent e) -> {
         if (NOC.this.rootNode != null) {
           logout();
         } else {
@@ -567,8 +569,8 @@ public class NOC {
     }
   }
 
-  private boolean ignoreChangeEvent = false;
-  private final ChangeListener changeListener = e -> {
+  private boolean ignoreChangeEvent;
+  private final ChangeListener changeListener = (ChangeEvent e) -> {
     //System.out.println("stateChanged: ignoreChangeEvent="+ignoreChangeEvent+", selectedIndex="+tabbedPane.getSelectedIndex());
     if (!ignoreChangeEvent) {
       int selectedIndex = tabbedPane.getSelectedIndex();
@@ -636,7 +638,7 @@ public class NOC {
             ? RESOURCES.getMessage("loginButton.label")
             : RESOURCES.getMessage("logoutButton.label")
     );
-    loginButton.addActionListener(e -> {
+    loginButton.addActionListener((ActionEvent e) -> {
       if (rootNode == null) {
         login();
       } else {

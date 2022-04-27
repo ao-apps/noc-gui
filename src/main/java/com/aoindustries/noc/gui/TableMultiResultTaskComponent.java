@@ -116,7 +116,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
       }
     }
   };
-  private volatile boolean tableMultiResultListenerExported = false;
+  private volatile boolean tableMultiResultListenerExported;
 
   @Override
   public void start(Node node, JComponent validationComponent) {

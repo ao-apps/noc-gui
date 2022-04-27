@@ -58,6 +58,7 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -118,7 +119,7 @@ public class SystemsPane extends JPanel {
     );
 
     add(splitPane, BorderLayout.CENTER);
-    tree.addTreeSelectionListener(e -> {
+    tree.addTreeSelectionListener((TreeSelectionEvent e) -> {
       if (e.isAddedPath()) {
         TreePath treePath = e.getPath();
         if (treePath != null) {
@@ -168,7 +169,7 @@ public class SystemsPane extends JPanel {
         setAlertLevel(AlertLevel.MEDIUM);
     }
     toolBar.add(alertLevel);
-    alertLevel.addItemListener(e -> {
+    alertLevel.addItemListener((ItemEvent e) -> {
       if (e.getStateChange() == ItemEvent.SELECTED) {
         String command = (String) e.getItem();
         if (allLabel.equals(command)) {
@@ -370,9 +371,9 @@ public class SystemsPane extends JPanel {
   }
 
   private final Object batchCounterLock = new Object();
-  private long batchCounter = 0;
-  private long lastCompletedBatchCounter = 0;
-  private boolean doingBatch = false;
+  private long batchCounter;
+  private long lastCompletedBatchCounter;
+  private boolean doingBatch;
 
   @SuppressWarnings({"SleepWhileInLoop", "SleepWhileHoldingLock"})
   private void batchValidateTreeNodes() {
@@ -568,9 +569,9 @@ public class SystemsPane extends JPanel {
     SystemsTreeCellRenderer() {
       super();
       Object value = UIManager.get("Tree.drawsFocusBorderAroundIcon");
-      drawsFocusBorderAroundIcon = (value != null && (Boolean) value);
+      drawsFocusBorderAroundIcon = value != null && (Boolean) value;
       value = UIManager.get("Tree.drawDashedFocusIndicator");
-      drawDashedFocusIndicator = (value != null && (Boolean) value);
+      drawDashedFocusIndicator = value != null && (Boolean) value;
     }
 
     @Override
