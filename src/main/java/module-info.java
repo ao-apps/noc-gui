@@ -39,4 +39,4 @@ module com.aoindustries.noc.gui {
   requires java.prefs;
   requires java.rmi;
   requires java.sql;
-}
+} // TODO: Avoiding rewrite-maven-plugin-4.22.2 truncation
