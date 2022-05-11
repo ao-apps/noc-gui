@@ -37,7 +37,7 @@ import com.aoapps.hodgepodge.tree.Trees;
 import com.aoapps.lang.i18n.Resources;
 import com.aoapps.net.Email;
 import com.aoapps.sql.SQLUtility;
-import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.aoserv.client.AoservConnector;
 import com.aoindustries.aoserv.client.Disablable;
 import com.aoindustries.aoserv.client.account.Account;
 import com.aoindustries.aoserv.client.account.Administrator;
@@ -101,14 +101,16 @@ import org.jdesktop.swingx.MultiSplitLayout;
 
 /**
  * Central point of all client communication.
- *
+ * <p>
  * TODO: Make filters persistent (Expand to selected on trees)
  * TODO: Make table column settings persistent
  * TODO: Remember tree open/close states between different filter views - store as preferences.
  * TODO: If account or category selected don't hide it
- *
+ * </p>
+ * <p>
  * TODO: This pane fails to initialize when a Brand's parent is not also a Brand
  *       Nothing logged.  I'm guessing a NPE somewhere.
+ * </p>
  *
  * @author  AO Industries, Inc.
  */
@@ -142,25 +144,25 @@ public class CommunicationPane extends JPanel implements TableListener {
 
   // <editor-fold defaultstate="collapsed" desc="Fields">
   private static final long serialVersionUID = 1L;
-  private final NOC noc;
-  private AOServConnector conn; // This is the connector that has all the listeners added
+  private final Noc noc;
+  private AoservConnector conn; // This is the connector that has all the listeners added
   private final JXMultiSplitPane splitPane;
   // Categories
   private final SynchronizingMutableTreeNode<Category> categoriesRootNode = new SynchronizingMutableTreeNode<>(RESOURCES.getMessage("categories.uncategorized"), true);
   private final DefaultTreeModel categoriesTreeModel = new DefaultTreeModel(categoriesRootNode, true);
-  private final JTree categoriesJTree = new JTree(categoriesTreeModel);
+  private final JTree categoriesTree = new JTree(categoriesTreeModel);
   // Accounts
   private final SynchronizingMutableTreeNode<Account> accountsRootNode = new SynchronizingMutableTreeNode<>(RESOURCES.getMessage("accounts.noAccount"), true);
   private final DefaultTreeModel accountsTreeModel = new DefaultTreeModel(accountsRootNode, true);
-  private final JTree accountsJTree = new JTree(accountsTreeModel);
+  private final JTree accountsTree = new JTree(accountsTreeModel);
   // Brands
   private final SynchronizingMutableTreeNode<Brand> brandsRootNode = new SynchronizingMutableTreeNode<>(RESOURCES.getMessage("brands.rootNode.label"), true);
   private final DefaultTreeModel brandsTreeModel = new DefaultTreeModel(brandsRootNode, true);
-  private final JTree brandsJTree = new JTree(brandsTreeModel);
+  private final JTree brandsTree = new JTree(brandsTreeModel);
   // Resellers
   private final SynchronizingMutableTreeNode<Reseller> resellersRootNode = new SynchronizingMutableTreeNode<>(RESOURCES.getMessage("resellers.rootNode.label"), true);
   private final DefaultTreeModel resellersTreeModel = new DefaultTreeModel(resellersRootNode, true);
-  private final JTree resellersJTree = new JTree(resellersTreeModel);
+  private final JTree resellersTree = new JTree(resellersTreeModel);
   // Assignments
   private final SynchronizingListModel<Object> assignmentsListModel = new SynchronizingListModel<>(RESOURCES.getMessage("assignments.unassigned"));
   private final JList<Object> assignmentsList = new JList<>(assignmentsListModel);
@@ -204,8 +206,11 @@ public class CommunicationPane extends JPanel implements TableListener {
   // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc="Construction">
+  /**
+   * Creates a new central point of all client communication.
+   */
   @SuppressWarnings({"OverridableMethodCallInConstructor", "OverridableMethodCallInConstructor"})
-  public CommunicationPane(final NOC noc) {
+  public CommunicationPane(final Noc noc) {
     super(new BorderLayout());
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -241,10 +246,10 @@ public class CommunicationPane extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    categoriesJTree.setRootVisible(true);
-    categoriesJTree.setCellRenderer(new DisablableTreeCellRenderer());
-    categoriesJTree.addTreeSelectionListener(e -> refresh());
-    categoriesPanel.add(new JScrollPane(categoriesJTree), BorderLayout.CENTER);
+    categoriesTree.setRootVisible(true);
+    categoriesTree.setCellRenderer(new DisablableTreeCellRenderer());
+    categoriesTree.addTreeSelectionListener(e -> refresh());
+    categoriesPanel.add(new JScrollPane(categoriesTree), BorderLayout.CENTER);
     splitPane.add(categoriesPanel, "categories");
 
     // Accounts
@@ -255,10 +260,10 @@ public class CommunicationPane extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    accountsJTree.setRootVisible(true);
-    accountsJTree.setCellRenderer(new DisablableTreeCellRenderer());
-    accountsJTree.addTreeSelectionListener(e -> refresh());
-    accountsPanel.add(new JScrollPane(accountsJTree), BorderLayout.CENTER);
+    accountsTree.setRootVisible(true);
+    accountsTree.setCellRenderer(new DisablableTreeCellRenderer());
+    accountsTree.addTreeSelectionListener(e -> refresh());
+    accountsPanel.add(new JScrollPane(accountsTree), BorderLayout.CENTER);
 
     splitPane.add(accountsPanel, "accounts");
 
@@ -270,10 +275,10 @@ public class CommunicationPane extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    brandsJTree.setRootVisible(false);
-    brandsJTree.setCellRenderer(new DisablableTreeCellRenderer());
-    brandsJTree.addTreeSelectionListener(e -> refresh());
-    brandsPanel.add(new JScrollPane(brandsJTree), BorderLayout.CENTER);
+    brandsTree.setRootVisible(false);
+    brandsTree.setCellRenderer(new DisablableTreeCellRenderer());
+    brandsTree.addTreeSelectionListener(e -> refresh());
+    brandsPanel.add(new JScrollPane(brandsTree), BorderLayout.CENTER);
     splitPane.add(brandsPanel, "brands");
 
     // Resellers
@@ -284,10 +289,10 @@ public class CommunicationPane extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    resellersJTree.setRootVisible(false);
-    resellersJTree.setCellRenderer(new DisablableTreeCellRenderer());
-    resellersJTree.addTreeSelectionListener(e -> refresh());
-    resellersPanel.add(new JScrollPane(resellersJTree), BorderLayout.CENTER);
+    resellersTree.setRootVisible(false);
+    resellersTree.setCellRenderer(new DisablableTreeCellRenderer());
+    resellersTree.addTreeSelectionListener(e -> refresh());
+    resellersPanel.add(new JScrollPane(resellersTree), BorderLayout.CENTER);
     splitPane.add(resellersPanel, "resellers");
 
     // Assignments
@@ -495,7 +500,7 @@ public class CommunicationPane extends JPanel implements TableListener {
   /**
    * start() should only be called when we have a login established.
    */
-  void start(AOServConnector conn) {
+  void start(AoservConnector conn) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     this.conn = conn;
     conn.getAccount().getAccount().addTableListener(this, 0);
@@ -584,96 +589,96 @@ public class CommunicationPane extends JPanel implements TableListener {
       // Query the GUI filter components
       final boolean includeUncategorized;
       final Set<Category> selectedCategories;
-      {
-        TreePath[] selectedCategoryPaths = categoriesJTree.getSelectionPaths();
-        if (selectedCategoryPaths == null) {
-          includeUncategorized = false;
-          selectedCategories = Collections.emptySet();
-        } else {
-          boolean myIncludeUncategorized = false;
-          selectedCategories = AoCollections.newHashSet(selectedCategoryPaths.length);
-          for (TreePath treePath : selectedCategoryPaths) {
-            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
-            if (treeNode == categoriesRootNode) {
-              myIncludeUncategorized = true;
-            } else {
-              Category ticketCategory = (Category) ((DefaultMutableTreeNode) treeNode).getUserObject();
-              selectedCategories.add(ticketCategory);
+        {
+          TreePath[] selectedCategoryPaths = categoriesTree.getSelectionPaths();
+          if (selectedCategoryPaths == null) {
+            includeUncategorized = false;
+            selectedCategories = Collections.emptySet();
+          } else {
+            boolean includeUncategorizedTmp = false;
+            selectedCategories = AoCollections.newHashSet(selectedCategoryPaths.length);
+            for (TreePath treePath : selectedCategoryPaths) {
+              TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
+              if (treeNode == categoriesRootNode) {
+                includeUncategorizedTmp = true;
+              } else {
+                Category ticketCategory = (Category) ((DefaultMutableTreeNode) treeNode).getUserObject();
+                selectedCategories.add(ticketCategory);
+              }
             }
+            includeUncategorized = includeUncategorizedTmp;
           }
-          includeUncategorized = myIncludeUncategorized;
         }
-      }
       final boolean includeNoAccount;
       final Set<Account> selectedAccounts;
-      {
-        TreePath[] selectedAccountPaths = accountsJTree.getSelectionPaths();
-        if (selectedAccountPaths == null) {
-          includeNoAccount = false;
-          selectedAccounts = Collections.emptySet();
-        } else {
-          boolean myIncludeNoAccount = false;
-          selectedAccounts = AoCollections.newHashSet(selectedAccountPaths.length);
-          for (TreePath treePath : selectedAccountPaths) {
-            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
-            if (treeNode == accountsRootNode) {
-              myIncludeNoAccount = true;
-            } else {
-              Account account = (Account) ((DefaultMutableTreeNode) treeNode).getUserObject();
-              selectedAccounts.add(account);
+        {
+          TreePath[] selectedAccountPaths = accountsTree.getSelectionPaths();
+          if (selectedAccountPaths == null) {
+            includeNoAccount = false;
+            selectedAccounts = Collections.emptySet();
+          } else {
+            boolean includeNoAccountTmp = false;
+            selectedAccounts = AoCollections.newHashSet(selectedAccountPaths.length);
+            for (TreePath treePath : selectedAccountPaths) {
+              TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
+              if (treeNode == accountsRootNode) {
+                includeNoAccountTmp = true;
+              } else {
+                Account account = (Account) ((DefaultMutableTreeNode) treeNode).getUserObject();
+                selectedAccounts.add(account);
+              }
             }
+            includeNoAccount = includeNoAccountTmp;
           }
-          includeNoAccount = myIncludeNoAccount;
         }
-      }
       final Set<Brand> selectedBrands;
-      {
-        TreePath[] selectedBrandPaths = brandsJTree.getSelectionPaths();
-        if (selectedBrandPaths == null) {
-          selectedBrands = Collections.emptySet();
-        } else {
-          selectedBrands = AoCollections.newHashSet(selectedBrandPaths.length);
-          for (TreePath treePath : selectedBrandPaths) {
-            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
-            if (treeNode != brandsRootNode) {
-              Brand brand = (Brand) ((DefaultMutableTreeNode) treeNode).getUserObject();
-              selectedBrands.add(brand);
+        {
+          TreePath[] selectedBrandPaths = brandsTree.getSelectionPaths();
+          if (selectedBrandPaths == null) {
+            selectedBrands = Collections.emptySet();
+          } else {
+            selectedBrands = AoCollections.newHashSet(selectedBrandPaths.length);
+            for (TreePath treePath : selectedBrandPaths) {
+              TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
+              if (treeNode != brandsRootNode) {
+                Brand brand = (Brand) ((DefaultMutableTreeNode) treeNode).getUserObject();
+                selectedBrands.add(brand);
+              }
             }
           }
         }
-      }
       final Set<Reseller> selectedResellers;
-      {
-        TreePath[] selectedResellerPaths = resellersJTree.getSelectionPaths();
-        if (selectedResellerPaths == null) {
-          selectedResellers = Collections.emptySet();
-        } else {
-          selectedResellers = AoCollections.newHashSet(selectedResellerPaths.length);
-          for (TreePath treePath : selectedResellerPaths) {
-            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
-            if (treeNode != resellersRootNode) {
-              Reseller reseller = (Reseller) ((DefaultMutableTreeNode) treeNode).getUserObject();
-              selectedResellers.add(reseller);
+        {
+          TreePath[] selectedResellerPaths = resellersTree.getSelectionPaths();
+          if (selectedResellerPaths == null) {
+            selectedResellers = Collections.emptySet();
+          } else {
+            selectedResellers = AoCollections.newHashSet(selectedResellerPaths.length);
+            for (TreePath treePath : selectedResellerPaths) {
+              TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
+              if (treeNode != resellersRootNode) {
+                Reseller reseller = (Reseller) ((DefaultMutableTreeNode) treeNode).getUserObject();
+                selectedResellers.add(reseller);
+              }
             }
           }
         }
-      }
       final boolean includeUnassigned;
       final Set<Administrator> selectedAssignments;
-      {
-        List<Object> selectedValues = assignmentsList.getSelectedValuesList();
-        boolean myIncludeUnassigned = false;
-        selectedAssignments = AoCollections.newHashSet(selectedValues.size());
-        for (Object selectedValue : selectedValues) {
-          if (selectedValue == assignmentsListModel.getElementAt(0)) {
-            myIncludeUnassigned = true;
-          } else {
-            Administrator administrator = (Administrator) selectedValue;
-            selectedAssignments.add(administrator);
+        {
+          List<Object> selectedValues = assignmentsList.getSelectedValuesList();
+          boolean includeUnassignedTmp = false;
+          selectedAssignments = AoCollections.newHashSet(selectedValues.size());
+          for (Object selectedValue : selectedValues) {
+            if (selectedValue == assignmentsListModel.getElementAt(0)) {
+              includeUnassignedTmp = true;
+            } else {
+              Administrator administrator = (Administrator) selectedValue;
+              selectedAssignments.add(administrator);
+            }
           }
+          includeUnassigned = includeUnassignedTmp;
         }
-        includeUnassigned = myIncludeUnassigned;
-      }
       final Set<TicketType> selectedTypes = new HashSet<>(typesList.getSelectedValuesList());
       final Set<Status> selectedStatuses = new HashSet<>(statusesList.getSelectedValuesList());
       final Set<Priority> selectedPriorities = new HashSet<>(prioritiesList.getSelectedValuesList());
@@ -711,7 +716,7 @@ public class CommunicationPane extends JPanel implements TableListener {
             });
             try {
               // Perform all data lookups
-              AOServConnector conn1 = CommunicationPane.this.conn;
+              AoservConnector conn1 = CommunicationPane.this.conn;
               final Tree<Category> categoryTree;
               final Tree<Account> accountTree;
               final Tree<Brand> brandTree;
@@ -744,22 +749,22 @@ public class CommunicationPane extends JPanel implements TableListener {
                 resellerTree = new TreeCopy<>(conn1.getReseller().getReseller().getTree());
                 final List<Administrator> administrators = conn1.getAccount().getAdministrator().getRows();
                 allTickets = conn1.getTicket().getTicket().getRows();
-                List<Assignment> allTicketAssignments = conn1.getTicket().getAssignment().getRows();
+                final List<Assignment> allTicketAssignments = conn1.getTicket().getAssignment().getRows();
                 ticketTypes = conn1.getTicket().getTicketType().getRows();
                 ticketStatuses = conn1.getTicket().getStatus().getRows();
                 ticketPriorities = conn1.getTicket().getPriority().getRows();
                 languages = conn1.getTicket().getLanguage().getRows();
                 // Determine the reseller for assignment lookups
                 Reseller currentReseller = null;
-                {
-                  Account currentAccount = conn1.getCurrentAdministrator().getUsername().getPackage().getAccount();
-                  if (currentAccount != null) {
-                    Brand currentBrand = currentAccount.getBrand();
-                    if (currentBrand != null) {
-                      currentReseller = currentBrand.getReseller();
+                  {
+                    Account currentAccount = conn1.getCurrentAdministrator().getUsername().getPackage().getAccount();
+                    if (currentAccount != null) {
+                      Brand currentBrand = currentAccount.getBrand();
+                      if (currentBrand != null) {
+                        currentReseller = currentBrand.getReseller();
+                      }
                     }
                   }
-                }
                 if (currentReseller != null && (includeUnassigned || !selectedAssignments.isEmpty())) {
                   ticketAssignments = AoCollections.newHashMap(allTickets.size()); // Worst-case is all tickets assigned
                 } else {
@@ -913,6 +918,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     public boolean isNodeFiltered(Node<Category> node) throws IOException, SQLException {
                       return !hasTicket(node, categoriesWithTickets);
                     }
+
                     private boolean hasTicket(Node<Category> node, Set<Category> categoriesWithTickets) throws IOException, SQLException {
                       if (categoriesWithTickets.contains(node.getValue())) {
                         return true;
@@ -936,6 +942,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                     public boolean isNodeFiltered(Node<Account> node) throws IOException, SQLException {
                       return !hasTicket(node, accountsWithTickets);
                     }
+
                     private boolean hasTicket(Node<Account> node, Set<Account> accountsWithTickets) throws IOException, SQLException {
                       if (accountsWithTickets.contains(node.getValue())) {
                         return true;
@@ -1071,8 +1078,7 @@ public class CommunicationPane extends JPanel implements TableListener {
       return
           (isStrikethrough == other.isStrikethrough)
               && value.equals(other.value)
-              && foregroundColor.equals(other.foregroundColor)
-      ;
+              && foregroundColor.equals(other.foregroundColor);
     }
 
     @Override
@@ -1245,139 +1251,139 @@ public class CommunicationPane extends JPanel implements TableListener {
           // Check each cell in this row for changes
           Color foregroundColor = ticketRow.getForegroundColor();
           boolean isStrikethrough = ticketRow.isStrikethrough;
-          // ticketNumber
-          {
-            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 0);
-            if (
-                ticketCell.isStrikethrough != isStrikethrough
-                    || !ticketCell.value.equals(ticketRow.ticketNumber)
-                    || !ticketCell.foregroundColor.equals(foregroundColor)
-            ) {
-              ticketsTableModel.setValueAt(
-                  new TicketCell<>(
-                      ticketRow.ticketNumber,
-                      foregroundColor,
-                      isStrikethrough
-                  ),
-                  index,
-                  0
-              );
+            // ticketNumber
+            {
+              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 0);
+              if (
+                  ticketCell.isStrikethrough != isStrikethrough
+                      || !ticketCell.value.equals(ticketRow.ticketNumber)
+                      || !ticketCell.foregroundColor.equals(foregroundColor)
+              ) {
+                ticketsTableModel.setValueAt(
+                    new TicketCell<>(
+                        ticketRow.ticketNumber,
+                        foregroundColor,
+                        isStrikethrough
+                    ),
+                    index,
+                    0
+                );
+              }
             }
-          }
-          // priority
-          {
-            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 1);
-            if (
-                ticketCell.isStrikethrough != isStrikethrough
-                    || !ticketCell.value.equals(ticketRow.priority)
-                    || !ticketCell.foregroundColor.equals(foregroundColor)
-            ) {
-              ticketsTableModel.setValueAt(
-                  new TicketCell<>(
-                      ticketRow.priority,
-                      foregroundColor,
-                      isStrikethrough
-                  ),
-                  index,
-                  1
-              );
+            // priority
+            {
+              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 1);
+              if (
+                  ticketCell.isStrikethrough != isStrikethrough
+                      || !ticketCell.value.equals(ticketRow.priority)
+                      || !ticketCell.foregroundColor.equals(foregroundColor)
+              ) {
+                ticketsTableModel.setValueAt(
+                    new TicketCell<>(
+                        ticketRow.priority,
+                        foregroundColor,
+                        isStrikethrough
+                    ),
+                    index,
+                    1
+                );
+              }
             }
-          }
-          // status
-          {
-            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 2);
-            if (
-                ticketCell.isStrikethrough != isStrikethrough
-                    || !ticketCell.value.equals(ticketRow.status)
-                    || !ticketCell.foregroundColor.equals(foregroundColor)
-            ) {
-              ticketsTableModel.setValueAt(
-                  new TicketCell<>(
-                      ticketRow.status,
-                      foregroundColor,
-                      isStrikethrough
-                  ),
-                  index,
-                  2
-              );
+            // status
+            {
+              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 2);
+              if (
+                  ticketCell.isStrikethrough != isStrikethrough
+                      || !ticketCell.value.equals(ticketRow.status)
+                      || !ticketCell.foregroundColor.equals(foregroundColor)
+              ) {
+                ticketsTableModel.setValueAt(
+                    new TicketCell<>(
+                        ticketRow.status,
+                        foregroundColor,
+                        isStrikethrough
+                    ),
+                    index,
+                    2
+                );
+              }
             }
-          }
-          // openDate
-          {
-            DateTimeTicketCell ticketCell = (DateTimeTicketCell) ticketsTableModel.getValueAt(index, 3);
-            if (
-                ticketCell.isStrikethrough != isStrikethrough
-                    || !ticketCell.value.equals(ticketRow.openDate)
-                    || !ticketCell.foregroundColor.equals(foregroundColor)
-            ) {
-              ticketsTableModel.setValueAt(
-                  new DateTimeTicketCell(
-                      ticketRow.openDate,
-                      foregroundColor,
-                      isStrikethrough
-                  ),
-                  index,
-                  3
-              );
+            // openDate
+            {
+              DateTimeTicketCell ticketCell = (DateTimeTicketCell) ticketsTableModel.getValueAt(index, 3);
+              if (
+                  ticketCell.isStrikethrough != isStrikethrough
+                      || !ticketCell.value.equals(ticketRow.openDate)
+                      || !ticketCell.foregroundColor.equals(foregroundColor)
+              ) {
+                ticketsTableModel.setValueAt(
+                    new DateTimeTicketCell(
+                        ticketRow.openDate,
+                        foregroundColor,
+                        isStrikethrough
+                    ),
+                    index,
+                    3
+                );
+              }
             }
-          }
-          // openedBy
-          {
-            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 4);
-            if (
-                ticketCell.isStrikethrough != isStrikethrough
-                    || !ticketCell.value.equals(ticketRow.openedBy)
-                    || !ticketCell.foregroundColor.equals(foregroundColor)
-            ) {
-              ticketsTableModel.setValueAt(
-                  new TicketCell<>(
-                      ticketRow.openedBy,
-                      foregroundColor,
-                      isStrikethrough
-                  ),
-                  index,
-                  4
-              );
+            // openedBy
+            {
+              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 4);
+              if (
+                  ticketCell.isStrikethrough != isStrikethrough
+                      || !ticketCell.value.equals(ticketRow.openedBy)
+                      || !ticketCell.foregroundColor.equals(foregroundColor)
+              ) {
+                ticketsTableModel.setValueAt(
+                    new TicketCell<>(
+                        ticketRow.openedBy,
+                        foregroundColor,
+                        isStrikethrough
+                    ),
+                    index,
+                    4
+                );
+              }
             }
-          }
-          // account
-          {
-            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 5);
-            if (
-                ticketCell.isStrikethrough != isStrikethrough
-                    || !ticketCell.value.equals(ticketRow.account)
-                    || !ticketCell.foregroundColor.equals(foregroundColor)
-            ) {
-              ticketsTableModel.setValueAt(
-                  new TicketCell<>(
-                      ticketRow.account,
-                      foregroundColor,
-                      isStrikethrough
-                  ),
-                  index,
-                  5
-              );
+            // account
+            {
+              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 5);
+              if (
+                  ticketCell.isStrikethrough != isStrikethrough
+                      || !ticketCell.value.equals(ticketRow.account)
+                      || !ticketCell.foregroundColor.equals(foregroundColor)
+              ) {
+                ticketsTableModel.setValueAt(
+                    new TicketCell<>(
+                        ticketRow.account,
+                        foregroundColor,
+                        isStrikethrough
+                    ),
+                    index,
+                    5
+                );
+              }
             }
-          }
-          // summary
-          {
-            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 6);
-            if (
-                ticketCell.isStrikethrough != isStrikethrough
-                    || !ticketCell.value.equals(ticketRow.summary)
-                    || !ticketCell.foregroundColor.equals(foregroundColor)
-            ) {
-              ticketsTableModel.setValueAt(
-                  new TicketCell<>(
-                      ticketRow.summary,
-                      foregroundColor,
-                      isStrikethrough
-                  ),
-                  index,
-                  6
-              );
+            // summary
+            {
+              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 6);
+              if (
+                  ticketCell.isStrikethrough != isStrikethrough
+                      || !ticketCell.value.equals(ticketRow.summary)
+                      || !ticketCell.foregroundColor.equals(foregroundColor)
+              ) {
+                ticketsTableModel.setValueAt(
+                    new TicketCell<>(
+                        ticketRow.summary,
+                        foregroundColor,
+                        isStrikethrough
+                    ),
+                    index,
+                    6
+                );
+              }
             }
-          }
         }
       }
     }
@@ -1450,12 +1456,12 @@ public class CommunicationPane extends JPanel implements TableListener {
     /**
      * Background color of the tree.
      */
-    private Color treeBGColor;
+    private Color treeBgColor;
     /**
      * Color to draw the focus indicator in, determined from the background.
      * color.
      */
-    private Color focusBGColor;
+    private Color focusBgColor;
 
     DisablableTreeCellRenderer() {
       super();
@@ -1581,28 +1587,28 @@ public class CommunicationPane extends JPanel implements TableListener {
     public void paint(Graphics g) {
       assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-      Color bColor;
+      Color bgColor;
 
       if (isDropCell) {
-        bColor = UIManager.getColor("Tree.dropCellBackground");
-        if (bColor == null) {
-          bColor = getBackgroundSelectionColor();
+        bgColor = UIManager.getColor("Tree.dropCellBackground");
+        if (bgColor == null) {
+          bgColor = getBackgroundSelectionColor();
         }
       } else if (selected) {
-        bColor = getBackgroundSelectionColor();
+        bgColor = getBackgroundSelectionColor();
       } else {
-        bColor = getBackgroundNonSelectionColor();
-        if (bColor == null) {
-          bColor = getBackground();
+        bgColor = getBackgroundNonSelectionColor();
+        if (bgColor == null) {
+          bgColor = getBackground();
         }
       }
 
       int imageOffset = -1;
-      if (bColor != null) {
+      if (bgColor != null) {
         Icon currentI = getIcon();
 
         imageOffset = getLabelStart();
-        g.setColor(bColor);
+        g.setColor(bgColor);
         if (getComponentOrientation().isLeftToRight()) {
           g.fillRect(imageOffset, 0, getWidth() - imageOffset,
               getHeight());
@@ -1620,9 +1626,9 @@ public class CommunicationPane extends JPanel implements TableListener {
         }
         if (getComponentOrientation().isLeftToRight()) {
           paintFocus(g, imageOffset, 0, getWidth() - imageOffset,
-              getHeight(), bColor);
+              getHeight(), bgColor);
         } else {
-          paintFocus(g, 0, 0, getWidth() - imageOffset, getHeight(), bColor);
+          paintFocus(g, 0, 0, getWidth() - imageOffset, getHeight(), bgColor);
         }
       }
       super.paint(g);
@@ -1638,11 +1644,11 @@ public class CommunicationPane extends JPanel implements TableListener {
         g.drawRect(x, y, w - 1, h - 1);
       }
       if (drawDashedFocusIndicator && notColor != null) {
-        if (treeBGColor != notColor) {
-          treeBGColor = notColor;
-          focusBGColor = new Color(~notColor.getRGB());
+        if (treeBgColor != notColor) {
+          treeBgColor = notColor;
+          focusBgColor = new Color(~notColor.getRGB());
         }
-        g.setColor(focusBGColor);
+        g.setColor(focusBgColor);
         BasicGraphicsUtils.drawDashedRect(g, x, y, w, h);
       }
     }

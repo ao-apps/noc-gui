@@ -24,7 +24,7 @@
 package com.aoindustries.noc.gui;
 
 import com.aoapps.lang.i18n.Resources;
-import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.aoserv.client.AoservConnector;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -58,8 +58,11 @@ public class TicketEditorFrame extends JFrame {
 
   //private final Integer ticketId;
 
+  /**
+   * Creates a new ticket editor component.
+   */
   @SuppressWarnings("OverridableMethodCallInConstructor")
-  public TicketEditorFrame(final NOC noc, final Integer ticketId) {
+  public TicketEditorFrame(final Noc noc, final Integer ticketId) {
     super(RESOURCES.getMessage("title", ticketId));
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     Container contentPane = getContentPane();
@@ -73,7 +76,7 @@ public class TicketEditorFrame extends JFrame {
     glassPane.setVisible(true);
     ticketEditor.currentTicketExecutorService.submit(() -> {
       try {
-        AOServConnector conn = noc.conn;
+        AoservConnector conn = noc.conn;
         if (conn != null) {
           ticketEditor.showTicket(conn, ticketId);
         } else {
@@ -99,6 +102,7 @@ public class TicketEditorFrame extends JFrame {
           public void componentResized(ComponentEvent e) {
             noc.preferences.setTicketEditorFrameBounds(getBounds());
           }
+
           @Override
           public void componentMoved(ComponentEvent e) {
             noc.preferences.setTicketEditorFrameBounds(getBounds());

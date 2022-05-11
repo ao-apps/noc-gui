@@ -80,8 +80,9 @@ class Buzzer {
 
   /**
    * Does not return quickly.  Plays the sound on the current thread.
-   *
+   * <p>
    * Source: http://www.anyexample.com/programming/java/java_play_wav_sound_file.xml
+   * </p>
    */
   @SuppressWarnings("SleepWhileInLoop")
   private static void playSound(String audioResource) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -135,23 +136,23 @@ class Buzzer {
     // Find the highest alertLevel and its associated category in the list
     AlertLevel highestLevel;
     AlertCategory highestCategory;
-    {
-      AlertLevel _highestLevel = AlertLevel.NONE;
-      AlertCategory _highestCategory = AlertCategory.UNCATEGORIZED;
-      for (AlertsPane.Alert alert : history) {
-        if (alert.newAlertLevel.compareTo(_highestLevel) > 0) {
-          _highestLevel = alert.newAlertLevel;
-          _highestCategory = alert.newAlertCategory;
-        } else if (
-            alert.newAlertLevel == _highestLevel
-                && alert.newAlertCategory.compareTo(_highestCategory) > 0
-        ) {
-          _highestCategory = alert.newAlertCategory;
+      {
+        AlertLevel highestLevelTmp = AlertLevel.NONE;
+        AlertCategory highestCategoryTmp = AlertCategory.UNCATEGORIZED;
+        for (AlertsPane.Alert alert : history) {
+          if (alert.newAlertLevel.compareTo(highestLevelTmp) > 0) {
+            highestLevelTmp = alert.newAlertLevel;
+            highestCategoryTmp = alert.newAlertCategory;
+          } else if (
+              alert.newAlertLevel == highestLevelTmp
+                  && alert.newAlertCategory.compareTo(highestCategoryTmp) > 0
+          ) {
+            highestCategoryTmp = alert.newAlertCategory;
+          }
         }
+        highestLevel = highestLevelTmp;
+        highestCategory = highestCategoryTmp;
       }
-      highestLevel = _highestLevel;
-      highestCategory = _highestCategory;
-    }
     buzzerThread.setAlertLevel(highestLevel, highestCategory);
   }
 

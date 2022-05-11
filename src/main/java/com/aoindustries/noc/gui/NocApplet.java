@@ -31,17 +31,17 @@ import javax.swing.JApplet;
 import javax.swing.SwingUtilities;
 
 /**
- * Runs NOC as an applet.
+ * Runs Noc as an applet.
  *
  * @author  AO Industries, Inc.
  */
-public class NOCApplet extends JApplet {
+public class NocApplet extends JApplet {
 
   private static final long serialVersionUID = 1L;
 
-  private static final Logger logger = Logger.getLogger(NOCApplet.class.getName());
+  private static final Logger logger = Logger.getLogger(NocApplet.class.getName());
 
-  private NOC noc;
+  private Noc noc;
 
   @Override
   public void start() {
@@ -57,7 +57,7 @@ public class NOCApplet extends JApplet {
       }
     } else {
       try {
-        this.noc = new NOC(getContentPane());
+        this.noc = new Noc(getContentPane());
       } catch (IOException err) {
         logger.log(Level.SEVERE, null, err);
       }

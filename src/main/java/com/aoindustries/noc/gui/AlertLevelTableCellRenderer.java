@@ -37,24 +37,28 @@ import javax.swing.table.TableCellRenderer;
 class AlertLevelTableCellRenderer implements TableCellRenderer {
 
   // TODO: Should these colors go on the enum directly?
-  static final Color
-      unknownColor = Color.LIGHT_GRAY,
-      criticalColor = Color.RED,
-      highColor = Color.ORANGE.darker(),
-      mediumColor = Color.BLUE,
-      lowColor = Color.GREEN.darker().darker(),
-      defaultColor = Color.BLACK
-  ;
+  static final Color unknownColor = Color.LIGHT_GRAY;
+  static final Color criticalColor = Color.RED;
+  static final Color highColor = Color.ORANGE.darker();
+  static final Color mediumColor = Color.BLUE;
+  static final Color lowColor = Color.GREEN.darker().darker();
+  static final Color defaultColor = Color.BLACK;
 
   // TODO: Should these colors go on the enum directly?
   static Color getColor(AlertLevel alertLevel) {
     switch (alertLevel) {
-      case UNKNOWN: return unknownColor;
-      case CRITICAL: return  criticalColor;
-      case HIGH: return highColor;
-      case MEDIUM: return mediumColor;
-      case LOW: return lowColor;
-      default: return defaultColor;
+      case UNKNOWN:
+        return unknownColor;
+      case CRITICAL:
+        return criticalColor;
+      case HIGH:
+        return highColor;
+      case MEDIUM:
+        return mediumColor;
+      case LOW:
+        return lowColor;
+      default:
+        return defaultColor;
     }
   }
 

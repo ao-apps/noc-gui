@@ -56,7 +56,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * One task.
+ * Component that displays {@link TableResult}.
  *
  * @author  AO Industries, Inc.
  */
@@ -69,7 +69,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
 
   private static final long serialVersionUID = 1L;
 
-  private final NOC noc;
+  private final Noc noc;
   private TableResultNode tableResultNode;
   private JComponent validationComponent;
 
@@ -80,8 +80,11 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
   private JTable table;
   private final JScrollPane scrollPane;
 
+  /**
+   * Creates a new component that displays {@link TableResult}.
+   */
   @SuppressWarnings("OverridableMethodCallInConstructor")
-  public TableResultTaskComponent(NOC noc) {
+  public TableResultTaskComponent(Noc noc) {
     super(new BorderLayout());
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     this.noc = noc;
@@ -247,8 +250,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
               "retrieved.second",
               formattedDate,
               SQLUtility.formatDecimal3(latency / 1000000)
-          )
-      ;
+          );
       retrievedLabel.setText(retrievedLine);
 
       UneditableDefaultTableModel tableModel = (UneditableDefaultTableModel) table.getModel();

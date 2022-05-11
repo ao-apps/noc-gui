@@ -51,7 +51,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 /**
- * One task.
+ * Component that displays {@link SingleResult}.
  *
  * @author  AO Industries, Inc.
  */
@@ -64,15 +64,18 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
   private static final Resources RESOURCES =
       Resources.getResources(ResourceBundle::getBundle, SingleResultTaskComponent.class);
 
-  private final NOC noc;
+  private final Noc noc;
   private SingleResultNode singleResultNode;
   private JComponent validationComponent;
 
   private final JScrollPane scrollPane;
   private final JTextArea textArea;
 
+  /**
+   * Creates a new component that displays {@link SingleResult}.
+   */
   @SuppressWarnings("OverridableMethodCallInConstructor")
-  public SingleResultTaskComponent(NOC noc) {
+  public SingleResultTaskComponent(Noc noc) {
     super(new GridLayout(1, 0));
     this.noc = noc;
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

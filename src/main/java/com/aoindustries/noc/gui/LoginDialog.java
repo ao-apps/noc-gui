@@ -30,7 +30,7 @@ import com.aoapps.hodgepodge.rmi.RMIServerSocketFactoryTCP;
 import com.aoapps.hodgepodge.swing.ErrorDialog;
 import com.aoapps.lang.i18n.Resources;
 import com.aoapps.lang.validation.ValidationException;
-import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.aoserv.client.AoservConnector;
 import com.aoindustries.aoserv.client.account.User;
 import com.aoindustries.noc.monitor.MonitorImpl;
 import com.aoindustries.noc.monitor.client.MonitorClient;
@@ -80,7 +80,7 @@ public final class LoginDialog extends JDialog {
 
   private static final long serialVersionUID = 1L;
 
-  private final NOC noc;
+  private final Noc noc;
   private final Component owner;
   private final JTextField serverField;
   private final JTextField serverPortField;
@@ -91,7 +91,10 @@ public final class LoginDialog extends JDialog {
   private final JButton okButton;
   private final JButton cancelButton;
 
-  public LoginDialog(NOC noc, Component owner) {
+  /**
+   * Creates a new AOServ connection information prompt.
+   */
+  public LoginDialog(Noc noc, Component owner) {
     super((owner instanceof Frame) ? (Frame) owner : new JFrame(), RESOURCES.getMessage("title"), true);
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     assert owner != null;
@@ -100,7 +103,7 @@ public final class LoginDialog extends JDialog {
     this.owner = owner;
     Container localContentPane = getContentPane();
     localContentPane.setLayout(new BorderLayout());
-    JRootPane localRootPane = getRootPane();
+    final JRootPane localRootPane = getRootPane();
 
     // Add the labels
     JPanel p = new JPanel(new GridLayout(6, 1, 0, 2));
@@ -196,6 +199,7 @@ public final class LoginDialog extends JDialog {
               passwordField.requestFocus();
             }
           }
+
           @Override
           public void windowClosing(WindowEvent e) {
             assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -236,8 +240,8 @@ public final class LoginDialog extends JDialog {
         final String password = new String(passwordField.getPassword());
         loginThread = new Thread(() -> {
           try {
-            // First try to login to local AOServConnector
-            final AOServConnector conn = AOServConnector.getConnector(
+            // First try to login to local AoservConnector
+            final AoservConnector conn = AoservConnector.getConnector(
                 username,
                 password
             );

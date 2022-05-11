@@ -67,7 +67,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * Encapsulates and stores the previous user preferences.
+ * The systems panel.
  *
  * @author  AO Industries, Inc.
  */
@@ -79,7 +79,7 @@ public class SystemsPane extends JPanel {
 
   private static final long serialVersionUID = 1L;
 
-  private final NOC noc;
+  private final Noc noc;
   private final JSplitPane splitPane;
   private final JTree tree;
   private final DefaultTreeModel treeModel;
@@ -90,8 +90,11 @@ public class SystemsPane extends JPanel {
   private SystemsTreeNode selectedTreeNode;
   private TaskComponent taskComponent;
 
+  /**
+   * Creates a new systems panel.
+   */
   @SuppressWarnings("OverridableMethodCallInConstructor")
-  public SystemsPane(final NOC noc) {
+  public SystemsPane(final Noc noc) {
     super(new BorderLayout());
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -343,8 +346,9 @@ public class SystemsPane extends JPanel {
 
   /**
    * stop() should only be called when we have a login established.
-   *
+   * <p>
    * TODO: Reevaluate when start and stop are called.
+   * </p>
    */
   void stop() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -384,8 +388,7 @@ public class SystemsPane extends JPanel {
       batchCounter++;
       if (!doingBatch) {
         doingBatch = true;
-        noc.executorService.submit(() ->
-        {
+        noc.executorService.submit(() -> {
           try {
             while (!Thread.currentThread().isInterrupted()) {
               boolean doIt;
@@ -559,12 +562,12 @@ public class SystemsPane extends JPanel {
     /**
      * Background color of the tree.
      */
-    private Color treeBGColor;
+    private Color treeBgColor;
     /**
      * Color to draw the focus indicator in, determined from the background.
      * color.
      */
-    private Color focusBGColor;
+    private Color focusBgColor;
 
     SystemsTreeCellRenderer() {
       super();
@@ -635,6 +638,9 @@ public class SystemsPane extends JPanel {
               break;
             case LOW:
               fg = Color.GREEN.darker().darker();
+              break;
+            default:
+              assert alertLevel == AlertLevel.NONE;
           }
         }
       }
@@ -688,28 +694,28 @@ public class SystemsPane extends JPanel {
     public void paint(Graphics g) {
       assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-      Color bColor;
+      Color bgColor;
 
       if (isDropCell) {
-        bColor = UIManager.getColor("Tree.dropCellBackground");
-        if (bColor == null) {
-          bColor = getBackgroundSelectionColor();
+        bgColor = UIManager.getColor("Tree.dropCellBackground");
+        if (bgColor == null) {
+          bgColor = getBackgroundSelectionColor();
         }
       } else if (selected) {
-        bColor = getBackgroundSelectionColor();
+        bgColor = getBackgroundSelectionColor();
       } else {
-        bColor = getBackgroundNonSelectionColor();
-        if (bColor == null) {
-          bColor = getBackground();
+        bgColor = getBackgroundNonSelectionColor();
+        if (bgColor == null) {
+          bgColor = getBackground();
         }
       }
 
       int imageOffset = -1;
-      if (bColor != null) {
+      if (bgColor != null) {
         Icon currentI = getIcon();
 
         imageOffset = getLabelStart();
-        g.setColor(bColor);
+        g.setColor(bgColor);
         if (getComponentOrientation().isLeftToRight()) {
           g.fillRect(imageOffset, 0, getWidth() - imageOffset,
               getHeight());
@@ -727,9 +733,9 @@ public class SystemsPane extends JPanel {
         }
         if (getComponentOrientation().isLeftToRight()) {
           paintFocus(g, imageOffset, 0, getWidth() - imageOffset,
-              getHeight(), bColor);
+              getHeight(), bgColor);
         } else {
-          paintFocus(g, 0, 0, getWidth() - imageOffset, getHeight(), bColor);
+          paintFocus(g, 0, 0, getWidth() - imageOffset, getHeight(), bgColor);
         }
       }
       super.paint(g);
@@ -745,11 +751,11 @@ public class SystemsPane extends JPanel {
         g.drawRect(x, y, w - 1, h - 1);
       }
       if (drawDashedFocusIndicator && notColor != null) {
-        if (treeBGColor != notColor) {
-          treeBGColor = notColor;
-          focusBGColor = new Color(~notColor.getRGB());
+        if (treeBgColor != notColor) {
+          treeBgColor = notColor;
+          focusBgColor = new Color(~notColor.getRGB());
         }
-        g.setColor(focusBGColor);
+        g.setColor(focusBgColor);
         BasicGraphicsUtils.drawDashedRect(g, x, y, w, h);
       }
     }

@@ -55,7 +55,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 
 /**
- * One task.
+ * Component that displays {@link TableMultiResult}.
  *
  * @author  AO Industries, Inc.
  */
@@ -68,7 +68,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
 
   private static final long serialVersionUID = 1L;
 
-  private final NOC noc;
+  private final Noc noc;
   private TableMultiResultNode<? extends TableMultiResult> tableMultiResultNode;
   private JComponent validationComponent;
 
@@ -78,8 +78,11 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
   private JTable table;
   private final JScrollPane scrollPane;
 
+  /**
+   * Creates a new component that displays {@link TableMultiResult}.
+   */
   @SuppressWarnings("OverridableMethodCallInConstructor")
-  public TableMultiResultTaskComponent(NOC noc) {
+  public TableMultiResultTaskComponent(Noc noc) {
     super(new GridLayout(1, 0));
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     this.noc = noc;

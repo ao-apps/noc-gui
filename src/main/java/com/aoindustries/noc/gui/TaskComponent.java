@@ -28,7 +28,7 @@ import com.aoindustries.noc.monitor.common.Node;
 import javax.swing.JComponent;
 
 /**
- * One task.
+ * Component that displays a task.
  *
  * @author  AO Industries, Inc.
  */

@@ -27,7 +27,7 @@ import com.aoapps.hodgepodge.awt.image.Images;
 import com.aoapps.lang.SysExits;
 import com.aoapps.lang.i18n.Resources;
 import com.aoapps.lang.util.ErrorPrinter;
-import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.aoserv.client.AoservConnector;
 import com.aoindustries.aoserv.client.account.User;
 import com.aoindustries.noc.monitor.common.AlertCategory;
 import com.aoindustries.noc.monitor.common.AlertLevel;
@@ -78,11 +78,11 @@ import javax.swing.event.ChangeListener;
  *
  * @author  AO Industries, Inc.
  */
-public class NOC {
+public class Noc {
 
-  private static final Logger logger = Logger.getLogger(NOC.class.getName());
+  private static final Logger logger = Logger.getLogger(Noc.class.getName());
 
-  private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, NOC.class);
+  private static final Resources RESOURCES = Resources.getResources(ResourceBundle::getBundle, Noc.class);
 
   /**
    * In Java 7 and Debian 7, the keyboard stops working in the noc-gui the first
@@ -93,8 +93,9 @@ public class NOC {
 
   /**
    * Running as a standalone application.
-   *
+   * <p>
    * May we include the security policy with the source code?
+   * </p>
    */
   @SuppressWarnings({"UseSpecificCatch", "TooBroadCatch", "UseOfSystemOutOrSystemErr"})
   public static void main(String[] args) {
@@ -104,12 +105,12 @@ public class NOC {
       }
 
       if (SwingUtilities.isEventDispatchThread()) {
-        NOC noc = new NOC(null);
+        Noc noc = new Noc(null);
       } else {
         // If running standalone, start in proper mode
         SwingUtilities.invokeAndWait(() -> {
           try {
-            NOC noc = new NOC(null);
+            Noc noc = new Noc(null);
           } catch (IOException err) {
             ErrorPrinter.printStackTraces(err, System.err);
           }
@@ -156,7 +157,7 @@ public class NOC {
   /* The following variables should always be accessed from the Swing event thread. */
   // Encapsulate with getter/setter to enforce?
   @SuppressWarnings("PackageVisibleField")
-  AOServConnector conn;
+  AoservConnector conn;
   @SuppressWarnings("PackageVisibleField")
   RootNode rootNode;
   @SuppressWarnings("PackageVisibleField")
@@ -169,11 +170,11 @@ public class NOC {
   final ExecutorService executorService = Executors.newCachedThreadPool();
 
   /**
-   * Creates a new NOC component.
+   * Creates a new Noc component.
    *
-   * @param  parent  the parent component for this NOC (where it will embed itself during Tabbed mode) or <code>null</code> if there is no parent.
+   * @param  parent  the parent component for this Noc (where it will embed itself during Tabbed mode) or <code>null</code> if there is no parent.
    */
-  public NOC(Container parent) throws IOException {
+  public Noc(Container parent) throws IOException {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     // Either one of parent or singleFrame should exist
@@ -203,6 +204,7 @@ public class NOC {
             public void componentResized(ComponentEvent e) {
               preferences.setSingleFrameBounds(singleFrame.getBounds());
             }
+
             @Override
             public void componentMoved(ComponentEvent e) {
               preferences.setSingleFrameBounds(singleFrame.getBounds());
@@ -216,6 +218,7 @@ public class NOC {
           public void componentResized(ComponentEvent e) {
             preferences.setAlertsFrameBounds(alertsFrame.getBounds());
           }
+
           @Override
           public void componentMoved(ComponentEvent e) {
             preferences.setAlertsFrameBounds(alertsFrame.getBounds());
@@ -228,6 +231,7 @@ public class NOC {
           public void componentResized(ComponentEvent e) {
             preferences.setCommunicationFrameBounds(communicationFrame.getBounds());
           }
+
           @Override
           public void componentMoved(ComponentEvent e) {
             preferences.setCommunicationFrameBounds(communicationFrame.getBounds());
@@ -240,6 +244,7 @@ public class NOC {
           public void componentResized(ComponentEvent e) {
             preferences.setSystemsFrameBounds(systemsFrame.getBounds());
           }
+
           @Override
           public void componentMoved(ComponentEvent e) {
             preferences.setSystemsFrameBounds(systemsFrame.getBounds());
@@ -252,10 +257,10 @@ public class NOC {
       @Override
       public void windowClosing(WindowEvent e) {
         // Put back in the parent if there is one
-        if (NOC.this.parent != null) {
+        if (Noc.this.parent != null) {
           currentDisplayMode = Preferences.DisplayMode.TABS;
           configureDisplayMode();
-        } else if (NOC.this.singleFrame != null) {
+        } else if (Noc.this.singleFrame != null) {
           // Stays running in the background to popup alerts
           singleFrame.setVisible(false);
           alertsFrame.setVisible(false);
@@ -304,10 +309,10 @@ public class NOC {
         autoSize = true;
       }
 
-      PopupMenu popup = new PopupMenu();
+      final PopupMenu popup = new PopupMenu();
       MenuItem localLoginMenuItem = new MenuItem(RESOURCES.getMessage("trayIcon.popup.login"));
       localLoginMenuItem.addActionListener((ActionEvent e) -> {
-        if (NOC.this.rootNode != null) {
+        if (Noc.this.rootNode != null) {
           logout();
         } else {
           login();
@@ -367,7 +372,7 @@ public class NOC {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     switch (currentDisplayMode) {
-      case FRAMES:
+      case FRAMES: {
         systemsFrame.setVisible(true);
         systemsFrame.setState(Frame.NORMAL);
         systemsFrame.toFront();
@@ -379,7 +384,8 @@ public class NOC {
         alertsFrame.toFront();
         alertsFrame.requestFocus();
         break;
-      case TABS:
+      }
+      case TABS: {
         if (parent == null) {
           if (singleFrame == null) {
             throw new AssertionError("Both parent and singleFrame are null");
@@ -391,7 +397,9 @@ public class NOC {
           //tabbedPane.setSelectedIndex(0);
         }
         break;
-      default: throw new AssertionError("Unexpected value for currentDisplayMode: " + currentDisplayMode);
+      }
+      default:
+        throw new AssertionError("Unexpected value for currentDisplayMode: " + currentDisplayMode);
     }
   }
 
@@ -431,7 +439,7 @@ public class NOC {
     synchronized (getImageFromResourcesCache) {
       Image image = getImageFromResourcesCache.get(name);
       if (image == null) {
-        image = Images.getImageFromResources(NOC.class::getResourceAsStream, name);
+        image = Images.getImageFromResources(Noc.class::getResourceAsStream, name);
         getImageFromResourcesCache.put(name, image);
       }
       return image;
@@ -490,7 +498,7 @@ public class NOC {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     switch (currentDisplayMode) {
-      case FRAMES:
+      case FRAMES: {
         ignoreChangeEvent = true;
         if (singleFrame != null) {
           singleFrame.setVisible(false);
@@ -502,48 +510,49 @@ public class NOC {
           parent.repaint();
         }
         ignoreChangeEvent = false;
-      {
-        alertsFrame.getContentPane().setLayout(new BorderLayout());
-        JToolBar toolBar = new JToolBar(RESOURCES.getMessage("alerts.tools"));
-        toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-        toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-        alerts.addToolBars(toolBar);
-        toolBar.addSeparator();
-        alertsLoginButton = addCommonButtons(toolBar);
-        alertsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-        alertsFrame.getContentPane().add(alerts, BorderLayout.CENTER);
-        alertsFrame.setBounds(preferences.getAlertsFrameBounds());
-        alertsFrame.setVisible(true);
-      }
-      {
-        communicationFrame.getContentPane().setLayout(new BorderLayout());
-        JToolBar toolBar = new JToolBar(RESOURCES.getMessage("communication.tools"));
-        toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-        toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-        communication.addToolBars(toolBar);
-        toolBar.addSeparator();
-        communicationLoginButton = addCommonButtons(toolBar);
-        communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-        communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
-        communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
-        communicationFrame.setVisible(true);
-      }
-      {
-        systemsFrame.getContentPane().setLayout(new BorderLayout());
-        JToolBar toolBar = new JToolBar(RESOURCES.getMessage("systems.tools"));
-        toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-        toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-        systems.addToolBars(toolBar);
-        toolBar.addSeparator();
-        systemsLoginButton = addCommonButtons(toolBar);
-        systemsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-        systemsFrame.getContentPane().add(systems, BorderLayout.CENTER);
-        systemsFrame.setBounds(preferences.getSystemsFrameBounds());
-        systemsFrame.setVisible(true);
-      }
+          {
+            alertsFrame.getContentPane().setLayout(new BorderLayout());
+            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("alerts.tools"));
+            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+            alerts.addToolBars(toolBar);
+            toolBar.addSeparator();
+            alertsLoginButton = addCommonButtons(toolBar);
+            alertsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+            alertsFrame.getContentPane().add(alerts, BorderLayout.CENTER);
+            alertsFrame.setBounds(preferences.getAlertsFrameBounds());
+            alertsFrame.setVisible(true);
+          }
+          {
+            communicationFrame.getContentPane().setLayout(new BorderLayout());
+            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("communication.tools"));
+            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+            communication.addToolBars(toolBar);
+            toolBar.addSeparator();
+            communicationLoginButton = addCommonButtons(toolBar);
+            communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+            communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
+            communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
+            communicationFrame.setVisible(true);
+          }
+          {
+            systemsFrame.getContentPane().setLayout(new BorderLayout());
+            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("systems.tools"));
+            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+            systems.addToolBars(toolBar);
+            toolBar.addSeparator();
+            systemsLoginButton = addCommonButtons(toolBar);
+            systemsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+            systemsFrame.getContentPane().add(systems, BorderLayout.CENTER);
+            systemsFrame.setBounds(preferences.getSystemsFrameBounds());
+            systemsFrame.setVisible(true);
+          }
         singleLoginButton = null;
         break;
-      case TABS:
+      }
+      case TABS: {
         // Remove from frames
         alertsFrame.setVisible(false);
         alertsFrame.getContentPane().removeAll();
@@ -564,6 +573,7 @@ public class NOC {
           throw new AssertionError("Both parent and singleFrame are null");
         }
         break;
+      }
       default:
         throw new AssertionError("Unknown value for currentDisplayMode: " + currentDisplayMode);
     }
@@ -648,21 +658,19 @@ public class NOC {
     toolBar.add(loginButton);
 
     switch (currentDisplayMode) {
-      case FRAMES :
-      {
+      case FRAMES: {
         JButton framesButton = new JButton(RESOURCES.getMessage("tabsButton.label"));
         toolBar.add(framesButton);
         framesButton.addActionListener(e -> setDisplayMode(Preferences.DisplayMode.TABS));
         break;
       }
-      case TABS :
-      {
+      case TABS: {
         JButton framesButton = new JButton(RESOURCES.getMessage("framesButton.label"));
         toolBar.add(framesButton);
         framesButton.addActionListener(e -> setDisplayMode(Preferences.DisplayMode.FRAMES));
         break;
       }
-      default :
+      default:
         throw new AssertionError("Unexpected value for currentDisplayMode: " + currentDisplayMode);
     }
     return loginButton;
@@ -676,10 +684,12 @@ public class NOC {
   }
 
   /**
+   * Called when login completed.
+   *
    * @param  port  the port for the local objects, not the server port.
    */
   void loginCompleted(
-      AOServConnector conn,
+      AoservConnector conn,
       RootNode rootNode,
       String rootNodeLabel,
       String server,
@@ -766,8 +776,9 @@ public class NOC {
   }
 
   /**
+   * See {@link AlertsPane#alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String, com.aoindustries.noc.monitor.common.AlertCategory, com.aoindustries.noc.monitor.common.AlertCategory)}.
+   *
    * @see  #clearAlerts(java.lang.Object)
-   * @see  AlertsPane#alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String, com.aoindustries.noc.monitor.common.AlertCategory, com.aoindustries.noc.monitor.common.AlertCategory)
    */
   void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage, AlertCategory oldAlertCategory, AlertCategory newAlertCategory) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -807,8 +818,9 @@ public class NOC {
   }
 
   /**
+   * See {@link AlertsPane#clearAlerts(java.lang.Object)}.
+   *
    * @see  #alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
-   * @see  AlertsPane#clearAlerts(java.lang.Object)
    */
   void clearAlerts(Object source) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -826,10 +838,9 @@ public class NOC {
     assert !SwingUtilities.isEventDispatchThread() : "Running in Swing event dispatch thread";
     try {
       boolean unexported = false;
-      for (
-        int c = 0;
-        c < 100 && !Thread.currentThread().isInterrupted();
-        c++
+      for (int c = 0;
+          c < 100 && !Thread.currentThread().isInterrupted();
+          c++
       ) {
         if (UnicastRemoteObject.unexportObject(remote, false)) {
           unexported = true;

@@ -29,7 +29,7 @@ import com.aoapps.hodgepodge.table.Table;
 import com.aoapps.hodgepodge.table.TableListener;
 import com.aoapps.lang.i18n.Resources;
 import com.aoapps.sql.SQLUtility;
-import com.aoindustries.aoserv.client.AOServConnector;
+import com.aoindustries.aoserv.client.AoservConnector;
 import com.aoindustries.aoserv.client.account.Account;
 import com.aoindustries.aoserv.client.account.Administrator;
 import com.aoindustries.aoserv.client.reseller.Brand;
@@ -65,7 +65,7 @@ import org.jdesktop.swingx.MultiSplitLayout;
 
 /**
  * Ticket editor component.
- *
+ * <pre>
  *                      Ticket                                    Actions                    Internal Notes
  * +--------------------------------------------+-----------------------------------------+-------------------+
  * | 1) Small fields | 6) Category              | 3) List of actions (single click/double | 9) Internal Notes |
@@ -111,6 +111,7 @@ import org.jdesktop.swingx.MultiSplitLayout;
  *     Details (4)
  *     Raw Email (4 - popup)
  * Add Annotation (5)
+ * </pre>
  *
  * @author  AO Industries, Inc.
  */
@@ -146,15 +147,18 @@ public class TicketEditor extends JPanel implements TableListener {
 
   private static final long serialVersionUID = 1L;
 
-  private final NOC noc;
+  private final Noc noc;
 
+  /**
+   * Preferences are stored per overall layout.
+   */
   public enum PreferencesSet {
     EMBEDDED,
     FRAME
   }
 
   /**
-   * The name used to store its preferences - either "embedded" or "frame"
+   * The name used to store its preferences - either "embedded" or "frame".
    */
   private final PreferencesSet preferencesSet;
 
@@ -359,8 +363,11 @@ public class TicketEditor extends JPanel implements TableListener {
     }
   };
 
+  /**
+   * Creates a new ticket editor component.
+   */
   @SuppressWarnings("OverridableMethodCallInConstructor")
-  public TicketEditor(final NOC noc, PreferencesSet preferencesSet) {
+  public TicketEditor(final Noc noc, PreferencesSet preferencesSet) {
     super(new BorderLayout());
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -437,8 +444,8 @@ public class TicketEditor extends JPanel implements TableListener {
     // TODO
 
     // Ticket Details
-    JPanel detailsPanel = new JPanel(new BorderLayout());
-    JPanel summaryPanel = new JPanel(new BorderLayout());
+    final JPanel detailsPanel = new JPanel(new BorderLayout());
+    final JPanel summaryPanel = new JPanel(new BorderLayout());
     summaryPanel.add(
         new JLabel(
             RESOURCES.getMessage("summary.label"),
@@ -449,10 +456,10 @@ public class TicketEditor extends JPanel implements TableListener {
     summaryPanel.add(summaryTextField, BorderLayout.CENTER);
     detailsPanel.add(summaryPanel, BorderLayout.NORTH);
     detailsTextArea.setEditable(false);
-    {
-      Font oldFont = detailsTextArea.getFont();
-      detailsTextArea.setFont(new Font(Font.MONOSPACED, oldFont.getStyle(), oldFont.getSize()));
-    }
+      {
+        Font oldFont = detailsTextArea.getFont();
+        detailsTextArea.setFont(new Font(Font.MONOSPACED, oldFont.getStyle(), oldFont.getSize()));
+      }
     detailsPanel.add(new JScrollPane(detailsTextArea), BorderLayout.CENTER);
     splitPane.add(detailsPanel, "ticketDetails");
 
@@ -473,10 +480,10 @@ public class TicketEditor extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-    {
-      Font oldFont = internalNotesTextArea.getFont();
-      internalNotesTextArea.setFont(new Font(Font.MONOSPACED, oldFont.getStyle(), oldFont.getSize()));
-    }
+      {
+        Font oldFont = internalNotesTextArea.getFont();
+        internalNotesTextArea.setFont(new Font(Font.MONOSPACED, oldFont.getStyle(), oldFont.getSize()));
+      }
     internalNotesTextArea.addFocusListener(internalNotesTextAreaFocusListener);
     internalNotesPanel.add(new JScrollPane(internalNotesTextArea), BorderLayout.CENTER);
     splitPane.add(internalNotesPanel, "internalNotes");
@@ -497,23 +504,27 @@ public class TicketEditor extends JPanel implements TableListener {
 
   /**
    * Shows the specified ticket or empty if <code>null</code>.
-   *
+   * <p>
    * This may be called by any thread, if called by the Swing event dispatch
    * thread, it will recall itself in the background using ExecutorService to
    * retrieve data.
-   *
+   * </p>
+   * <p>
    * If the ticket is the same as the one currently opened (same ID), then this call has no affect.
-   *
+   * </p>
+   * <p>
    * Should only display complete information:
+   * </p>
    * <ul>
    *   <li>If ticket is not null, should set visibility to true when ticket fully loaded.</li>
    *   <li>If ticket is null, should set visibility to false before clearing fields.</li>
    * </ul>
-   *
+   * <p>
    * When <code>null</code>, all table listeners are removed.
+   * </p>
    */
   @SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
-  public void showTicket(final AOServConnector requestConn, final Integer requestedTicketId) {
+  public void showTicket(final AoservConnector requestConn, final Integer requestedTicketId) {
     if (SwingUtilities.isEventDispatchThread()) {
       // Run in background thread for data lookups
       //       Make happen in order
@@ -547,7 +558,7 @@ public class TicketEditor extends JPanel implements TableListener {
 
             // Remove listeners from old ticket connector (if set)
             if (currentTicket != null) {
-              AOServConnector conn = currentTicket.getTable().getConnector();
+              AoservConnector conn = currentTicket.getTable().getConnector();
               conn.getTicket().getAction().removeTableListener(this);
               conn.getTicket().getStatus().removeTableListener(this);
               conn.getTicket().getTicketType().removeTableListener(this);
@@ -555,7 +566,7 @@ public class TicketEditor extends JPanel implements TableListener {
             }
             // Add table listeners to new ticket connector (if set)
             if (ticket != null) {
-              AOServConnector conn = ticket.getTable().getConnector();
+              AoservConnector conn = ticket.getTable().getConnector();
               conn.getTicket().getAction().addTableListener(this, 100);
               conn.getTicket().getStatus().addTableListener(this, 100);
               conn.getTicket().getTicketType().addTableListener(this, 100);
@@ -639,15 +650,15 @@ public class TicketEditor extends JPanel implements TableListener {
     } else {
       Brand brandObj = ticket.getBrand();
       brand = brandObj == null ? null : brandObj.getKey();
-      AOServConnector conn = ticket.getTable().getConnector();
+      AoservConnector conn = ticket.getTable().getConnector();
       ticketNumber = ticket.getKey();
       ticketTypes = conn.getTicket().getTicketType().getRows();
       ticketType = ticket.getTicketType();
       ticketStatuses = conn.getTicket().getStatus().getRows();
       ticketStatus = ticket.getStatus();
       openDate = ticket.getOpenDate();
-      Administrator openedByBA = ticket.getCreatedBy();
-      openedBy = openedByBA == null ? "" : openedByBA.getName();
+      Administrator openedByAdministrator = ticket.getCreatedBy();
+      openedBy = openedByAdministrator == null ? "" : openedByAdministrator.getName();
       // TODO: Only show accounts that are a child of the current brandObj (or the current account if not in this set)
       accounts = conn.getAccount().getAccount().getRows();
       account = ticket.getAccount();

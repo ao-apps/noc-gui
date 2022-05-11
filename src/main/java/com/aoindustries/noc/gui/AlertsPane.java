@@ -56,7 +56,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 /**
- * Encapsulates and stores the previous user preferences.
+ * The alerts panel.
  *
  * @author  AO Industries, Inc.
  */
@@ -73,7 +73,7 @@ public class AlertsPane extends JPanel {
   private static final long serialVersionUID = 2L;
 
   /**
-   * Column indexes
+   * Column indexes.
    */
   private static final int
       COLUMN_TIME = 0,
@@ -83,7 +83,7 @@ public class AlertsPane extends JPanel {
       COLUMN_ALERT_MESSAGE = COLUMN_SOURCE_DISPLAY + 1;
 
   /**
-   * Column widths
+   * Column widths.
    */
   private static final int
       COLUMN_TIME_WIDTH = 120,
@@ -100,7 +100,7 @@ public class AlertsPane extends JPanel {
     }
   }
 
-  final NOC noc;
+  final Noc noc;
 
   private final Buzzer buzzer = new Buzzer(this);
 
@@ -132,8 +132,11 @@ public class AlertsPane extends JPanel {
   // Only accessed by Swing event dispatch thread, no additional synchronization necessary
   private final List<Alert> history = new ArrayList<>();
 
+  /**
+   * Create a new alerts panel.
+   */
   @SuppressWarnings("OverridableMethodCallInConstructor")
-  public AlertsPane(NOC noc) {
+  public AlertsPane(Noc noc) {
     super(new GridLayout(1, 0));
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -154,12 +157,17 @@ public class AlertsPane extends JPanel {
       @Override
       public Class<?> getColumnClass(int columnIndex) {
         switch (columnIndex) {
-          case COLUMN_TIME : return Date.class;
-          case COLUMN_ALERT_LEVEL : return AlertLevel.class;
-          case COLUMN_ALERT_CATEGORY : return AlertCategory.class;
-          case COLUMN_SOURCE_DISPLAY : return String.class;
-          case COLUMN_ALERT_MESSAGE : return String.class;
-          default :
+          case COLUMN_TIME:
+            return Date.class;
+          case COLUMN_ALERT_LEVEL:
+            return AlertLevel.class;
+          case COLUMN_ALERT_CATEGORY:
+            return AlertCategory.class;
+          case COLUMN_SOURCE_DISPLAY:
+            return String.class;
+          case COLUMN_ALERT_MESSAGE:
+            return String.class;
+          default:
             throw new AssertionError("Unexpected columnIndex: " + columnIndex);
         }
       }
@@ -190,20 +198,22 @@ public class AlertsPane extends JPanel {
         final int modelRow = getRowSorter().convertRowIndexToModel(row);
         TableCellRenderer renderer = super.getCellRenderer(row, column);
         Color foreground;
-        {
-          Color _foreground = null;
-          // Only put color on selected columns
-          switch (column) {
-            case COLUMN_ALERT_LEVEL :
-              _foreground = AlertLevelTableCellRenderer.getColor((AlertLevel) tableModel.getValueAt(modelRow, column));
-              break;
-            // TODO: Associate a color with each category?
+          {
+            Color foregroundTmp;
+            // Only put color on selected columns
+            switch (column) {
+              case COLUMN_ALERT_LEVEL:
+                foregroundTmp = AlertLevelTableCellRenderer.getColor((AlertLevel) tableModel.getValueAt(modelRow, column));
+                break;
+              default:
+                foregroundTmp = null;
+              // TODO: Associate a color with each category?
+            }
+            if (foregroundTmp == null) {
+              foregroundTmp = getForeground();
+            }
+            foreground = foregroundTmp;
           }
-          if (_foreground == null) {
-            _foreground = getForeground();
-          }
-          foreground = _foreground;
-        }
         return (JTable table1, Object value, boolean isSelected, boolean hasFocus, int row1, int column1) -> {
           if (column1 == COLUMN_TIME) {
             Locale locale = Locale.getDefault();
@@ -343,6 +353,8 @@ public class AlertsPane extends JPanel {
   }
 
   /**
+   * Adds a new alert.
+   *
    * @see  #clearAlerts(java.lang.Object)
    */
   void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage, AlertCategory oldAlertCategory, AlertCategory newAlertCategory) {

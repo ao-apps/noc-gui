@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.jdesktop.swingx.MultiSplitLayout.Node;
 
@@ -53,6 +54,9 @@ public class Preferences {
 
   private static final Logger logger = Logger.getLogger(Preferences.class.getName());
 
+  /**
+   * The set of supported display modes.
+   */
   public enum DisplayMode {
     FRAMES,
     TABS
@@ -60,9 +64,9 @@ public class Preferences {
 
   private static final java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(Preferences.class);
 
-  private final NOC noc;
+  private final Noc noc;
 
-  /** Local caches are used, just in case saving the user preferences doesn't work */
+  /* Local caches are used, just in case saving the user preferences doesn't work */
   private DisplayMode displayMode;
   private int tabbedPaneSelectedIndex;
   private Rectangle singleFrameBounds;
@@ -86,7 +90,10 @@ public class Preferences {
 
   private Rectangle ticketEditorFrameBounds;
 
-  public Preferences(NOC noc) {
+  /**
+   * Creates a new encapsulation of user preferences.
+   */
+  public Preferences(Noc noc) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     this.noc = noc;
@@ -187,12 +194,18 @@ public class Preferences {
     }
   }
 
+  /**
+   * Retrieves display mode.
+   */
   public DisplayMode getDisplayMode() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return displayMode;
   }
 
+  /**
+   * Stores display mode.
+   */
   public void setDisplayMode(DisplayMode displayMode) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -200,12 +213,18 @@ public class Preferences {
     prefs.put("Preferences." + getLocalHostname() + ".displayMode", displayMode.name());
   }
 
+  /**
+   * Retrieves selected tab when all combined into a single {@link JFrame}.
+   */
   public int getTabbedPaneSelectedIndex() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return tabbedPaneSelectedIndex;
   }
 
+  /**
+   * Stores selected tab when all combined into a single {@link JFrame}.
+   */
   public void setTabbedPaneSelectedIndex(int tabbedPaneSelectedIndex) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -213,12 +232,18 @@ public class Preferences {
     prefs.put("Preferences." + getLocalHostname() + ".tabbedPaneSelectedIndex", Integer.toString(tabbedPaneSelectedIndex));
   }
 
+  /**
+   * Retrieves bounds when all combined into a single {@link JFrame}.
+   */
   public Rectangle getSingleFrameBounds() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return singleFrameBounds;
   }
 
+  /**
+   * Stores bounds when all combined into a single {@link JFrame}.
+   */
   public void setSingleFrameBounds(Rectangle singleFrameBounds) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -230,12 +255,18 @@ public class Preferences {
     prefs.putInt("Preferences." + hostname + ".singleFrameBounds.height", singleFrameBounds.height);
   }
 
+  /**
+   * Retrieves bounds of {@link AlertsPane}.
+   */
   public Rectangle getAlertsFrameBounds() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return alertsFrameBounds;
   }
 
+  /**
+   * Stores bounds of {@link AlertsPane}.
+   */
   public void setAlertsFrameBounds(Rectangle alertsFrameBounds) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -247,12 +278,18 @@ public class Preferences {
     prefs.putInt("Preferences." + hostname + ".alertsFrameBounds.height", alertsFrameBounds.height);
   }
 
+  /**
+   * Retrieves bounds of {@link CommunicationPane}.
+   */
   public Rectangle getCommunicationFrameBounds() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return communicationFrameBounds;
   }
 
+  /**
+   * Stores bounds of {@link CommunicationPane}.
+   */
   public void setCommunicationFrameBounds(Rectangle communicationFrameBounds) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -264,12 +301,18 @@ public class Preferences {
     prefs.putInt("Preferences." + hostname + ".communicationFrameBounds.height", communicationFrameBounds.height);
   }
 
+  /**
+   * Retrieves bounds of {@link SystemsPane}.
+   */
   public Rectangle getSystemsFrameBounds() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return systemsFrameBounds;
   }
 
+  /**
+   * Stores bounds of {@link SystemsPane}.
+   */
   public void setSystemsFrameBounds(Rectangle systemsFrameBounds) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -281,12 +324,18 @@ public class Preferences {
     prefs.putInt("Preferences." + hostname + ".systemsFrameBounds.height", systemsFrameBounds.height);
   }
 
+  /**
+   * Retrieves server address of {@link LoginDialog}.
+   */
   public String getServer() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return server;
   }
 
+  /**
+   * Stores server address of {@link LoginDialog}.
+   */
   public void setServer(String server) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -294,12 +343,18 @@ public class Preferences {
     prefs.put("Preferences.server", server);
   }
 
+  /**
+   * Retrieves server port of {@link LoginDialog}.
+   */
   public String getServerPort() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return serverPort;
   }
 
+  /**
+   * Stores server port of {@link LoginDialog}.
+   */
   public void setServerPort(String serverPort) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -307,12 +362,18 @@ public class Preferences {
     prefs.put("Preferences.serverPort", serverPort);
   }
 
+  /**
+   * Retrieves external address of {@link LoginDialog}.
+   */
   public String getExternal() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return external;
   }
 
+  /**
+   * Stores external address of {@link LoginDialog}.
+   */
   public void setExternal(String external) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -320,12 +381,18 @@ public class Preferences {
     prefs.put("Preferences." + getLocalHostname() + ".external", external);
   }
 
+  /**
+   * Retrieves local port of {@link LoginDialog}.
+   */
   public String getLocalPort() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return localPort;
   }
 
+  /**
+   * Stores local port of {@link LoginDialog}.
+   */
   public void setLocalPort(String localPort) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -333,12 +400,18 @@ public class Preferences {
     prefs.put("Preferences." + getLocalHostname() + ".localPort", localPort);
   }
 
+  /**
+   * Retrieves username of {@link LoginDialog}.
+   */
   public User.Name getUsername() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return username;
   }
 
+  /**
+   * Stores username of {@link LoginDialog}.
+   */
   public void setUsername(User.Name username) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -350,12 +423,18 @@ public class Preferences {
     }
   }
 
+  /**
+   * Retrieves alert level of {@link SystemsPane}.
+   */
   public AlertLevel getSystemsAlertLevel() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return systemsAlertLevel;
   }
 
+  /**
+   * Stores alert level of {@link SystemsPane}.
+   */
   public void setSystemsAlertLevel(AlertLevel systemsAlertLevel) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -363,12 +442,18 @@ public class Preferences {
     prefs.put("Preferences.systemsAlertLevel", systemsAlertLevel.name());
   }
 
+  /**
+   * Retrieves split pane location of {@link SystemsPane}.
+   */
   public int getSystemsSplitPaneDividerLocation() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return systemsSplitPaneDividerLocation;
   }
 
+  /**
+   * Stores split pane location of {@link SystemsPane}.
+   */
   public void setSystemsSplitPaneDividerLocation(int systemsSplitPaneDividerLocation) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
@@ -376,6 +461,9 @@ public class Preferences {
     prefs.put("Preferences." + getLocalHostname() + ".systemsSplitPaneDividerLocation", Integer.toString(systemsSplitPaneDividerLocation));
   }
 
+  /**
+   * Retrieves layout model of {@link CommunicationPane}.
+   */
   public Node getCommunicationMultiSplitLayoutModel(String layoutDef) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     if (
@@ -396,6 +484,9 @@ public class Preferences {
     }
   }
 
+  /**
+   * Stores layout model of {@link CommunicationPane}.
+   */
   public void setCommunicationMultiSplitLayoutModel(String layoutDef, Node modelRoot) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -415,6 +506,9 @@ public class Preferences {
     }
   }
 
+  /**
+   * Retrieves layout model of {@link TicketEditor}.
+   */
   public Node getTicketEditorMultiSplitLayoutModel(TicketEditor.PreferencesSet preferencesSet, String layoutDef) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     byte[] ticketEditorMultiSplitLayoutModel = ticketEditorMultiSplitLayoutModels.get(preferencesSet);
@@ -437,6 +531,9 @@ public class Preferences {
     }
   }
 
+  /**
+   * Stores layout model of {@link TicketEditor}.
+   */
   public void setTicketEditorMultiSplitLayoutModel(TicketEditor.PreferencesSet preferencesSet, String layoutDef, Node modelRoot) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -456,12 +553,18 @@ public class Preferences {
     }
   }
 
+  /**
+   * Retrieves bounds of {@link TicketEditor}.
+   */
   public Rectangle getTicketEditorFrameBounds() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     return ticketEditorFrameBounds;
   }
 
+  /**
+   * Stores bounds of {@link TicketEditor}.
+   */
   public void setTicketEditorFrameBounds(Rectangle ticketEditorFrameBounds) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
