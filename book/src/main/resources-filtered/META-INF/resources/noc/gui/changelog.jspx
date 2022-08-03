@@ -37,7 +37,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
     shortTitle="Changelog"
     tocLevels="1"
     datePublished="2020-04-11T01:35:38-05:00"
-    dateModified="2022-05-16T06:57:07-05:00"
+    dateModified="2022-08-03T15:55:39-07:00"
   >
     <c:if test="${fn:endsWith('@{project.version}', '-SNAPSHOT') and !fn:endsWith('@{project.version}', '-POST-SNAPSHOT')}">
       <changelog:release
@@ -47,7 +47,11 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         artifactId="@{documented.artifactId}"
         repository="@{nexusUrl}content/repositories/snapshots/"
         scmUrl="@{project.scm.url}"
-      />
+      >
+        <ul>
+          <li>Updated dependencies.</li>
+        </ul>
+      </changelog:release>
     </c:if>
 
     <changelog:release

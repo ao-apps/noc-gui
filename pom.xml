@@ -29,7 +29,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
     <relativePath>../../oss/parent/pom.xml</relativePath>
   </parent>
 
-  <groupId>com.aoindustries</groupId><artifactId>noc-gui</artifactId><version>1.4.0-POST-SNAPSHOT</version>
+  <groupId>com.aoindustries</groupId><artifactId>noc-gui</artifactId><version>1.4.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <properties>
@@ -119,6 +119,20 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.sonatype.ossindex.maven</groupId><artifactId>ossindex-maven-plugin</artifactId>
+        <configuration>
+          <excludeVulnerabilityIds>
+            <!--
+              Exclude sonatype-2022-4402: https://ossindex.sonatype.org/vulnerability/sonatype-2022-4402
+              This issue is fixed in org.postgresql:postgresql:42.4.1, but still reported by audit.
+              Furthermore, all data schema is in our control so we are not vulnerable.
+              TODO: Remove in org.postgresql:postgresql > 42.4.1
+            -->
+            <exclude>sonatype-2022-4402</exclude>
+          </excludeVulnerabilityIds>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId><artifactId>maven-dependency-plugin</artifactId>
         <configuration>
@@ -304,7 +318,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId><version>1.4.0${POST-SNAPSHOT}</version>
       </dependency>
       <dependency>
-        <groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.4.0${POST-SNAPSHOT}</version>
+        <groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.4.1-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
       </dependency>
       <dependency>
         <groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId><version>1.4.0${POST-SNAPSHOT}</version>
@@ -363,7 +377,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>3.5.1</version>
       </dependency>
       <dependency>
-        <groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.4.0${POST-SNAPSHOT}</version>
+        <groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.4.1-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>1.7.36</version>
@@ -400,7 +414,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>mysql</groupId><artifactId>mysql-connector-java</artifactId><version>8.0.30</version>
       </dependency>
       <dependency>
-        <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.4.0</version>
+        <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.4.1</version>
       </dependency>
       <dependency>
         <groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.21.4</version>
