@@ -403,7 +403,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.5.0</version>
       </dependency>
       <dependency>
-        <groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.21.6</version>
+        <groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.21.7</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
