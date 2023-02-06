@@ -120,6 +120,18 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
   <build>
     <plugins>
       <plugin>
+        <groupId>org.sonatype.ossindex.maven</groupId><artifactId>ossindex-maven-plugin</artifactId>
+        <configuration>
+          <excludeVulnerabilityIds>
+            <!--
+            Skip CVE-2022-41862: https://github.com/postgres/postgres/commit/71c37797d7bd78266146a5829ab62b3687c47295
+            We are already on the latest PostgreSQL JDBC driver and we only connect to trusted servers.
+            -->
+            <exclude>CVE-2022-41862</exclude>
+          </excludeVulnerabilityIds>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId><artifactId>maven-dependency-plugin</artifactId>
         <configuration>
           <usedDependencies>
