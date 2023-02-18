@@ -121,18 +121,6 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
   <build>
     <plugins>
       <plugin>
-        <groupId>org.sonatype.ossindex.maven</groupId><artifactId>ossindex-maven-plugin</artifactId>
-        <configuration>
-          <excludeVulnerabilityIds>
-            <!--
-            Skip CVE-2022-41862: https://github.com/postgres/postgres/commit/71c37797d7bd78266146a5829ab62b3687c47295
-            We are already on the latest PostgreSQL JDBC driver and we only connect to trusted servers.
-            -->
-            <exclude>CVE-2022-41862</exclude>
-          </excludeVulnerabilityIds>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId><artifactId>maven-dependency-plugin</artifactId>
         <configuration>
           <usedDependencies>
@@ -435,7 +423,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>com.mysql</groupId><artifactId>mysql-connector-j</artifactId><version>8.0.32</version>
       </dependency>
       <dependency>
-        <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.5.3</version>
+        <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.5.4</version>
       </dependency>
       <dependency>
         <groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.22.0</version>
