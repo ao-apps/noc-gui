@@ -22,7 +22,7 @@ Graphical User Interface for [Network Operations Center](https://github.com/ao-a
 * [Project Home](https://aoindustries.com/noc/gui/)
 * [Changelog](https://aoindustries.com/noc/gui/changelog)
 * [API Docs](https://aoindustries.com/noc/gui/apidocs/)
-* [Maven Central Repository](https://central.sonatype.com/search?namespace=com.aoindustries&q=a%3Anoc-gui)
+* [Maven Central Repository](https://central.sonatype.com/artifact/com.aoindustries/noc-gui)
 * [GitHub](https://github.com/ao-apps/noc-gui)
 
 ## Contact Us
