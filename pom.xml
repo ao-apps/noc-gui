@@ -418,7 +418,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>com.mysql</groupId><artifactId>mysql-connector-j</artifactId><version>8.0.33</version>
       </dependency>
       <dependency>
-        <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.5.4</version>
+        <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.6.0</version>
       </dependency>
       <dependency>
         <groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.22.0</version>
