@@ -30,7 +30,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
   </parent>
 
   <groupId>com.aoindustries</groupId><artifactId>noc-gui-devel</artifactId><version>1.4.2-POST-SNAPSHOT</version>
-  <packaging>bundle</packaging>
+  <packaging>jar</packaging>
 
   <properties>
     <module.name>com.aoindustries.noc.gui.devel</module.name>
