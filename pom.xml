@@ -428,7 +428,8 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.6.0</version>
       </dependency>
       <dependency>
-        <groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.24.0</version>
+        <!-- When updating versions, review pgp-keys-map.list -->
+        <groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.24.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
