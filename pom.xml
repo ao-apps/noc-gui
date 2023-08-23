@@ -118,6 +118,19 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
   <build>
     <plugins>
       <plugin>
+        <groupId>org.sonatype.ossindex.maven</groupId><artifactId>ossindex-maven-plugin</artifactId>
+        <configuration>
+          <excludeVulnerabilityIds>
+            <!--
+              This seems to be a false positive, since the CVE relates to sending HUP signals to the PostgreSQL backend
+              process, which has nothing to do with the JDBC driver.  Furthermore, both the PostgreSQL server and JDBC
+              client are used in trusted and restricted environments.
+            -->
+            <exclude>CVE-2020-21469</exclude>
+          </excludeVulnerabilityIds>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId><artifactId>maven-dependency-plugin</artifactId>
         <configuration>
           <usedDependencies>
