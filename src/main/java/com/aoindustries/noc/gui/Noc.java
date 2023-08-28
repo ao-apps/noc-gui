@@ -101,6 +101,7 @@ public class Noc {
   public static void main(String[] args) {
     try {
       // TODO: Security manager deprecated in Java 17
+      // TODO: Also implement Serialization Filtering: https://docs.oracle.com/javase/8/docs/technotes/guides/serialization/filters/serialization-filtering.html
       if (System.getSecurityManager() == null) {
         System.setSecurityManager(new SecurityManager());
       }
