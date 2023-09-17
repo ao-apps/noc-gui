@@ -33,6 +33,8 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
   <packaging>jar</packaging>
 
   <properties>
+    <!-- Must be set to ${git.commit.time} for snapshots or ISO 8601 timestamp for releases. -->
+    <project.build.outputTimestamp>${git.commit.time}</project.build.outputTimestamp>
     <module.name>com.aoindustries.noc.gui</module.name>
     <javadoc.breadcrumbs><![CDATA[<a target="${javadoc.target}" href="https://aoindustries.com/noc/">NOC</a>
 / <a target="${javadoc.target}" href="${project.url}">GUI</a>]]></javadoc.breadcrumbs>
