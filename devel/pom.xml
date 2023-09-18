@@ -35,6 +35,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
   <properties>
     <!-- Must be set to ${git.commit.time} for snapshots or ISO 8601 timestamp for releases. -->
     <project.build.outputTimestamp>${git.commit.time}</project.build.outputTimestamp>
+    <subproject.subpath>devel/</subproject.subpath>
     <module.name>com.aoindustries.noc.gui.devel</module.name>
     <!-- TODO: Remove once moved to platform.aoapps.com -->
     <google.analytics.trackingId>UA-86871646-1</google.analytics.trackingId>
