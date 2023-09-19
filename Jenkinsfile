@@ -690,6 +690,7 @@ or any build that adds or removes build artifacts."""
         }
       }
       steps {
+        // See https://www.jenkins.io/doc/pipeline/steps/params/gitscm/
         // See https://www.jenkins.io/doc/pipeline/steps/workflow-scm-step/#checkout-check-out-from-version-control
         // See https://stackoverflow.com/questions/43293334/sparsecheckout-in-jenkinsfile-pipeline
         /*
@@ -717,8 +718,8 @@ or any build that adds or removes build artifacts."""
               // [$class: 'CleanCheckout'],
               [$class: 'CloneOption',
                 // See https://issues.jenkins.io/browse/JENKINS-45586
-                shallow: true,
-                depth: 20,
+                shallow: false,
+                // depth: 20,
                 honorRefspec: true
               ],
               [$class: 'SparseCheckoutPaths',
@@ -726,8 +727,8 @@ or any build that adds or removes build artifacts."""
               ],
               [$class: 'SubmoduleOption',
                 disableSubmodules: disableSubmodules,
-                shallow: true,
-                depth: 20
+                shallow: false
+                // depth: 20
               ]
             ]
           ]
@@ -757,8 +758,8 @@ or any build that adds or removes build artifacts."""
             // [$class: 'CleanCheckout'],
             [$class: 'CloneOption',
               // See https://issues.jenkins.io/browse/JENKINS-45586
-              shallow: true,
-              depth: 20,
+              shallow: false,
+              // depth: 20,
               honorRefspec: true
             ],
             [$class: 'SparseCheckoutPaths',
@@ -766,8 +767,8 @@ or any build that adds or removes build artifacts."""
             ],
             [$class: 'SubmoduleOption',
               disableSubmodules: disableSubmodules,
-              shallow: true,
-              depth: 20
+              shallow: false
+              // depth: 20
             ]
           ]
         ]
@@ -982,7 +983,7 @@ void deploySteps(niceCmd, projectDir, deployJdk, maven, mavenOpts, mavenOptsJdk1
 // Steps moved to separate function to avoid "Method too large"
 // See https://stackoverflow.com/a/47631522
 void sonarQubeAnalysisSteps(niceCmd, projectDir, deployJdk, maven, mavenOpts, mavenOptsJdk16, mvnCommon) {
-  sh "${niceCmd}git fetch --unshallow || true" // SonarQube does not currently support shallow fetch
+  // Not doing shallow: sh "${niceCmd}git fetch --unshallow || true" // SonarQube does not currently support shallow fetch
   dir(projectDir) {
     withSonarQubeEnv(installationName: 'AO SonarQube') {
       withMaven(
