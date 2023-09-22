@@ -46,8 +46,6 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
     <sonar.coverage.exclusions>**.*</sonar.coverage.exclusions>
     <!-- Dependencies -->
     <swingx-core.version>1.6.5-1</swingx-core.version>
-    <!-- TODO: Remove once moved to platform.aoapps.com -->
-    <google.analytics.trackingId>UA-86871646-1</google.analytics.trackingId>
     <!-- com.aoindustries is on original Sonatype Nexus Repository Manager -->
     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
   </properties>
