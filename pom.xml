@@ -44,8 +44,6 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
     <sonar.projectKey>com.aoapps.platform:noc-gui<!-- TODO: ${project.groupId}:${project.artifactId} --></sonar.projectKey>
     <!-- TODO: Implement tests -->
     <sonar.coverage.exclusions>**.*</sonar.coverage.exclusions>
-    <!-- Dependencies -->
-    <swingx-core.version>1.6.5-1</swingx-core.version>
     <!-- com.aoindustries is on original Sonatype Nexus Repository Manager -->
     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
   </properties>
@@ -251,7 +249,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
                   <location>${project.build.directory}/offlineLinks/com.aoindustries/noc-monitor-rmi-client</location>
                 </offlineLink>
                 <offlineLink>
-                  <url>https://javadoc.io/doc/org.swinglabs.swingx/swingx-core/${swingx-core.version}/</url>
+                  <url>https://javadoc.io/doc/org.swinglabs.swingx/swingx-core/${org.swinglabs.swingx:swingx-core:jar.version}/</url>
                   <location>${project.build.directory}/offlineLinks/org.swinglabs.swingx/swingx-core</location>
                 </offlineLink>
               </offlineLinks>
@@ -340,7 +338,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId><version>1.4.0${POST-SNAPSHOT}</version>
       </dependency>
       <dependency>
-        <groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId><version>${swingx-core.version}</version>
+        <groupId>org.swinglabs.swingx</groupId><artifactId>swingx-core</artifactId><version>1.6.5-1</version>
         <exclusions>
           <!-- TODO: Java modules do not supported split packages: -->
           <exclusion><groupId>org.swinglabs.swingx</groupId><artifactId>swingx-plaf</artifactId></exclusion>
