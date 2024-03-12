@@ -29,7 +29,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
     <relativePath>../../oss/parent/pom.xml</relativePath>
   </parent>
 
-  <groupId>com.aoindustries</groupId><artifactId>noc-gui</artifactId><version>1.4.2-POST-SNAPSHOT</version>
+  <groupId>com.aoindustries</groupId><artifactId>noc-gui</artifactId><version>1.4.3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <properties>
@@ -332,7 +332,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>com.aoindustries</groupId><artifactId>noc-monitor-api</artifactId><version>1.4.0${POST-SNAPSHOT}</version>
       </dependency>
       <dependency>
-        <groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.4.2${POST-SNAPSHOT}</version>
+        <groupId>com.aoindustries</groupId><artifactId>noc-monitor-impl</artifactId><version>1.4.3-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
       </dependency>
       <dependency>
         <groupId>com.aoindustries</groupId><artifactId>noc-monitor-rmi-client</artifactId><version>1.4.0${POST-SNAPSHOT}</version>
@@ -391,7 +391,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>dnsjava</groupId><artifactId>dnsjava</artifactId><version>3.5.3</version>
       </dependency>
       <dependency>
-        <groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.4.2${POST-SNAPSHOT}</version>
+        <groupId>com.aoindustries</groupId><artifactId>noc-monitor-portmon</artifactId><version>1.4.3-SNAPSHOT<!-- ${POST-SNAPSHOT} --></version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>2.0.11</version>
@@ -428,7 +428,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
         <groupId>com.mysql</groupId><artifactId>mysql-connector-j</artifactId><version>8.3.0</version>
       </dependency>
       <dependency>
-        <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.7.1</version>
+        <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.7.2</version>
       </dependency>
       <dependency>
         <!-- When updating versions, review pgp-keys-map.list -->
