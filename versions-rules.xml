@@ -28,6 +28,11 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
   xsi:schemaLocation="http://mojo.codehaus.org/versions-maven-plugin/rule/2.0.0 https://www.mojohaus.org/versions-maven-plugin/xsd/rule-2.0.0.xsd"
 >
   <rules>
+    <rule groupId="org.hamcrest" comparisonMethod="maven">
+      <ignoreVersions>
+        <ignoreVersion type="regex">.*-rc[0-9]+</ignoreVersion>
+      </ignoreVersions>
+    </rule>
     <rule groupId="org.postgresql" artifactId="postgresql" comparisonMethod="maven">
       <ignoreVersions>
         <ignoreVersion type="regex">.*\.jre[67]</ignoreVersion>
