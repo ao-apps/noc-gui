@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2009-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2009-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -65,8 +65,8 @@ import org.jdesktop.swingx.MultiSplitLayout;
 
 /**
  * Ticket editor component.
- * <pre>
- *                      Ticket                                    Actions                    Internal Notes
+ *
+ * <pre>                     Ticket                                    Actions                    Internal Notes
  * +--------------------------------------------+-----------------------------------------+-------------------+
  * | 1) Small fields | 6) Category              | 3) List of actions (single click/double | 9) Internal Notes |
  * |                 +--------------------------+ click popup like tickets list view)     |                   |
@@ -110,8 +110,7 @@ import org.jdesktop.swingx.MultiSplitLayout;
  *     Summary (4)
  *     Details (4)
  *     Raw Email (4 - popup)
- * Add Annotation (5)
- * </pre>
+ * Add Annotation (5)</pre>
  *
  * @author  AO Industries, Inc.
  */
@@ -504,24 +503,21 @@ public class TicketEditor extends JPanel implements TableListener {
 
   /**
    * Shows the specified ticket or empty if <code>null</code>.
-   * <p>
-   * This may be called by any thread, if called by the Swing event dispatch
+   *
+   * <p>This may be called by any thread, if called by the Swing event dispatch
    * thread, it will recall itself in the background using ExecutorService to
-   * retrieve data.
-   * </p>
-   * <p>
-   * If the ticket is the same as the one currently opened (same ID), then this call has no affect.
-   * </p>
-   * <p>
-   * Should only display complete information:
-   * </p>
+   * retrieve data.</p>
+   *
+   * <p>If the ticket is the same as the one currently opened (same ID), then this call has no affect.</p>
+   *
+   * <p>Should only display complete information:</p>
+   *
    * <ul>
    *   <li>If ticket is not null, should set visibility to true when ticket fully loaded.</li>
    *   <li>If ticket is null, should set visibility to false before clearing fields.</li>
    * </ul>
-   * <p>
-   * When <code>null</code>, all table listeners are removed.
-   * </p>
+   *
+   * <p>When <code>null</code>, all table listeners are removed.</p>
    */
   @SuppressWarnings({"UseSpecificCatch", "TooBroadCatch"})
   public void showTicket(final AoservConnector requestConn, final Integer requestedTicketId) {

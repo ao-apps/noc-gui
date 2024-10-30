@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -101,16 +101,14 @@ import org.jdesktop.swingx.MultiSplitLayout;
 
 /**
  * Central point of all client communication.
- * <p>
- * TODO: Make filters persistent (Expand to selected on trees)
+ *
+ * <p>TODO: Make filters persistent (Expand to selected on trees)
  * TODO: Make table column settings persistent
  * TODO: Remember tree open/close states between different filter views - store as preferences.
- * TODO: If account or category selected don't hide it
- * </p>
- * <p>
- * TODO: This pane fails to initialize when a Brand's parent is not also a Brand
- *       Nothing logged.  I'm guessing a NPE somewhere.
- * </p>
+ * TODO: If account or category selected don't hide it</p>
+ *
+ * <p>TODO: This pane fails to initialize when a Brand's parent is not also a Brand
+ *       Nothing logged.  I'm guessing a NPE somewhere.</p>
  *
  * @author  AO Industries, Inc.
  */

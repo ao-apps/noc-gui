@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2018, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2018, 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -80,9 +80,8 @@ class Buzzer {
 
   /**
    * Does not return quickly.  Plays the sound on the current thread.
-   * <p>
-   * Source: http://www.anyexample.com/programming/java/java_play_wav_sound_file.xml
-   * </p>
+   *
+   * <p>Source: http://www.anyexample.com/programming/java/java_play_wav_sound_file.xml</p>
    */
   @SuppressWarnings("SleepWhileInLoop")
   private static void playSound(String audioResource) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -203,24 +202,18 @@ class Buzzer {
     private AlertCategory category;
 
     /**
-     * <p>
      * Plays sound immediately when the thread is first started.
-     * </p>
-     * <p>
-     * Plays sound immediately when the alert level goes up.
-     * </p>
-     * <p>
-     * Plays sound immediately when in the same alert level, but the category goes up.
-     * </p>
-     * <p>
-     * Plays sound immediately if the new timeout, based on new level and category, would now indicate time to play the sound.
-     * See {@link #getBuzzerInterval(com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertCategory)}.
-     * </p>
-     * <p>
-     * Stop the thread when there is nothing to play.  This will cause
+     *
+     * <p>Plays sound immediately when the alert level goes up.</p>
+     *
+     * <p>Plays sound immediately when in the same alert level, but the category goes up.</p>
+     *
+     * <p>Plays sound immediately if the new timeout, based on new level and category, would now indicate time to play the sound.
+     * See {@link #getBuzzerInterval(com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertCategory)}.</p>
+     *
+     * <p>Stop the thread when there is nothing to play.  This will cause
      * the thread to be restarted, along with an immediately play, should there be something to play again.
-     * The idea is to be notified quickly of new things when have already manually acknowledged all exiting.
-     * </p>
+     * The idea is to be notified quickly of new things when have already manually acknowledged all exiting.</p>
      */
     @SuppressWarnings({"SleepWhileInLoop", "SleepWhileHoldingLock"})
     private void setAlertLevel(AlertLevel newLevel, AlertCategory newCategory) {

@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2018, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2018, 2020, 2021, 2022, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -346,9 +346,8 @@ public class SystemsPane extends JPanel {
 
   /**
    * stop() should only be called when we have a login established.
-   * <p>
-   * TODO: Reevaluate when start and stop are called.
-   * </p>
+   *
+   * <p>TODO: Reevaluate when start and stop are called.</p>
    */
   void stop() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

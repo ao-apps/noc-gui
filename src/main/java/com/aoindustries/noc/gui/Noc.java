@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022, 2023  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -93,9 +93,8 @@ public class Noc {
 
   /**
    * Running as a standalone application.
-   * <p>
-   * May we include the security policy with the source code?
-   * </p>
+   *
+   * <p>May we include the security policy with the source code?</p>
    */
   @SuppressWarnings({"UseSpecificCatch", "TooBroadCatch", "UseOfSystemOutOrSystemErr"})
   public static void main(String[] args) {
@@ -374,32 +373,34 @@ public class Noc {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     switch (currentDisplayMode) {
-      case FRAMES: {
-        systemsFrame.setVisible(true);
-        systemsFrame.setState(Frame.NORMAL);
-        systemsFrame.toFront();
-        communicationFrame.setVisible(true);
-        communicationFrame.setState(Frame.NORMAL);
-        communicationFrame.toFront();
-        alertsFrame.setVisible(true);
-        alertsFrame.setState(Frame.NORMAL);
-        alertsFrame.toFront();
-        alertsFrame.requestFocus();
-        break;
-      }
-      case TABS: {
-        if (parent == null) {
-          if (singleFrame == null) {
-            throw new AssertionError("Both parent and singleFrame are null");
-          }
-          singleFrame.setVisible(true);
-          singleFrame.setState(Frame.NORMAL);
-          singleFrame.toFront();
-          singleFrame.requestFocus();
-          //tabbedPane.setSelectedIndex(0);
+      case FRAMES:
+        {
+          systemsFrame.setVisible(true);
+          systemsFrame.setState(Frame.NORMAL);
+          systemsFrame.toFront();
+          communicationFrame.setVisible(true);
+          communicationFrame.setState(Frame.NORMAL);
+          communicationFrame.toFront();
+          alertsFrame.setVisible(true);
+          alertsFrame.setState(Frame.NORMAL);
+          alertsFrame.toFront();
+          alertsFrame.requestFocus();
+          break;
         }
-        break;
-      }
+      case TABS:
+        {
+          if (parent == null) {
+            if (singleFrame == null) {
+              throw new AssertionError("Both parent and singleFrame are null");
+            }
+            singleFrame.setVisible(true);
+            singleFrame.setState(Frame.NORMAL);
+            singleFrame.toFront();
+            singleFrame.requestFocus();
+            //tabbedPane.setSelectedIndex(0);
+          }
+          break;
+        }
       default:
         throw new AssertionError("Unexpected value for currentDisplayMode: " + currentDisplayMode);
     }
@@ -500,82 +501,84 @@ public class Noc {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
     switch (currentDisplayMode) {
-      case FRAMES: {
-        ignoreChangeEvent = true;
-        if (singleFrame != null) {
-          singleFrame.setVisible(false);
-          singleFrame.getContentPane().removeAll();
-        }
-        if (parent != null) {
-          parent.removeAll();
-          parent.validate();
-          parent.repaint();
-        }
-        ignoreChangeEvent = false;
-          {
-            alertsFrame.getContentPane().setLayout(new BorderLayout());
-            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("alerts.tools"));
-            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-            alerts.addToolBars(toolBar);
-            toolBar.addSeparator();
-            alertsLoginButton = addCommonButtons(toolBar);
-            alertsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-            alertsFrame.getContentPane().add(alerts, BorderLayout.CENTER);
-            alertsFrame.setBounds(preferences.getAlertsFrameBounds());
-            alertsFrame.setVisible(true);
+      case FRAMES:
+        {
+          ignoreChangeEvent = true;
+          if (singleFrame != null) {
+            singleFrame.setVisible(false);
+            singleFrame.getContentPane().removeAll();
           }
-          {
-            communicationFrame.getContentPane().setLayout(new BorderLayout());
-            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("communication.tools"));
-            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-            communication.addToolBars(toolBar);
-            toolBar.addSeparator();
-            communicationLoginButton = addCommonButtons(toolBar);
-            communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-            communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
-            communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
-            communicationFrame.setVisible(true);
+          if (parent != null) {
+            parent.removeAll();
+            parent.validate();
+            parent.repaint();
           }
-          {
-            systemsFrame.getContentPane().setLayout(new BorderLayout());
-            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("systems.tools"));
-            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-            systems.addToolBars(toolBar);
-            toolBar.addSeparator();
-            systemsLoginButton = addCommonButtons(toolBar);
-            systemsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-            systemsFrame.getContentPane().add(systems, BorderLayout.CENTER);
-            systemsFrame.setBounds(preferences.getSystemsFrameBounds());
-            systemsFrame.setVisible(true);
-          }
-        singleLoginButton = null;
-        break;
-      }
-      case TABS: {
-        // Remove from frames
-        alertsFrame.setVisible(false);
-        alertsFrame.getContentPane().removeAll();
-        communicationFrame.setVisible(false);
-        communicationFrame.getContentPane().removeAll();
-        systemsFrame.setVisible(false);
-        systemsFrame.getContentPane().removeAll();
-        // Add as tabs
-        if (parent != null) {
-          initTabs(parent);
-          parent.validate();
-          parent.repaint();
-        } else if (singleFrame != null) {
-          initTabs(singleFrame.getContentPane());
-          singleFrame.setBounds(preferences.getSingleFrameBounds());
-          singleFrame.setVisible(true);
-        } else {
-          throw new AssertionError("Both parent and singleFrame are null");
+          ignoreChangeEvent = false;
+            {
+              alertsFrame.getContentPane().setLayout(new BorderLayout());
+              JToolBar toolBar = new JToolBar(RESOURCES.getMessage("alerts.tools"));
+              toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+              toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+              alerts.addToolBars(toolBar);
+              toolBar.addSeparator();
+              alertsLoginButton = addCommonButtons(toolBar);
+              alertsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+              alertsFrame.getContentPane().add(alerts, BorderLayout.CENTER);
+              alertsFrame.setBounds(preferences.getAlertsFrameBounds());
+              alertsFrame.setVisible(true);
+            }
+            {
+              communicationFrame.getContentPane().setLayout(new BorderLayout());
+              JToolBar toolBar = new JToolBar(RESOURCES.getMessage("communication.tools"));
+              toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+              toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+              communication.addToolBars(toolBar);
+              toolBar.addSeparator();
+              communicationLoginButton = addCommonButtons(toolBar);
+              communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+              communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
+              communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
+              communicationFrame.setVisible(true);
+            }
+            {
+              systemsFrame.getContentPane().setLayout(new BorderLayout());
+              JToolBar toolBar = new JToolBar(RESOURCES.getMessage("systems.tools"));
+              toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+              toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+              systems.addToolBars(toolBar);
+              toolBar.addSeparator();
+              systemsLoginButton = addCommonButtons(toolBar);
+              systemsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+              systemsFrame.getContentPane().add(systems, BorderLayout.CENTER);
+              systemsFrame.setBounds(preferences.getSystemsFrameBounds());
+              systemsFrame.setVisible(true);
+            }
+          singleLoginButton = null;
+          break;
         }
-        break;
-      }
+      case TABS:
+        {
+          // Remove from frames
+          alertsFrame.setVisible(false);
+          alertsFrame.getContentPane().removeAll();
+          communicationFrame.setVisible(false);
+          communicationFrame.getContentPane().removeAll();
+          systemsFrame.setVisible(false);
+          systemsFrame.getContentPane().removeAll();
+          // Add as tabs
+          if (parent != null) {
+            initTabs(parent);
+            parent.validate();
+            parent.repaint();
+          } else if (singleFrame != null) {
+            initTabs(singleFrame.getContentPane());
+            singleFrame.setBounds(preferences.getSingleFrameBounds());
+            singleFrame.setVisible(true);
+          } else {
+            throw new AssertionError("Both parent and singleFrame are null");
+          }
+          break;
+        }
       default:
         throw new AssertionError("Unknown value for currentDisplayMode: " + currentDisplayMode);
     }
@@ -660,18 +663,20 @@ public class Noc {
     toolBar.add(loginButton);
 
     switch (currentDisplayMode) {
-      case FRAMES: {
-        JButton framesButton = new JButton(RESOURCES.getMessage("tabsButton.label"));
-        toolBar.add(framesButton);
-        framesButton.addActionListener(e -> setDisplayMode(Preferences.DisplayMode.TABS));
-        break;
-      }
-      case TABS: {
-        JButton framesButton = new JButton(RESOURCES.getMessage("framesButton.label"));
-        toolBar.add(framesButton);
-        framesButton.addActionListener(e -> setDisplayMode(Preferences.DisplayMode.FRAMES));
-        break;
-      }
+      case FRAMES:
+        {
+          JButton framesButton = new JButton(RESOURCES.getMessage("tabsButton.label"));
+          toolBar.add(framesButton);
+          framesButton.addActionListener(e -> setDisplayMode(Preferences.DisplayMode.TABS));
+          break;
+        }
+      case TABS:
+        {
+          JButton framesButton = new JButton(RESOURCES.getMessage("framesButton.label"));
+          toolBar.add(framesButton);
+          framesButton.addActionListener(e -> setDisplayMode(Preferences.DisplayMode.FRAMES));
+          break;
+        }
       default:
         throw new AssertionError("Unexpected value for currentDisplayMode: " + currentDisplayMode);
     }
