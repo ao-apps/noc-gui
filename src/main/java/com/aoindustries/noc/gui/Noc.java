@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022, 2023, 2024  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022, 2023, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -514,45 +514,45 @@ public class Noc {
             parent.repaint();
           }
           ignoreChangeEvent = false;
-            {
-              alertsFrame.getContentPane().setLayout(new BorderLayout());
-              JToolBar toolBar = new JToolBar(RESOURCES.getMessage("alerts.tools"));
-              toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-              toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-              alerts.addToolBars(toolBar);
-              toolBar.addSeparator();
-              alertsLoginButton = addCommonButtons(toolBar);
-              alertsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-              alertsFrame.getContentPane().add(alerts, BorderLayout.CENTER);
-              alertsFrame.setBounds(preferences.getAlertsFrameBounds());
-              alertsFrame.setVisible(true);
-            }
-            {
-              communicationFrame.getContentPane().setLayout(new BorderLayout());
-              JToolBar toolBar = new JToolBar(RESOURCES.getMessage("communication.tools"));
-              toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-              toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-              communication.addToolBars(toolBar);
-              toolBar.addSeparator();
-              communicationLoginButton = addCommonButtons(toolBar);
-              communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-              communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
-              communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
-              communicationFrame.setVisible(true);
-            }
-            {
-              systemsFrame.getContentPane().setLayout(new BorderLayout());
-              JToolBar toolBar = new JToolBar(RESOURCES.getMessage("systems.tools"));
-              toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
-              toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
-              systems.addToolBars(toolBar);
-              toolBar.addSeparator();
-              systemsLoginButton = addCommonButtons(toolBar);
-              systemsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
-              systemsFrame.getContentPane().add(systems, BorderLayout.CENTER);
-              systemsFrame.setBounds(preferences.getSystemsFrameBounds());
-              systemsFrame.setVisible(true);
-            }
+          {
+            alertsFrame.getContentPane().setLayout(new BorderLayout());
+            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("alerts.tools"));
+            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+            alerts.addToolBars(toolBar);
+            toolBar.addSeparator();
+            alertsLoginButton = addCommonButtons(toolBar);
+            alertsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+            alertsFrame.getContentPane().add(alerts, BorderLayout.CENTER);
+            alertsFrame.setBounds(preferences.getAlertsFrameBounds());
+            alertsFrame.setVisible(true);
+          }
+          {
+            communicationFrame.getContentPane().setLayout(new BorderLayout());
+            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("communication.tools"));
+            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+            communication.addToolBars(toolBar);
+            toolBar.addSeparator();
+            communicationLoginButton = addCommonButtons(toolBar);
+            communicationFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+            communicationFrame.getContentPane().add(communication, BorderLayout.CENTER);
+            communicationFrame.setBounds(preferences.getCommunicationFrameBounds());
+            communicationFrame.setVisible(true);
+          }
+          {
+            systemsFrame.getContentPane().setLayout(new BorderLayout());
+            JToolBar toolBar = new JToolBar(RESOURCES.getMessage("systems.tools"));
+            toolBar.setAlignmentX(JToolBar.CENTER_ALIGNMENT);
+            toolBar.setAlignmentY(JToolBar.CENTER_ALIGNMENT);
+            systems.addToolBars(toolBar);
+            toolBar.addSeparator();
+            systemsLoginButton = addCommonButtons(toolBar);
+            systemsFrame.getContentPane().add(toolBar, BorderLayout.PAGE_START);
+            systemsFrame.getContentPane().add(systems, BorderLayout.CENTER);
+            systemsFrame.setBounds(preferences.getSystemsFrameBounds());
+            systemsFrame.setVisible(true);
+          }
           singleLoginButton = null;
           break;
         }

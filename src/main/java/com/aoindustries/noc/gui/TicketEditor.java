@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2009-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024  AO Industries, Inc.
+ * Copyright (C) 2009-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -455,10 +455,10 @@ public class TicketEditor extends JPanel implements TableListener {
     summaryPanel.add(summaryTextField, BorderLayout.CENTER);
     detailsPanel.add(summaryPanel, BorderLayout.NORTH);
     detailsTextArea.setEditable(false);
-      {
-        Font oldFont = detailsTextArea.getFont();
-        detailsTextArea.setFont(new Font(Font.MONOSPACED, oldFont.getStyle(), oldFont.getSize()));
-      }
+    {
+      Font oldFont = detailsTextArea.getFont();
+      detailsTextArea.setFont(new Font(Font.MONOSPACED, oldFont.getStyle(), oldFont.getSize()));
+    }
     detailsPanel.add(new JScrollPane(detailsTextArea), BorderLayout.CENTER);
     splitPane.add(detailsPanel, "ticketDetails");
 
@@ -479,10 +479,10 @@ public class TicketEditor extends JPanel implements TableListener {
             SwingConstants.CENTER
         ), BorderLayout.NORTH
     );
-      {
-        Font oldFont = internalNotesTextArea.getFont();
-        internalNotesTextArea.setFont(new Font(Font.MONOSPACED, oldFont.getStyle(), oldFont.getSize()));
-      }
+    {
+      Font oldFont = internalNotesTextArea.getFont();
+      internalNotesTextArea.setFont(new Font(Font.MONOSPACED, oldFont.getStyle(), oldFont.getSize()));
+    }
     internalNotesTextArea.addFocusListener(internalNotesTextAreaFocusListener);
     internalNotesPanel.add(new JScrollPane(internalNotesTextArea), BorderLayout.CENTER);
     splitPane.add(internalNotesPanel, "internalNotes");

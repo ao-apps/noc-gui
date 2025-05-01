@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -587,96 +587,96 @@ public class CommunicationPane extends JPanel implements TableListener {
       // Query the GUI filter components
       final boolean includeUncategorized;
       final Set<Category> selectedCategories;
-        {
-          TreePath[] selectedCategoryPaths = categoriesTree.getSelectionPaths();
-          if (selectedCategoryPaths == null) {
-            includeUncategorized = false;
-            selectedCategories = Collections.emptySet();
-          } else {
-            boolean includeUncategorizedTmp = false;
-            selectedCategories = AoCollections.newHashSet(selectedCategoryPaths.length);
-            for (TreePath treePath : selectedCategoryPaths) {
-              TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
-              if (treeNode == categoriesRootNode) {
-                includeUncategorizedTmp = true;
-              } else {
-                Category ticketCategory = (Category) ((DefaultMutableTreeNode) treeNode).getUserObject();
-                selectedCategories.add(ticketCategory);
-              }
+      {
+        TreePath[] selectedCategoryPaths = categoriesTree.getSelectionPaths();
+        if (selectedCategoryPaths == null) {
+          includeUncategorized = false;
+          selectedCategories = Collections.emptySet();
+        } else {
+          boolean includeUncategorizedTmp = false;
+          selectedCategories = AoCollections.newHashSet(selectedCategoryPaths.length);
+          for (TreePath treePath : selectedCategoryPaths) {
+            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
+            if (treeNode == categoriesRootNode) {
+              includeUncategorizedTmp = true;
+            } else {
+              Category ticketCategory = (Category) ((DefaultMutableTreeNode) treeNode).getUserObject();
+              selectedCategories.add(ticketCategory);
             }
-            includeUncategorized = includeUncategorizedTmp;
           }
+          includeUncategorized = includeUncategorizedTmp;
         }
+      }
       final boolean includeNoAccount;
       final Set<Account> selectedAccounts;
-        {
-          TreePath[] selectedAccountPaths = accountsTree.getSelectionPaths();
-          if (selectedAccountPaths == null) {
-            includeNoAccount = false;
-            selectedAccounts = Collections.emptySet();
-          } else {
-            boolean includeNoAccountTmp = false;
-            selectedAccounts = AoCollections.newHashSet(selectedAccountPaths.length);
-            for (TreePath treePath : selectedAccountPaths) {
-              TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
-              if (treeNode == accountsRootNode) {
-                includeNoAccountTmp = true;
-              } else {
-                Account account = (Account) ((DefaultMutableTreeNode) treeNode).getUserObject();
-                selectedAccounts.add(account);
-              }
+      {
+        TreePath[] selectedAccountPaths = accountsTree.getSelectionPaths();
+        if (selectedAccountPaths == null) {
+          includeNoAccount = false;
+          selectedAccounts = Collections.emptySet();
+        } else {
+          boolean includeNoAccountTmp = false;
+          selectedAccounts = AoCollections.newHashSet(selectedAccountPaths.length);
+          for (TreePath treePath : selectedAccountPaths) {
+            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
+            if (treeNode == accountsRootNode) {
+              includeNoAccountTmp = true;
+            } else {
+              Account account = (Account) ((DefaultMutableTreeNode) treeNode).getUserObject();
+              selectedAccounts.add(account);
             }
-            includeNoAccount = includeNoAccountTmp;
           }
+          includeNoAccount = includeNoAccountTmp;
         }
+      }
       final Set<Brand> selectedBrands;
-        {
-          TreePath[] selectedBrandPaths = brandsTree.getSelectionPaths();
-          if (selectedBrandPaths == null) {
-            selectedBrands = Collections.emptySet();
-          } else {
-            selectedBrands = AoCollections.newHashSet(selectedBrandPaths.length);
-            for (TreePath treePath : selectedBrandPaths) {
-              TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
-              if (treeNode != brandsRootNode) {
-                Brand brand = (Brand) ((DefaultMutableTreeNode) treeNode).getUserObject();
-                selectedBrands.add(brand);
-              }
+      {
+        TreePath[] selectedBrandPaths = brandsTree.getSelectionPaths();
+        if (selectedBrandPaths == null) {
+          selectedBrands = Collections.emptySet();
+        } else {
+          selectedBrands = AoCollections.newHashSet(selectedBrandPaths.length);
+          for (TreePath treePath : selectedBrandPaths) {
+            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
+            if (treeNode != brandsRootNode) {
+              Brand brand = (Brand) ((DefaultMutableTreeNode) treeNode).getUserObject();
+              selectedBrands.add(brand);
             }
           }
         }
+      }
       final Set<Reseller> selectedResellers;
-        {
-          TreePath[] selectedResellerPaths = resellersTree.getSelectionPaths();
-          if (selectedResellerPaths == null) {
-            selectedResellers = Collections.emptySet();
-          } else {
-            selectedResellers = AoCollections.newHashSet(selectedResellerPaths.length);
-            for (TreePath treePath : selectedResellerPaths) {
-              TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
-              if (treeNode != resellersRootNode) {
-                Reseller reseller = (Reseller) ((DefaultMutableTreeNode) treeNode).getUserObject();
-                selectedResellers.add(reseller);
-              }
+      {
+        TreePath[] selectedResellerPaths = resellersTree.getSelectionPaths();
+        if (selectedResellerPaths == null) {
+          selectedResellers = Collections.emptySet();
+        } else {
+          selectedResellers = AoCollections.newHashSet(selectedResellerPaths.length);
+          for (TreePath treePath : selectedResellerPaths) {
+            TreeNode treeNode = (TreeNode) treePath.getLastPathComponent();
+            if (treeNode != resellersRootNode) {
+              Reseller reseller = (Reseller) ((DefaultMutableTreeNode) treeNode).getUserObject();
+              selectedResellers.add(reseller);
             }
           }
         }
+      }
       final boolean includeUnassigned;
       final Set<Administrator> selectedAssignments;
-        {
-          List<Object> selectedValues = assignmentsList.getSelectedValuesList();
-          boolean includeUnassignedTmp = false;
-          selectedAssignments = AoCollections.newHashSet(selectedValues.size());
-          for (Object selectedValue : selectedValues) {
-            if (selectedValue == assignmentsListModel.getElementAt(0)) {
-              includeUnassignedTmp = true;
-            } else {
-              Administrator administrator = (Administrator) selectedValue;
-              selectedAssignments.add(administrator);
-            }
+      {
+        List<Object> selectedValues = assignmentsList.getSelectedValuesList();
+        boolean includeUnassignedTmp = false;
+        selectedAssignments = AoCollections.newHashSet(selectedValues.size());
+        for (Object selectedValue : selectedValues) {
+          if (selectedValue == assignmentsListModel.getElementAt(0)) {
+            includeUnassignedTmp = true;
+          } else {
+            Administrator administrator = (Administrator) selectedValue;
+            selectedAssignments.add(administrator);
           }
-          includeUnassigned = includeUnassignedTmp;
         }
+        includeUnassigned = includeUnassignedTmp;
+      }
       final Set<TicketType> selectedTypes = new HashSet<>(typesList.getSelectedValuesList());
       final Set<Status> selectedStatuses = new HashSet<>(statusesList.getSelectedValuesList());
       final Set<Priority> selectedPriorities = new HashSet<>(prioritiesList.getSelectedValuesList());
@@ -754,15 +754,15 @@ public class CommunicationPane extends JPanel implements TableListener {
                 languages = conn1.getTicket().getLanguage().getRows();
                 // Determine the reseller for assignment lookups
                 Reseller currentReseller = null;
-                  {
-                    Account currentAccount = conn1.getCurrentAdministrator().getUsername().getPackage().getAccount();
-                    if (currentAccount != null) {
-                      Brand currentBrand = currentAccount.getBrand();
-                      if (currentBrand != null) {
-                        currentReseller = currentBrand.getReseller();
-                      }
+                {
+                  Account currentAccount = conn1.getCurrentAdministrator().getUsername().getPackage().getAccount();
+                  if (currentAccount != null) {
+                    Brand currentBrand = currentAccount.getBrand();
+                    if (currentBrand != null) {
+                      currentReseller = currentBrand.getReseller();
                     }
                   }
+                }
                 if (currentReseller != null && (includeUnassigned || !selectedAssignments.isEmpty())) {
                   ticketAssignments = AoCollections.newHashMap(allTickets.size()); // Worst-case is all tickets assigned
                 } else {
@@ -1249,139 +1249,139 @@ public class CommunicationPane extends JPanel implements TableListener {
           // Check each cell in this row for changes
           Color foregroundColor = ticketRow.getForegroundColor();
           boolean isStrikethrough = ticketRow.isStrikethrough;
-            // ticketNumber
-            {
-              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 0);
-              if (
-                  ticketCell.isStrikethrough != isStrikethrough
-                      || !ticketCell.value.equals(ticketRow.ticketNumber)
-                      || !ticketCell.foregroundColor.equals(foregroundColor)
-              ) {
-                ticketsTableModel.setValueAt(
-                    new TicketCell<>(
-                        ticketRow.ticketNumber,
-                        foregroundColor,
-                        isStrikethrough
-                    ),
-                    index,
-                    0
-                );
-              }
+          // ticketNumber
+          {
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 0);
+            if (
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.ticketNumber)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
+            ) {
+              ticketsTableModel.setValueAt(
+                  new TicketCell<>(
+                      ticketRow.ticketNumber,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  0
+              );
             }
-            // priority
-            {
-              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 1);
-              if (
-                  ticketCell.isStrikethrough != isStrikethrough
-                      || !ticketCell.value.equals(ticketRow.priority)
-                      || !ticketCell.foregroundColor.equals(foregroundColor)
-              ) {
-                ticketsTableModel.setValueAt(
-                    new TicketCell<>(
-                        ticketRow.priority,
-                        foregroundColor,
-                        isStrikethrough
-                    ),
-                    index,
-                    1
-                );
-              }
+          }
+          // priority
+          {
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 1);
+            if (
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.priority)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
+            ) {
+              ticketsTableModel.setValueAt(
+                  new TicketCell<>(
+                      ticketRow.priority,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  1
+              );
             }
-            // status
-            {
-              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 2);
-              if (
-                  ticketCell.isStrikethrough != isStrikethrough
-                      || !ticketCell.value.equals(ticketRow.status)
-                      || !ticketCell.foregroundColor.equals(foregroundColor)
-              ) {
-                ticketsTableModel.setValueAt(
-                    new TicketCell<>(
-                        ticketRow.status,
-                        foregroundColor,
-                        isStrikethrough
-                    ),
-                    index,
-                    2
-                );
-              }
+          }
+          // status
+          {
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 2);
+            if (
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.status)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
+            ) {
+              ticketsTableModel.setValueAt(
+                  new TicketCell<>(
+                      ticketRow.status,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  2
+              );
             }
-            // openDate
-            {
-              DateTimeTicketCell ticketCell = (DateTimeTicketCell) ticketsTableModel.getValueAt(index, 3);
-              if (
-                  ticketCell.isStrikethrough != isStrikethrough
-                      || !ticketCell.value.equals(ticketRow.openDate)
-                      || !ticketCell.foregroundColor.equals(foregroundColor)
-              ) {
-                ticketsTableModel.setValueAt(
-                    new DateTimeTicketCell(
-                        ticketRow.openDate,
-                        foregroundColor,
-                        isStrikethrough
-                    ),
-                    index,
-                    3
-                );
-              }
+          }
+          // openDate
+          {
+            DateTimeTicketCell ticketCell = (DateTimeTicketCell) ticketsTableModel.getValueAt(index, 3);
+            if (
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.openDate)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
+            ) {
+              ticketsTableModel.setValueAt(
+                  new DateTimeTicketCell(
+                      ticketRow.openDate,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  3
+              );
             }
-            // openedBy
-            {
-              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 4);
-              if (
-                  ticketCell.isStrikethrough != isStrikethrough
-                      || !ticketCell.value.equals(ticketRow.openedBy)
-                      || !ticketCell.foregroundColor.equals(foregroundColor)
-              ) {
-                ticketsTableModel.setValueAt(
-                    new TicketCell<>(
-                        ticketRow.openedBy,
-                        foregroundColor,
-                        isStrikethrough
-                    ),
-                    index,
-                    4
-                );
-              }
+          }
+          // openedBy
+          {
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 4);
+            if (
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.openedBy)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
+            ) {
+              ticketsTableModel.setValueAt(
+                  new TicketCell<>(
+                      ticketRow.openedBy,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  4
+              );
             }
-            // account
-            {
-              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 5);
-              if (
-                  ticketCell.isStrikethrough != isStrikethrough
-                      || !ticketCell.value.equals(ticketRow.account)
-                      || !ticketCell.foregroundColor.equals(foregroundColor)
-              ) {
-                ticketsTableModel.setValueAt(
-                    new TicketCell<>(
-                        ticketRow.account,
-                        foregroundColor,
-                        isStrikethrough
-                    ),
-                    index,
-                    5
-                );
-              }
+          }
+          // account
+          {
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 5);
+            if (
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.account)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
+            ) {
+              ticketsTableModel.setValueAt(
+                  new TicketCell<>(
+                      ticketRow.account,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  5
+              );
             }
-            // summary
-            {
-              TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 6);
-              if (
-                  ticketCell.isStrikethrough != isStrikethrough
-                      || !ticketCell.value.equals(ticketRow.summary)
-                      || !ticketCell.foregroundColor.equals(foregroundColor)
-              ) {
-                ticketsTableModel.setValueAt(
-                    new TicketCell<>(
-                        ticketRow.summary,
-                        foregroundColor,
-                        isStrikethrough
-                    ),
-                    index,
-                    6
-                );
-              }
+          }
+          // summary
+          {
+            TicketCell<?> ticketCell = (TicketCell<?>) ticketsTableModel.getValueAt(index, 6);
+            if (
+                ticketCell.isStrikethrough != isStrikethrough
+                    || !ticketCell.value.equals(ticketRow.summary)
+                    || !ticketCell.foregroundColor.equals(foregroundColor)
+            ) {
+              ticketsTableModel.setValueAt(
+                  new TicketCell<>(
+                      ticketRow.summary,
+                      foregroundColor,
+                      isStrikethrough
+                  ),
+                  index,
+                  6
+              );
             }
+          }
         }
       }
     }

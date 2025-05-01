@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2018, 2020, 2021, 2022, 2024  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2018, 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -135,23 +135,23 @@ class Buzzer {
     // Find the highest alertLevel and its associated category in the list
     AlertLevel highestLevel;
     AlertCategory highestCategory;
-      {
-        AlertLevel highestLevelTmp = AlertLevel.NONE;
-        AlertCategory highestCategoryTmp = AlertCategory.UNCATEGORIZED;
-        for (AlertsPane.Alert alert : history) {
-          if (alert.newAlertLevel.compareTo(highestLevelTmp) > 0) {
-            highestLevelTmp = alert.newAlertLevel;
-            highestCategoryTmp = alert.newAlertCategory;
-          } else if (
-              alert.newAlertLevel == highestLevelTmp
-                  && alert.newAlertCategory.compareTo(highestCategoryTmp) > 0
-          ) {
-            highestCategoryTmp = alert.newAlertCategory;
-          }
+    {
+      AlertLevel highestLevelTmp = AlertLevel.NONE;
+      AlertCategory highestCategoryTmp = AlertCategory.UNCATEGORIZED;
+      for (AlertsPane.Alert alert : history) {
+        if (alert.newAlertLevel.compareTo(highestLevelTmp) > 0) {
+          highestLevelTmp = alert.newAlertLevel;
+          highestCategoryTmp = alert.newAlertCategory;
+        } else if (
+            alert.newAlertLevel == highestLevelTmp
+                && alert.newAlertCategory.compareTo(highestCategoryTmp) > 0
+        ) {
+          highestCategoryTmp = alert.newAlertCategory;
         }
-        highestLevel = highestLevelTmp;
-        highestCategory = highestCategoryTmp;
       }
+      highestLevel = highestLevelTmp;
+      highestCategory = highestCategoryTmp;
+    }
     buzzerThread.setAlertLevel(highestLevel, highestCategory);
   }
 
