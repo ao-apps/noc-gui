@@ -802,9 +802,9 @@ public class Noc {
               ? (
               !singleFrame.isActive()
                   || tabbedPane.getSelectedIndex() != ALERTS_TAB_INDEX
-          ) : (
+            ) : (
               !alertsFrame.isActive()
-          )
+            )
       ) {
         if (trayIcon != null) {
           // TODO: Enable tray icon alerts by category and alert level, such as showing new tickets, contacts, or emails

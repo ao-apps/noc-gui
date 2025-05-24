@@ -253,7 +253,7 @@ class Buzzer {
                         // Plays sound immediately when in the same alert level, but the category goes up.
                         currentLevel == lastBuzzedLevel
                             && currentCategory.compareTo(lastBuzzedCategory) > 0
-                    )
+                      )
                 ) {
                   // Buzz now if alert level increased
                   lastBuzzedLevel = currentLevel;
