@@ -44,9 +44,6 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
     <sonar.projectKey>com.aoapps.platform:noc-gui<!-- TODO: ${project.groupId}:${project.artifactId} --></sonar.projectKey>
     <!-- TODO: Implement tests -->
     <sonar.coverage.exclusions>**.*</sonar.coverage.exclusions>
-    <!-- com.aoindustries is on original Sonatype Nexus Repository Manager -->
-    <nexusServerId>ossrh-aoindustries</nexusServerId>
-    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
   </properties>
 
   <name>NOC GUI</name>
@@ -103,9 +100,9 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
   <repositories>
     <!-- Repository required here, too, so can find parent -->
     <repository>
-      <id>sonatype-nexus-snapshots-s01</id>
-      <name>Sonatype Nexus Snapshots S01</name>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+      <id>central-snapshots</id>
+      <name>Central Snapshot Repository</name>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
