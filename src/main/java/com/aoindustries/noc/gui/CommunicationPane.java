@@ -315,12 +315,12 @@ public class CommunicationPane extends JPanel implements TableListener {
               strikethroughFont = normalFont.deriveFont(Collections.singletonMap(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON));
             }
             Font font = normalFont;
-            //Color color = Color.BLACK;
+            // Color color = Color.BLACK;
             if (value instanceof Disablable && ((Disablable) value).isDisabled()) {
               font = strikethroughFont;
               // color = Color.RED;
             }
-            //rendererComponent.setForeground(color);
+            // rendererComponent.setForeground(color);
             // setFont seems to come with a bunch of complexity - this avoids the call if the font hasn't changed.
             rendererComponent.setFont(font);
 
@@ -697,7 +697,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         }
         if (doRefresh) {
           try {
-            //final long startTime = System.currentTimeMillis();
+            // final long startTime = System.currentTimeMillis();
             // Set wait cursor
             SwingUtilities.invokeLater(() -> {
               assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -809,7 +809,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                 categoriesWithTickets = Collections.emptySet();
                 accountsWithTickets = Collections.emptySet();
               } else {
-                //System.out.println("DEBUG: Got "+allTickets.size()+" total tickets");
+                // System.out.println("DEBUG: Got "+allTickets.size()+" total tickets");
                 tickets = new ArrayList<>(allTickets.size()); // Worst-case is to be equal size - this avoids any resize - choosing time over space
                 categoriesWithTickets = new HashSet<>();
                 accountsWithTickets = new HashSet<>();
@@ -1027,7 +1027,7 @@ public class CommunicationPane extends JPanel implements TableListener {
                   glassPane.setVisible(false);
                 }
               });
-              //System.out.println("DEBUG: CommunicationPanel: refresh completed in "+(System.currentTimeMillis()-startTime)+" ms");
+              // System.out.println("DEBUG: CommunicationPanel: refresh completed in "+(System.currentTimeMillis()-startTime)+" ms");
             }
           } finally {
             synchronized (refreshLock) {
@@ -1516,9 +1516,9 @@ public class CommunicationPane extends JPanel implements TableListener {
       if (normalFont == null) {
         normalFont = lastFont = getFont();
         strikethroughFont = normalFont.deriveFont(Collections.singletonMap(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON));
-        //Map attributes = new HashMap(normalFont.getAttributes());
-        //attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
-        //strikethroughFont = normalFont.deriveFont(attributes);
+        // Map attributes = new HashMap(normalFont.getAttributes());
+        // attributes.put(TextAttribute.STRIKETHROUGH, TextAttribute.STRIKETHROUGH_ON);
+        // strikethroughFont = normalFont.deriveFont(attributes);
       }
       Font font = normalFont;
       if (value instanceof DefaultMutableTreeNode) {

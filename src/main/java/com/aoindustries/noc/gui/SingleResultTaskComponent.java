@@ -179,18 +179,18 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
         text.append(
             latency < 1000000
                 ? RESOURCES.getMessage(
-                //locale,
+                // locale,
                 "retrieved.micro",
                 formattedDate,
                 SQLUtility.formatDecimal3(latency)
             ) : latency < 1000000000
                 ? RESOURCES.getMessage(
-                //locale,
+                // locale,
                 "retrieved.milli",
                 formattedDate,
                 SQLUtility.formatDecimal3(latency / 1000)
             ) : RESOURCES.getMessage(
-                //locale,
+                // locale,
                 "retrieved.second",
                 formattedDate,
                 SQLUtility.formatDecimal3(latency / 1000000)

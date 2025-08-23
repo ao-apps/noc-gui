@@ -237,7 +237,7 @@ public class AlertsPane extends JPanel {
     table.setRowSorter(sorter);
     sorter.setSortsOnUpdates(true);
 
-    //table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+    // table.setPreferredScrollableViewportSize(new Dimension(500, 70));
     table.setFillsViewportHeight(true);
 
     // Respond to delete key
@@ -419,7 +419,7 @@ public class AlertsPane extends JPanel {
 
     setTrayIcon();
     buzzer.controlBuzzer(history);
-    //validateTable();
+    // validateTable();
   }
 
   /**
@@ -435,7 +435,7 @@ public class AlertsPane extends JPanel {
 
     setTrayIcon();
     buzzer.controlBuzzer(history);
-    //validateTable();
+    // validateTable();
   }
 
   private void setTrayIcon() {

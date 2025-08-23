@@ -155,7 +155,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
           UnicastRemoteObject.exportObject(tableMultiResultListener, port, csf, ssf);
           tableMultiResultListenerExported = true;
         }
-        //noc.unexportObject(tableResultListener);
+        // noc.unexportObject(tableResultListener);
         localTableMultiResultNode.addTableMultiResultListener(tableMultiResultListener);
       } catch (RemoteException err) {
         logger.log(Level.SEVERE, null, err);
@@ -211,7 +211,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
           // Swap-out the table if needed
           JTable newTable = tables.get(columnHeaders);
           if (newTable == null) {
-            //System.out.println("DEBUG: TableResultTaskComponent: creating new JTable: "+columnHeaders);
+            // System.out.println("DEBUG: TableResultTaskComponent: creating new JTable: "+columnHeaders);
             UneditableDefaultTableModel tableModel = new UneditableDefaultTableModel(
                 rows,
                 columns
@@ -226,8 +226,8 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                 );
               }
             };
-            //table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-            //table.setFillsViewportHeight(true);
+            // table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+            // table.setFillsViewportHeight(true);
             tables.put(columnHeaders, newTable);
           }
           if (newTable != table) {
@@ -238,7 +238,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
               table = null;
             }
             scrollPane.setViewportView(table = newTable);
-            //scrollPane.validate();
+            // scrollPane.validate();
           }
 
           // Update the data in the table
@@ -259,7 +259,7 @@ public class TableMultiResultTaskComponent extends JPanel implements TaskCompone
                 new AlertLevelAndData(
                     alertLevel,
                     RESOURCES.getMessage(
-                        //locale,
+                        // locale,
                         "time",
                         df.format(new Date(result.getTime()))
                     )

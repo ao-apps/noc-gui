@@ -397,7 +397,7 @@ public class Noc {
             singleFrame.setState(Frame.NORMAL);
             singleFrame.toFront();
             singleFrame.requestFocus();
-            //tabbedPane.setSelectedIndex(0);
+            // tabbedPane.setSelectedIndex(0);
           }
           break;
         }
@@ -479,7 +479,7 @@ public class Noc {
   }
 
   // TODO: Register logger to display in a window
-  //new ErrorDialog(getDefaultDialogOwner(), "Warning", T, extraInfo).setVisible(true);
+  // new ErrorDialog(getDefaultDialogOwner(), "Warning", T, extraInfo).setVisible(true);
   // Make sure swing event dispatch thread for dialog
 
   /**
@@ -586,7 +586,7 @@ public class Noc {
 
   private boolean ignoreChangeEvent;
   private final ChangeListener changeListener = (ChangeEvent e) -> {
-    //System.out.println("stateChanged: ignoreChangeEvent="+ignoreChangeEvent+", selectedIndex="+tabbedPane.getSelectedIndex());
+    // System.out.println("stateChanged: ignoreChangeEvent="+ignoreChangeEvent+", selectedIndex="+tabbedPane.getSelectedIndex());
     if (!ignoreChangeEvent) {
       int selectedIndex = tabbedPane.getSelectedIndex();
       if (selectedIndex != -1) {

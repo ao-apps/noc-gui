@@ -56,7 +56,7 @@ public class TicketEditorFrame extends JFrame {
 
   private final TicketEditor ticketEditor;
 
-  //private final Integer ticketId;
+  // private final Integer ticketId;
 
   /**
    * Creates a new ticket editor component.
@@ -70,7 +70,7 @@ public class TicketEditorFrame extends JFrame {
     ticketEditor = new TicketEditor(noc, TicketEditor.PreferencesSet.FRAME);
     ticketEditor.setVisible(false);
     contentPane.add(ticketEditor, BorderLayout.CENTER);
-    //this.ticketId = ticketId;
+    // this.ticketId = ticketId;
     Component glassPane = getGlassPane();
     glassPane.setCursor(Cursor.getPredefinedCursor(java.awt.Cursor.WAIT_CURSOR));
     glassPane.setVisible(true);

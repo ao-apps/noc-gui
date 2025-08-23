@@ -198,7 +198,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
       List<String> columnHeaders = tableResult.getColumnHeaders(locale);
       JTable newTable = tables.get(columnHeaders);
       if (newTable == null) {
-        //System.out.println("DEBUG: TableResultTaskComponent: creating new JTable: "+columnHeaders);
+        // System.out.println("DEBUG: TableResultTaskComponent: creating new JTable: "+columnHeaders);
         UneditableDefaultTableModel tableModel = new UneditableDefaultTableModel(
             tableResult.getRows(),
             tableResult.getColumns()
@@ -215,8 +215,8 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
           }
         };
         newTable.setCellSelectionEnabled(true);
-        //table.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        //table.setFillsViewportHeight(true);
+        // table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        // table.setFillsViewportHeight(true);
         tables.put(columnHeaders, newTable);
       }
       if (newTable != table) {
@@ -225,7 +225,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
           table = null;
         }
         scrollPane.setViewportView(table = newTable);
-        //scrollPane.validate();
+        // scrollPane.validate();
       }
 
       // Update the data in the table
@@ -235,18 +235,18 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
       String retrievedLine =
           latency < 1000000
               ? RESOURCES.getMessage(
-              //locale,
+              // locale,
               "retrieved.micro",
               formattedDate,
               SQLUtility.formatDecimal3(latency)
           ) : latency < 1000000000
               ? RESOURCES.getMessage(
-              //locale,
+              // locale,
               "retrieved.milli",
               formattedDate,
               SQLUtility.formatDecimal3(latency / 1000)
           ) : RESOURCES.getMessage(
-              //locale,
+              // locale,
               "retrieved.second",
               formattedDate,
               SQLUtility.formatDecimal3(latency / 1000000)

@@ -101,7 +101,7 @@ public class SystemsPane extends JPanel {
     this.noc = noc;
     rootTreeNode = new DefaultMutableTreeNode("Hidden Root", true);
     treeModel = new DefaultTreeModel(rootTreeNode, true);
-    //treeModel.addTreeModelListener(new MyTreeModelListener());
+    // treeModel.addTreeModelListener(new MyTreeModelListener());
     tree = new JTree(treeModel);
     tree.setCellRenderer(new SystemsTreeCellRenderer());
     tree.setRootVisible(false);
@@ -393,7 +393,7 @@ public class SystemsPane extends JPanel {
               boolean doIt;
               synchronized (batchCounterLock) {
                 if (batchCounter > lastCompletedBatchCounter) {
-                  //System.out.println("DEBUG: Total in this batch: "+(batchCounter - lastCompletedBatchCounter));
+                  // System.out.println("DEBUG: Total in this batch: "+(batchCounter - lastCompletedBatchCounter));
                   lastCompletedBatchCounter = batchCounter;
                   doIt = true;
                 } else {
