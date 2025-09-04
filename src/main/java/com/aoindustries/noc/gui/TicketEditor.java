@@ -287,7 +287,7 @@ public class TicketEditor extends JPanel implements TableListener {
       });
     }
   };
-  // TODO
+  // TODO: Implement
   // summary
   private final JTextField summaryTextField = new JTextField("");
   private final FocusListener summaryTextFieldFocusListener = new FocusAdapter() {
@@ -325,7 +325,7 @@ public class TicketEditor extends JPanel implements TableListener {
   };
   // details
   private final JTextArea detailsTextArea = new JTextArea();
-  // TODO
+  // TODO: Implement
   // internalNotes
   private final JTextArea internalNotesTextArea = new JTextArea();
   private final FocusListener internalNotesTextAreaFocusListener = new FocusAdapter() {
@@ -424,23 +424,23 @@ public class TicketEditor extends JPanel implements TableListener {
     accountComboBox.setEditable(false);
     accountComboBox.addFocusListener(accountComboBoxFocusListener);
     smallFieldsPanel.add(accountComboBox);
-    // TODO
+    // TODO: Implement
     splitPane.add(new JScrollPane(smallFieldsPanel), "smallFields");
 
     // Category
-    // TODO
+    // TODO: Implement
 
     // Account
-    // TODO
+    // TODO: Implement
 
     // Escalation
-    // TODO
+    // TODO: Implement
 
     // Email Addresses
-    // TODO
+    // TODO: Implement
 
     // Phone Numbers
-    // TODO
+    // TODO: Implement
 
     // Ticket Details
     final JPanel detailsPanel = new JPanel(new BorderLayout());
@@ -463,13 +463,13 @@ public class TicketEditor extends JPanel implements TableListener {
     splitPane.add(detailsPanel, "ticketDetails");
 
     // Action List
-    // TODO
+    // TODO: Implement
 
     // Single Action
-    // TODO
+    // TODO: Implement
 
     // Add Annotation/Reply
-    // TODO
+    // TODO: Implement
 
     // Internal Notes
     JPanel internalNotesPanel = new JPanel(new BorderLayout());
@@ -662,7 +662,7 @@ public class TicketEditor extends JPanel implements TableListener {
       details = ticket.getDetails();
       internalNotes = ticket.getInternalNotes();
     }
-    // TODO
+    // TODO: Implement
 
     SwingUtilities.invokeLater(() -> {
       if (saveLayout) {
@@ -705,7 +705,7 @@ public class TicketEditor extends JPanel implements TableListener {
         accountComboBox.setSelectedItem(account);
       }
       accountComboBox.addFocusListener(accountComboBoxFocusListener);
-      // TODO
+      // TODO: Implement
       // summary
       summaryTextField.removeFocusListener(summaryTextFieldFocusListener);
       if (!summaryTextField.getText().equals(summary)) {
@@ -718,7 +718,7 @@ public class TicketEditor extends JPanel implements TableListener {
         detailsTextArea.setText(newDetails);
         detailsTextArea.setCaretPosition(0);
       }
-      // TODO
+      // TODO: Implement
       // internalNotes
       internalNotesTextArea.removeFocusListener(internalNotesTextAreaFocusListener);
       accountComboBoxModel.synchronize(accounts);
