@@ -1579,8 +1579,8 @@ public class CommunicationPane extends JPanel implements TableListener {
     }
 
     /**
-      * Paints the value.  The background is filled based on selected.
-      */
+     * Paints the value.  The background is filled based on selected.
+     */
     @Override
     public void paint(Graphics g) {
       assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

@@ -687,8 +687,8 @@ public class SystemsPane extends JPanel {
     }
 
     /**
-      * Paints the value.  The background is filled based on selected.
-      */
+     * Paints the value.  The background is filled based on selected.
+     */
     @Override
     public void paint(Graphics g) {
       assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
