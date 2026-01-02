@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 noc-gui - Graphical User Interface for Network Operations Center.
-Copyright (C) 2020, 2021, 2022, 2022, 2023, 2024, 2025  AO Industries, Inc.
+Copyright (C) 2020, 2021, 2022, 2022, 2023, 2024, 2025, 2026  AO Industries, Inc.
     support@aoindustries.com
     7262 Bull Pen Cir
     Mobile, AL 36695
@@ -295,7 +295,8 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
               <instructions>
                 <!--
                   Releases use "Automatic-Module-Name" instead of "module-info.java"
-                  since has direct dependencies that are not yet modularized.
+                  since has direct dependencies that are not yet modularized:
+                  swingx-core-1.6.5-1.jar
                 -->
                 <Automatic-Module-Name>${module.name}</Automatic-Module-Name>
                 <Private-Package>!.</Private-Package>
