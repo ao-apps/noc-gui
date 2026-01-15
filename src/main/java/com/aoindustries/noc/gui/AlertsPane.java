@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2018, 2019, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2018, 2019, 2020, 2021, 2022, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -297,14 +297,14 @@ public class AlertsPane extends JPanel {
   }
 
   /**
-   * start() should only be called when we have a login established.
+   * {@code start()} should only be called when we have a login established.
    */
   void start() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
   }
 
   /**
-   * stop() should only be called when we have a login established.
+   * {@code stop()} should only be called when we have a login established.
    */
   void stop() {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
