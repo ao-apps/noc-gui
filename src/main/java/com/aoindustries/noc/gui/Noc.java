@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022, 2023, 2024, 2025  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022, 2023, 2024, 2025, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -99,11 +99,7 @@ public class Noc {
   @SuppressWarnings({"UseSpecificCatch", "TooBroadCatch", "UseOfSystemOutOrSystemErr"})
   public static void main(String[] args) {
     try {
-      // TODO: Security manager deprecated in Java 17
       // TODO: Also implement Serialization Filtering: https://docs.oracle.com/javase/8/docs/technotes/guides/serialization/filters/serialization-filtering.html
-      if (System.getSecurityManager() == null) {
-        System.setSecurityManager(new SecurityManager());
-      }
 
       if (SwingUtilities.isEventDispatchThread()) {
         Noc noc = new Noc(null);
