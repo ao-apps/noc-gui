@@ -594,7 +594,7 @@ public class Noc {
   /**
    * Sets up the tabbed pane in the given component.  Should only be called by <code>configureDisplayMode</code>.
    *
-   * @see  #configureDisplayMode()
+   * @see  Noc#configureDisplayMode()
    */
   private void initTabs(Container parent) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -781,7 +781,7 @@ public class Noc {
   /**
    * See {@link AlertsPane#alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String, com.aoindustries.noc.monitor.common.AlertCategory, com.aoindustries.noc.monitor.common.AlertCategory)}.
    *
-   * @see  #clearAlerts(java.lang.Object)
+   * @see  Noc#clearAlerts(java.lang.Object)
    */
   void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage, AlertCategory oldAlertCategory, AlertCategory newAlertCategory) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -823,7 +823,7 @@ public class Noc {
   /**
    * See {@link AlertsPane#clearAlerts(java.lang.Object)}.
    *
-   * @see  #alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
+   * @see  Noc#alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
    */
   void clearAlerts(Object source) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

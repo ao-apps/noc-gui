@@ -355,7 +355,7 @@ public class AlertsPane extends JPanel {
   /**
    * Adds a new alert.
    *
-   * @see  #clearAlerts(java.lang.Object)
+   * @see  AlertsPane#clearAlerts(java.lang.Object)
    */
   void alert(Object source, String sourceDisplay, AlertLevel oldAlertLevel, AlertLevel newAlertLevel, String alertMessage, AlertCategory oldAlertCategory, AlertCategory newAlertCategory) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
@@ -425,7 +425,7 @@ public class AlertsPane extends JPanel {
   /**
    * Called when alert sources (such as nodes) are removed, to clean-up any alerts created by them.
    *
-   * @see  #alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
+   * @see  AlertsPane#alert(java.lang.Object, java.lang.String, com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertLevel, java.lang.String)
    */
   void clearAlerts(Object source) {
     assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

@@ -209,7 +209,7 @@ class Buzzer {
      * <p>Plays sound immediately when in the same alert level, but the category goes up.</p>
      *
      * <p>Plays sound immediately if the new timeout, based on new level and category, would now indicate time to play the sound.
-     * See {@link #getBuzzerInterval(com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertCategory)}.</p>
+     * See {@link BuzzerThread#getBuzzerInterval(com.aoindustries.noc.monitor.common.AlertLevel, com.aoindustries.noc.monitor.common.AlertCategory)}.</p>
      *
      * <p>Stop the thread when there is nothing to play.  This will cause
      * the thread to be restarted, along with an immediately play, should there be something to play again.
