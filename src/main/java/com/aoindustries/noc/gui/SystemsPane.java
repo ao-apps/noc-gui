@@ -141,7 +141,7 @@ public class SystemsPane extends JPanel {
     final String highLabel = RESOURCES.getMessage("alertLevel.high.label");
     final String criticalLabel = RESOURCES.getMessage("alertLevel.critical.label");
     JComboBox<String> alertLevel = new JComboBox<>(
-        new String[]{
+        new String[] {
             allLabel,
             lowLabel,
             mediumLabel,
@@ -743,7 +743,7 @@ public class SystemsPane extends JPanel {
     private void paintFocus(Graphics g, int x, int y, int w, int h, Color notColor) {
       assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-      Color       bsColor = getBorderSelectionColor();
+      Color bsColor = getBorderSelectionColor();
 
       if (bsColor != null && (selected || !drawDashedFocusIndicator)) {
         g.setColor(bsColor);

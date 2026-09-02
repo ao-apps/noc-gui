@@ -143,7 +143,7 @@ public class AlertsPane extends JPanel {
     this.noc = noc;
 
     tableModel = new DefaultTableModel(
-        new String[]{
+        new String[] {
             RESOURCES.getMessage("time.header"),
             RESOURCES.getMessage("alertLevel.header"),
             RESOURCES.getMessage("alertCategory.header"),
@@ -390,7 +390,7 @@ public class AlertsPane extends JPanel {
       history.add(0, alert);
       tableModel.insertRow(
           0,
-          new Object[]{
+          new Object[] {
               new Date(alert.time),
               alert.newAlertLevel,
               alert.newAlertCategory,
@@ -464,34 +464,34 @@ public class AlertsPane extends JPanel {
     }
   }
 
-  /*private void validateTable() {
-    Locale locale = Locale.getDefault();
-    DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
-
-    if (tableModel.getRowCount()<history.size()) {
-      tableModel.setRowCount(history.size());
-    }
-    int row = 0;
-    Iterator<Alert> historyIter = history.iterator();
-    while (historyIter.hasNext()) {
-      Alert alert = historyIter.next();
-
-      tableModel.setValueAt(df.format(new Date(alert.time)), row, 0);
-      tableModel.setValueAt(alert.sourceDisplay, row, 1);
-      tableModel.setValueAt(alert.newAlertLevel, row, 2); // Should internationalize
-      // alertCategory now, too
-      tableModel.setValueAt(alert.alertMessage, row, 4);
-      row++;
-    }
-    for (;row<tableModel.getRowCount();row++) {
-      for (int col=0;col<4;col++) {
-        tableModel.setValueAt(null, row, col);
-      }
-    }
-    invalidate();
-    validate();
-    repaint();
-  }*/
+  // private void validateTable() {
+  //   Locale locale = Locale.getDefault();
+  //   DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.LONG, locale);
+  //
+  //   if (tableModel.getRowCount()<history.size()) {
+  //     tableModel.setRowCount(history.size());
+  //   }
+  //   int row = 0;
+  //   Iterator<Alert> historyIter = history.iterator();
+  //   while (historyIter.hasNext()) {
+  //     Alert alert = historyIter.next();
+  //
+  //     tableModel.setValueAt(df.format(new Date(alert.time)), row, 0);
+  //     tableModel.setValueAt(alert.sourceDisplay, row, 1);
+  //     tableModel.setValueAt(alert.newAlertLevel, row, 2); // Should internationalize
+  //     // alertCategory now, too
+  //     tableModel.setValueAt(alert.alertMessage, row, 4);
+  //     row++;
+  //   }
+  //   for (;row<tableModel.getRowCount();row++) {
+  //     for (int col=0;col<4;col++) {
+  //       tableModel.setValueAt(null, row, col);
+  //     }
+  //   }
+  //   invalidate();
+  //   validate();
+  //   repaint();
+  // }
 
   /**
    * Called when the application is about to exit.

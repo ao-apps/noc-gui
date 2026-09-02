@@ -178,7 +178,7 @@ public class CommunicationPane extends JPanel implements TableListener {
   private final JList<Language> languagesList = new JList<>(languagesListModel);
   // Tickets
   private final DefaultTableModel ticketsTableModel = new UneditableDefaultTableModel(
-      new Object[]{
+      new Object[] {
           RESOURCES.getMessage("ticketsTable.header.ticketNumber"),
           RESOURCES.getMessage("ticketsTable.header.priority"),
           RESOURCES.getMessage("ticketsTable.header.status"),
@@ -558,11 +558,11 @@ public class CommunicationPane extends JPanel implements TableListener {
   // <editor-fold defaultstate="collapsed" desc="Refreshing">
   @Override
   public void tableUpdated(Table<?> table) {
-    /*try {
-      System.out.println("tableUpdated: "+table.getTableName());
-    } catch (Exception err) {
-      noc.reportError(err, null);
-    }*/
+    // try {
+    //   System.out.println("tableUpdated: "+table.getTableName());
+    // } catch (Exception err) {
+    //   noc.reportError(err, null);
+    // }
     refresh();
   }
 
@@ -1164,7 +1164,7 @@ public class CommunicationPane extends JPanel implements TableListener {
 
     Object[] getObjectArray() {
       Color foregroundColor = getForegroundColor();
-      return new Object[]{
+      return new Object[] {
           new TicketCell<>(ticketNumber, foregroundColor, isStrikethrough),
           new TicketCell<>(priority, foregroundColor, isStrikethrough),
           new TicketCell<>(status, foregroundColor, isStrikethrough),
@@ -1635,7 +1635,7 @@ public class CommunicationPane extends JPanel implements TableListener {
     private void paintFocus(Graphics g, int x, int y, int w, int h, Color notColor) {
       assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";
 
-      Color       bsColor = getBorderSelectionColor();
+      Color bsColor = getBorderSelectionColor();
 
       if (bsColor != null && (selected || !drawDashedFocusIndicator)) {
         g.setColor(bsColor);
