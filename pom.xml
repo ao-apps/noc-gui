@@ -126,47 +126,6 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
 
   <profiles>
     <profile>
-      <id>audit-dependencies</id>
-      <activation>
-        <property><name>ossindex.skip</name><value>!true</value></property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.sonatype.ossindex.maven</groupId><artifactId>ossindex-maven-plugin</artifactId>
-            <configuration>
-              <excludeVulnerabilityIds>
-                <!--
-                  com.mysql:mysql-connector-j:9.7.0: CVE-2026-60586:
-                  https://dev.mysql.com/community/security/advisories/2026-07-21/
-                  "Exploit without Auth.?: No"
-                -->
-                <exclude>CVE-2026-60586</exclude>
-                <!--
-                  com.mysql:mysql-connector-j:9.7.0: CVE-2026-60623:
-                  https://dev.mysql.com/community/security/advisories/2026-07-21/
-                  "Exploit without Auth.?: No"
-                -->
-                <exclude>CVE-2026-60623</exclude>
-                <!--
-                  com.mysql:mysql-connector-j:9.7.0: CVE-2026-60624:
-                  https://www.cve.org/CVERecord?id=CVE-2026-60624
-                  "Successful attacks require human interaction from a person other than the attacker."
-                -->
-                <exclude>CVE-2026-60624</exclude>
-                <!--
-                  com.mysql:mysql-connector-j:9.7.0: CVE-2026-61082:
-                  https://www.cve.org/CVERecord?id=CVE-2026-61082
-                  "Successful attacks require human interaction from a person other than the attacker."
-                -->
-                <exclude>CVE-2026-61082</exclude>
-              </excludeVulnerabilityIds>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
       <id>offlineLinks</id><activation><file><exists>src/main/java</exists></file></activation>
       <build>
         <plugins>
@@ -449,7 +408,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
       </dependency>
       <!-- Runtime Transitive -->
       <dependency>
-        <groupId>com.mysql</groupId><artifactId>mysql-connector-j</artifactId><version>9.7.0</version>
+        <groupId>com.mysql</groupId><artifactId>mysql-connector-j</artifactId><version>26.7.0</version>
       </dependency>
       <dependency>
         <groupId>org.postgresql</groupId><artifactId>postgresql</artifactId><version>42.7.13</version>
