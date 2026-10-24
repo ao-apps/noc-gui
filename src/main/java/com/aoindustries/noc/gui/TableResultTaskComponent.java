@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2008-2013, 2016, 2018, 2019, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2008-2013, 2016, 2018, 2019, 2020, 2021, 2022, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -151,7 +151,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
           }
         }
       } catch (RemoteException err) {
-        logger.log(Level.SEVERE, null, err);
+        logger.log(Level.SEVERE, "TODO: message here", err);
       }
     });
   }
@@ -169,7 +169,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
             try {
               localTableResultNode.removeTableResultListener(tableResultListener);
             } catch (RemoteException err) {
-              logger.log(Level.WARNING, null, err);
+              logger.log(Level.WARNING, "TODO: message here", err);
             }
             tableResultListenerExported = false;
             noc.unexportObject(tableResultListener);
@@ -315,7 +315,7 @@ public class TableResultTaskComponent extends JPanel implements TaskComponent {
           }
         });
       } catch (RemoteException err) {
-        logger.log(Level.SEVERE, null, err);
+        logger.log(Level.SEVERE, "TODO: message here", err);
       }
     });
   }

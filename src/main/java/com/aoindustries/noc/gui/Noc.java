@@ -340,7 +340,7 @@ public class Noc {
       try {
         tray.add(localTrayIcon);
       } catch (AWTException e) {
-        logger.log(Level.WARNING, null, e);
+        logger.log(Level.WARNING, "TODO: message here", e);
         localLoginMenuItem = null;
         localTrayIconEnabledImage = null;
         localTrayIconDisabledImage = null;
@@ -424,7 +424,7 @@ public class Noc {
         try {
           System.exit(0);
         } catch (SecurityException err) {
-          logger.log(Level.SEVERE, null, err);
+          logger.log(Level.SEVERE, "TODO: message here", err);
         }
       }
     } else {
@@ -852,17 +852,17 @@ public class Noc {
         try {
           Thread.sleep(100);
         } catch (InterruptedException err) {
-          logger.log(Level.WARNING, null, err);
+          logger.log(Level.WARNING, "TODO: message here", err);
           // Restore the interrupted status
           Thread.currentThread().interrupt();
         }
       }
       if (!unexported) {
-        logger.log(Level.WARNING, null, new RuntimeException("Unable to unexport Object, now being forceful"));
+        logger.log(Level.WARNING, "TODO: message here", new RuntimeException("Unable to unexport Object, now being forceful"));
         UnicastRemoteObject.unexportObject(remote, true);
       }
     } catch (NoSuchObjectException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
     }
   }
 }

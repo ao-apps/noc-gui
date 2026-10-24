@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2009-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
+ * Copyright (C) 2009-2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -193,7 +193,7 @@ public class TicketEditor extends JPanel implements TableListener {
               } catch (ThreadDeath td) {
                 throw td;
               } catch (Throwable t) {
-                logger.log(Level.SEVERE, null, t);
+                logger.log(Level.SEVERE, "TODO: message here", t);
               }
             }
           }
@@ -239,7 +239,7 @@ public class TicketEditor extends JPanel implements TableListener {
               } catch (ThreadDeath td) {
                 throw td;
               } catch (Throwable t) {
-                logger.log(Level.SEVERE, null, t);
+                logger.log(Level.SEVERE, "TODO: message here", t);
               }
             }
           }
@@ -280,7 +280,7 @@ public class TicketEditor extends JPanel implements TableListener {
             } catch (ThreadDeath td) {
               throw td;
             } catch (Throwable t) {
-              logger.log(Level.SEVERE, null, t);
+              logger.log(Level.SEVERE, "TODO: message here", t);
             }
           }
         }
@@ -316,7 +316,7 @@ public class TicketEditor extends JPanel implements TableListener {
             } catch (ThreadDeath td) {
               throw td;
             } catch (Throwable t) {
-              logger.log(Level.SEVERE, null, t);
+              logger.log(Level.SEVERE, "TODO: message here", t);
             }
           }
         }
@@ -354,7 +354,7 @@ public class TicketEditor extends JPanel implements TableListener {
             } catch (ThreadDeath td) {
               throw td;
             } catch (Throwable t) {
-              logger.log(Level.SEVERE, null, t);
+              logger.log(Level.SEVERE, "TODO: message here", t);
             }
           }
         }
@@ -387,7 +387,7 @@ public class TicketEditor extends JPanel implements TableListener {
         floatingDividers = false;
       }
     } catch (Exception err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       modelRoot = MultiSplitLayout.parseModel(LAYOUT_DEF);
       floatingDividers = true;
     }
@@ -576,7 +576,7 @@ public class TicketEditor extends JPanel implements TableListener {
         } catch (ThreadDeath td) {
           throw td;
         } catch (Throwable t) {
-          logger.log(Level.SEVERE, null, t);
+          logger.log(Level.SEVERE, "TODO: message here", t);
         }
       }
     }
@@ -600,7 +600,7 @@ public class TicketEditor extends JPanel implements TableListener {
           } catch (ThreadDeath td) {
             throw td;
           } catch (Throwable t) {
-            logger.log(Level.SEVERE, null, t);
+            logger.log(Level.SEVERE, "TODO: message here", t);
           }
         }
       }

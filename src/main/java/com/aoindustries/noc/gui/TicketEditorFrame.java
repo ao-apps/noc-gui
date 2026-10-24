@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2009-2013, 2016, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2009-2013, 2016, 2020, 2021, 2022, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -83,7 +83,7 @@ public class TicketEditorFrame extends JFrame {
           ticketEditor.showTicket(null, null);
         }
       } catch (Exception err) {
-        logger.log(Level.SEVERE, null, err);
+        logger.log(Level.SEVERE, "TODO: message here", err);
       } finally {
         SwingUtilities.invokeLater(() -> {
           assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

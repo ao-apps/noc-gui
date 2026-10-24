@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2008-2013, 2016, 2018, 2019, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2008-2013, 2016, 2018, 2019, 2020, 2021, 2022, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -137,7 +137,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
         UnicastRemoteObject.exportObject(singleResultListener, port, csf, ssf);
         localSingleResultNode.addSingleResultListener(singleResultListener);
       } catch (RemoteException err) {
-        logger.log(Level.SEVERE, null, err);
+        logger.log(Level.SEVERE, "TODO: message here", err);
       }
     });
   }
@@ -154,7 +154,7 @@ public class SingleResultTaskComponent extends JPanel implements TaskComponent {
           localSingleResultNode.removeSingleResultListener(singleResultListener);
           noc.unexportObject(singleResultListener);
         } catch (RemoteException err) {
-          logger.log(Level.SEVERE, null, err);
+          logger.log(Level.SEVERE, "TODO: message here", err);
         }
       });
     }

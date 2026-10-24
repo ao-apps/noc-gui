@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2018, 2020, 2021, 2022, 2024, 2025  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2018, 2020, 2021, 2022, 2024, 2025, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -174,7 +174,7 @@ class Buzzer {
           } catch (ThreadDeath td) {
             throw td;
           } catch (Throwable t) {
-            logger.log(Level.SEVERE, null, t);
+            logger.log(Level.SEVERE, "TODO: message here", t);
           } finally {
             synchronized (buzzerLock) {
               isBuzzing = false;

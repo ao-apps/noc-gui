@@ -167,7 +167,7 @@ public class SystemsPane extends JPanel {
         alertLevel.setSelectedItem(criticalLabel);
         break;
       default:
-        logger.log(Level.WARNING, null, new AssertionError("Unexpected display level, resetting to Medium: " + curAlertLevel));
+        logger.log(Level.WARNING, "TODO: message here", new AssertionError("Unexpected display level, resetting to Medium: " + curAlertLevel));
         alertLevel.setSelectedItem(mediumLabel);
         setAlertLevel(AlertLevel.MEDIUM);
     }
@@ -337,7 +337,7 @@ public class SystemsPane extends JPanel {
         UnicastRemoteObject.exportObject(newTreeListener, port, csf, ssf);
         rootNode.addTreeListener(newTreeListener);
       } catch (RemoteException err) {
-        logger.log(Level.SEVERE, null, err);
+        logger.log(Level.SEVERE, "TODO: message here", err);
       }
     });
     selectNode(newRootNode);
@@ -361,7 +361,7 @@ public class SystemsPane extends JPanel {
         oldRootNode.removeTreeListener(oldTreeListener);
         noc.unexportObject(oldTreeListener);
       } catch (RemoteException err) {
-        logger.log(Level.SEVERE, null, err);
+        logger.log(Level.SEVERE, "TODO: message here", err);
       }
     });
 
@@ -407,7 +407,7 @@ public class SystemsPane extends JPanel {
                 try {
                   Thread.sleep(250);
                 } catch (InterruptedException err) {
-                  logger.log(Level.WARNING, null, err);
+                  logger.log(Level.WARNING, "TODO: message here", err);
                   // Restore the interrupted status
                   Thread.currentThread().interrupt();
                 }

@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -102,7 +102,7 @@ public class Preferences {
     try {
       displayMode = DisplayMode.valueOf(displayModeS);
     } catch (IllegalArgumentException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       displayMode = DisplayMode.TABS;
     }
     String tabbedPaneSelectedIndexS = prefs.get("Preferences." + hostname + ".tabbedPaneSelectedIndex", "1");
@@ -112,7 +112,7 @@ public class Preferences {
         tabbedPaneSelectedIndex = 1;
       }
     } catch (NumberFormatException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       tabbedPaneSelectedIndex = 1;
     }
     singleFrameBounds = new Rectangle(
@@ -146,21 +146,21 @@ public class Preferences {
     try {
       username = User.Name.valueOf(prefs.get("Preferences.username", System.getProperty("user.name", null)));
     } catch (SecurityException | ValidationException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       username = null;
     }
     String systemsAlertLevelS = prefs.get("Preferences.systemsAlertLevel", AlertLevel.MEDIUM.name());
     try {
       systemsAlertLevel = AlertLevel.valueOf(systemsAlertLevelS);
     } catch (IllegalArgumentException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       systemsAlertLevel = AlertLevel.MEDIUM;
     }
     String systemsSplitPaneDividerLocationS = prefs.get("Preferences." + hostname + ".systemsSplitPaneDividerLocation", "200");
     try {
       systemsSplitPaneDividerLocation = Integer.parseInt(systemsSplitPaneDividerLocationS);
     } catch (NumberFormatException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       systemsSplitPaneDividerLocation = 200;
     }
     communicationMultiSplitLayoutModel = prefs.getByteArray("Preferences." + hostname + ".cMSLM", null);
@@ -189,7 +189,7 @@ public class Preferences {
     try {
       return InetAddress.getLocalHost().getHostName();
     } catch (UnknownHostException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       return "unknown";
     }
   }
@@ -478,7 +478,7 @@ public class Preferences {
         return (Node) decoder.readObject();
       }
     } catch (IOException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       this.communicationMultiSplitLayoutModel = null;
       return null;
     }
@@ -500,7 +500,7 @@ public class Preferences {
       prefs.putByteArray("Preferences." + getLocalHostname() + ".cMSLM", bytes);
       prefs.put("Preferences." + getLocalHostname() + ".cMSLM.layoutDef", layoutDef);
     } catch (IOException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       this.communicationMultiSplitLayoutModel = null;
       this.communicationMultiSplitLayoutModelLayoutDef = null;
     }
@@ -525,7 +525,7 @@ public class Preferences {
         return (Node) decoder.readObject();
       }
     } catch (IOException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       ticketEditorMultiSplitLayoutModels.remove(preferencesSet);
       return null;
     }
@@ -547,7 +547,7 @@ public class Preferences {
       prefs.putByteArray("Preferences." + getLocalHostname() + ".teMSLM." + preferencesSet, bytes);
       prefs.put("Preferences." + getLocalHostname() + ".teMSLM." + preferencesSet + ".layoutDef", layoutDef);
     } catch (IOException err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       this.ticketEditorMultiSplitLayoutModels.remove(preferencesSet);
       this.ticketEditorMultiSplitLayoutModelLayoutDefs.remove(preferencesSet);
     }

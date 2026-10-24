@@ -228,7 +228,7 @@ public class CommunicationPane extends JPanel implements TableListener {
         floatingDividers = false;
       }
     } catch (Exception err) {
-      logger.log(Level.WARNING, null, err);
+      logger.log(Level.WARNING, "TODO: message here", err);
       modelRoot = MultiSplitLayout.parseModel(LAYOUT_DEF);
       floatingDividers = true;
     }
@@ -1006,13 +1006,13 @@ public class CommunicationPane extends JPanel implements TableListener {
                 } catch (ThreadDeath td) {
                   throw td;
                 } catch (Throwable t) {
-                  logger.log(Level.SEVERE, null, t);
+                  logger.log(Level.SEVERE, "TODO: message here", t);
                 }
               });
             } catch (ThreadDeath td) {
               throw td;
             } catch (Throwable t) {
-              logger.log(Level.SEVERE, null, t);
+              logger.log(Level.SEVERE, "TODO: message here", t);
             } finally {
               SwingUtilities.invokeLater(() -> {
                 assert SwingUtilities.isEventDispatchThread() : "Not running in Swing event dispatch thread";

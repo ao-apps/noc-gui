@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2018, 2020, 2022  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2018, 2020, 2022, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -49,17 +49,17 @@ public class NocApplet extends JApplet {
       try {
         SwingUtilities.invokeAndWait(this::start);
       } catch (InterruptedException e) {
-        logger.log(Level.SEVERE, null, e);
+        logger.log(Level.SEVERE, "TODO: message here", e);
         // Restore the interrupted status
         Thread.currentThread().interrupt();
       } catch (InvocationTargetException e) {
-        logger.log(Level.SEVERE, null, e);
+        logger.log(Level.SEVERE, "TODO: message here", e);
       }
     } else {
       try {
         this.noc = new Noc(getContentPane());
       } catch (IOException err) {
-        logger.log(Level.SEVERE, null, err);
+        logger.log(Level.SEVERE, "TODO: message here", err);
       }
     }
   }
@@ -73,11 +73,11 @@ public class NocApplet extends JApplet {
       try {
         SwingUtilities.invokeAndWait(this::stop);
       } catch (InterruptedException e) {
-        logger.log(Level.SEVERE, null, e);
+        logger.log(Level.SEVERE, "TODO: message here", e);
         // Restore the interrupted status
         Thread.currentThread().interrupt();
       } catch (InvocationTargetException e) {
-        logger.log(Level.SEVERE, null, e);
+        logger.log(Level.SEVERE, "TODO: message here", e);
       }
     } else {
       if (noc != null) {
