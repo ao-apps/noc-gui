@@ -276,6 +276,7 @@ along with noc-gui.  If not, see <https://www.gnu.org/licenses/>.
                   swingx-core-1.6.5-1.jar
                 -->
                 <Automatic-Module-Name>${module.name}</Automatic-Module-Name>
+                <Include-Resource>{maven-resources}</Include-Resource>
                 <Private-Package>!.</Private-Package>
               </instructions>
             </configuration>
