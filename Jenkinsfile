@@ -49,6 +49,9 @@ binding.setVariable('upstreamProjects', [
   // No Jenkins: <groupId>org.slf4j</groupId><artifactId>slf4j-jdk14</artifactId>
 ])
 
+// The actively deployed and running NOC software is tracked on the release branch.
+binding.setVariable('scmAdditionalAuditBranches', 'release')
+
 /******************************************************************************************
  *                                                                                        *
  * Everything below this line is identical for all projects, except the copied matrix     *
