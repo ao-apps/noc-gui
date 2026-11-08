@@ -50,6 +50,7 @@ binding.setVariable('upstreamProjects', [
 ])
 
 // The actively deployed and running NOC software is tracked on the release branch.
+// Note: These branches are added as additional build triggers
 binding.setVariable('scmAdditionalAuditBranches', 'release')
 
 /******************************************************************************************
