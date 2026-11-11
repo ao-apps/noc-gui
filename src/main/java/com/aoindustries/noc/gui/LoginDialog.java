@@ -1,6 +1,6 @@
 /*
  * noc-gui - Graphical User Interface for Network Operations Center.
- * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022  AO Industries, Inc.
+ * Copyright (C) 2007-2013, 2016, 2017, 2018, 2020, 2021, 2022, 2026  AO Industries, Inc.
  *     support@aoindustries.com
  *     7262 Bull Pen Cir
  *     Mobile, AL 36695
@@ -295,13 +295,6 @@ public final class LoginDialog extends JDialog {
             // Do the login (get the root node)
             final RootNode rootNode = monitor.login(Locale.getDefault(), username, password);
             final String rootNodeLabel = rootNode.getLabel();
-
-            // Check if canceled
-            synchronized (loginLock) {
-              if (Thread.currentThread() != loginThread) {
-                return;
-              }
-            }
 
             // Check if canceled
             synchronized (loginLock) {
